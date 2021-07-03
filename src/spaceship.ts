@@ -23,9 +23,20 @@ export class Spaceship {
     });
   }
 
+  public translate(p5:P5, trans:Vector) {
+      this.transVectors.forEach(v => {
+          v = v.add(trans);
+      });
+  }
+
   public render(p5: P5) {
     p5.push();
-
+    p5.beginShape();
+    this.transVectors.forEach(v => {
+        p5.vertex(v.x,v.y)
+        console.log(v)
+    });
+    p5.endShape(p5.CLOSE);
     p5.pop();
   }
 }
