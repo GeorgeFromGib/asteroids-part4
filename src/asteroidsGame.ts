@@ -1,18 +1,31 @@
+import { Spaceship } from './spaceship';
 import P5 from "p5";
 import { sketch } from "./app";
-import { Spaceship } from "./spaceship";
 
 export class AsteroidsGame {
   spaceShip: Spaceship;
 
   constructor() {
-    this.spaceShip = new Spaceship();
-    new P5((p5) => sketch(p5, p5.windowWidth, p5.windowHeight, this.gameLoop));
+    new P5((p) => sketch(p, this.setup, this.gameLoop));
   }
 
-  public gameLoop(p5: P5) {
-    this.spaceShip.scale(p5, 2);
-    this.spaceShip.translate(p5, p5.createVector(p5.width / 2, p5.height / 2));
+  public setup=(p5: P5)=> {
+    // Creating and positioning the canvas
+    const canvas = p5.createCanvas(p5.windowWidth*0.8, p5.windowHeight*0.8);
+    canvas.parent("app");
+
+    // Configuring the canvas
+    p5.background("black");
+    this.spaceShip = new Spaceship();
+    this.spaceShip.setPosition(p5.createVector(p5.width / 2, p5.height / 2))
+    this.spaceShip.setScale(2);
+    this.spaceShip.setRotation(p5.PI)
+  }
+
+  public gameLoop=(p5: P5)=> {
+    this.spaceShip.update(p5);
+    p5.noFill();
+    p5.stroke('white');
     this.spaceShip.render(p5);
     //Draw the spaceship
     //   p5.translate(p5.width / 2, p5.height / 2);
