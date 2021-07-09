@@ -5,12 +5,13 @@ export interface Model {
     vertices:number[][];
 }
 
-export class GameObject {
+export class Actor {
     protected _transModel:Model;
-    protected _position: Vector;
-    protected _heading: number=0;
-    protected _scale: number=1;
-    protected _velocity:Vector=new Vector().set(0,0);
+    public position: Vector;
+    public heading: number=0;
+    public scale: number=1;
+    public velocity:Vector=new Vector().set(0,0);
+    public rotationVel:number=0;
 
     constructor(protected _model:Model) {
         this._transModel={
@@ -19,35 +20,23 @@ export class GameObject {
         }
     }
   
-    public setPositionVector = (pos: Vector) => {
-      this._position = pos;
-    };
+    public positionXY = (x:number, y:number) => {
+        this.position=new Vector().set(x,y);
+    }
 
-    public setPositionXY = (x:number, y:number) => {
-        this.setPositionVector(new Vector().set(x,y));
-      };
-  
-    public setHeading = (angle: number) => {
-      this._heading = angle;
-    };
-
-    public setRotateBy=(angle:number) => {
-      this._heading+=angle;
+    public rotateBy=(angle:number)=> {
+      this.heading+=angle;
     }
   
-    public setScale = (scale: number) => {
-      this._scale = scale;
-    };
-  
     public update(p5: P5, timeDelta:number) {
-      this._position.add(this._velocity);
-
+      this.position.add(this.velocity);
+      this.heading+=this.rotationVel;
       this._transModel.vertexes=[];
       this._model.vertexes.forEach((av) => {
         let v = p5.createVector(av[0],av[1])
-        v.mult(this._scale);
-        v.rotate(this._heading);
-        v.add(this._position);
+        v.mult(this.scale);
+        v.rotate(this.heading);
+        v.add(this.position);
         this._transModel.vertexes.push([v.x,v.y]);
       });
     }
