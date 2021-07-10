@@ -1,3 +1,4 @@
+
 import P5, { Vector } from "p5";
 import { Actor, Model } from "./actor";
 
@@ -15,9 +16,9 @@ export class Spaceship extends Actor {
     this.velocity.add(force);
   }
 
-  public update=(p5:P5, deltaTime:number)=> {
+  public update=(deltaTime:number)=> {
     this.velocity.mult(0.995);
-    super.update(p5,deltaTime);
+    super.update(deltaTime);
   }
   
 }

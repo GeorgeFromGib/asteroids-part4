@@ -38,12 +38,12 @@ export class AsteroidsGame {
     this._ship = new Spaceship(configData.spaceship.model);
     this._ship.positionXY(p5.width / 2, p5.height / 2);
 
-    //this.addActor(this._ship);
+    this.addActor(this._ship);
 
     for(let i=0;i<=10;i++) {
       const asteroid=new Asteroid(configData.asteroids.designs[0].model);
       asteroid.position=new Vector().set(p5.random(p5.width),p5.random(p5.height));
-      asteroid.rotationVel=Math.PI/250
+      asteroid.rotationVel=Math.PI/1000
       asteroid.velocity=Vector.random2D().mult(0.5);
       asteroid.scale=4;
       this.addActor(asteroid);
@@ -80,7 +80,8 @@ export class AsteroidsGame {
     this._ship.rotateBy(this._rotDelta);
 
     this._actors.forEach(actor => {
-      actor.update(p5,timeDelta);
+      actor.update(timeDelta);
+      actor.edgeWrap(p5.width,p5.height);
       actor.render(p5);
     });
 

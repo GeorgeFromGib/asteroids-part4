@@ -3,6 +3,7 @@ import P5, { Vector } from "p5";
 export interface Model {
     vertexes:number[][];
     vertices:number[][];
+    radius:number;
 }
 
 export class Actor {
@@ -16,7 +17,8 @@ export class Actor {
     constructor(protected _model:Model) {
         this._transModel={
             vertexes:[],
-            vertices:this._model.vertices
+            vertices:this._model.vertices,
+            radius:this._model.radius
         }
     }
   
@@ -27,13 +29,25 @@ export class Actor {
     public rotateBy=(angle:number)=> {
       this.heading+=angle;
     }
+
+    public edgeWrap=(screen_width:number, screen_height:number)=>{
+        if(this.position.x > screen_width+this._model.radius)
+          this.position.x=-this._model.radius;
+        else if (this.position.x < -this._model.radius)
+          this.position.x=screen_width + this._model.radius;
+
+        if(this.position.y > screen_height+this._model.radius)
+          this.position.y=-this._model.radius;
+        else if (this.position.y < -this._model.radius)
+          this.position.y=screen_height + this._model.radius;
+    }   
   
-    public update(p5: P5, timeDelta:number) {
+    public update( timeDelta:number) {
       this.position.add(this.velocity);
       this.heading+=this.rotationVel;
       this._transModel.vertexes=[];
       this._model.vertexes.forEach((av) => {
-        let v = p5.createVector(av[0],av[1])
+        let v = new Vector().set(av[0],av[1])
         v.mult(this.scale);
         v.rotate(this.heading);
         v.add(this.position);
