@@ -13,6 +13,7 @@ export class AsteroidsGame {
   private _ship: Spaceship;
   _thrusting: boolean = false;
   _actors:Actor[]=[];
+  _asteroids:Asteroid[]=[];
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -46,8 +47,10 @@ export class AsteroidsGame {
       asteroid.rotationVel=Math.PI/1000
       asteroid.velocity=Vector.random2D().mult(0.5);
       asteroid.scale=4;
-      this.addActor(asteroid);
+      this._asteroids.push(asteroid);
     }
+
+    this._actors.push(...this._asteroids);
     
   };
 
@@ -84,7 +87,10 @@ export class AsteroidsGame {
       actor.edgeWrap(p5.width,p5.height);
       actor.render(p5);
     });
-
+    
+    const collided=this._ship.hasCollided(this._asteroids);
+    if(collided)
+      console.log(collided)
 
     p5.stroke("white");
     p5.textSize(32);
