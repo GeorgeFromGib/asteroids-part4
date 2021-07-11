@@ -49,7 +49,6 @@ export class Actor {
         actor._model.radius + this._model.radius
       ) {
         if (this != actor) {
-          console.log("collided");
           return actor;
         }
       }

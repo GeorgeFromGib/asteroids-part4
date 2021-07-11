@@ -42,7 +42,16 @@ export class PlayerShipManager extends Manager {
         this.projectiles=this.projectiles.filter((p,i)=>!p.expired) 
     }
     public checkCollisions(manager:Manager) {
-        
+        const asteroids=manager.getActors();
+        //const col=this.ship.hasCollided(asteroids)
+        this.projectiles.forEach(p => {
+            const col=p.hasCollided(asteroids)
+            console.log(col);
+            if(col!==undefined)
+                console.log('collided');
+                
+                //p.expired=true;
+        });
     }
 
     public getActors() {

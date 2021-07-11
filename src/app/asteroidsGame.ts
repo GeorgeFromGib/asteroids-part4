@@ -79,7 +79,7 @@ export class AsteroidsGame {
     this._playerManager.update(timeDelta);
     this._asteroidsManager.update(timeDelta);
 
-    this._playerManager.checkCollisions(this._asteroidsManager)
+    this._playerManager.checkCollisions(this._asteroidsManager);
 
     actors.push(...this._playerManager.getActors());
     actors.push(...this._asteroidsManager.getActors());
