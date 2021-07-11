@@ -1,10 +1,12 @@
-import { PlayerShipManager, ShipTurn } from './playerShipManager';
+import { PlayerShipManager, ShipTurn } from './managers/playerShipManager';
 import { Spaceship } from "./spaceship";
 import P5, { Vector } from "p5";
 import { sketch } from "./p5-sketch";
 import * as configData from '../assets/config.json' 
-import { Actor } from "./actor";
-import { Asteroid } from "./asteroid";
+import { Actor } from "./actors/actor";
+import { AsteroidsManager } from './managers/asteroidsManager';
+import { Asteroid } from './actors/asteroid';
+import { Manager } from './managers/manager';
 
 
 
@@ -13,6 +15,7 @@ export class AsteroidsGame {
   private _ship: Spaceship;    
   _asteroids:Asteroid[]=[];
   _playerManager:PlayerShipManager;
+  _asteroidsManager: AsteroidsManager;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -37,15 +40,17 @@ export class AsteroidsGame {
 
     this._playerManager=new PlayerShipManager(configData.spaceship.model)
     this._playerManager.createShip(p5);
+    this._asteroidsManager=new AsteroidsManager(configData.asteroids);
+    this._asteroidsManager.createAsteroids(10,p5.width,p5.height);
 
-    for(let i=0;i<=10;i++) {
-      const asteroid=new Asteroid(configData.asteroids.designs[0].model);
-      asteroid.position=new Vector().set(p5.random(p5.width),p5.random(p5.height));
-      asteroid.rotationVel=Math.PI/1000
-      asteroid.velocity=Vector.random2D().mult(0.5);
-      asteroid.scale=4;
-      this._asteroids.push(asteroid);
-    }
+    // for(let i=0;i<=10;i++) {
+    //   const asteroid=new Asteroid(configData.asteroids.designs[0].model);
+    //   asteroid.position=new Vector().set(p5.random(p5.width),p5.random(p5.height));
+    //   asteroid.rotationVel=Math.PI/1000
+    //   asteroid.velocity=Vector.random2D().mult(0.5);
+    //   asteroid.scale=4;
+    //   this._asteroids.push(asteroid);
+    // }
 
     //this._actors.push(...this._asteroids);
     
@@ -72,8 +77,12 @@ export class AsteroidsGame {
 
     p5.background(0);
     this._playerManager.update(timeDelta);
+    this._asteroidsManager.update(timeDelta);
+
+    this._playerManager.checkCollisions(this._asteroidsManager)
+
     actors.push(...this._playerManager.getActors());
-    actors.push(...this._asteroids);
+    actors.push(...this._asteroidsManager.getActors());
 
     actors.forEach(actor => {
       actor.update(timeDelta);
@@ -100,5 +109,9 @@ export class AsteroidsGame {
     const timeDelta = elapsedNow - this._prevElapsed;
     this._prevElapsed = elapsedNow
     return timeDelta;
+  }
+
+  public static random(max:number) {
+    return Math.floor(Math.random() * max);
   }
 }

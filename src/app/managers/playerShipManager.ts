@@ -1,7 +1,8 @@
-import { Projectile } from './projectile';
+import { Projectile } from '../actors/projectile';
 import P5, { Vector } from 'p5';
-import { Actor, Model } from "./actor";
-import { Spaceship } from "./spaceship";
+import { Actor, IModel } from "../actors/actor";
+import { Manager } from './manager';
+import { Spaceship } from '../actors/spaceship';
 
 export enum ShipTurn {
     LEFT,
@@ -9,7 +10,7 @@ export enum ShipTurn {
     STOP
 }
 
-export class PlayerShipManager {
+export class PlayerShipManager extends Manager {
     ship:Spaceship;
     rotAmnt = Math.PI / 70;
     thrusting:boolean=false;
@@ -19,7 +20,8 @@ export class PlayerShipManager {
     projectiles:Projectile[]=[];
 
 
-    constructor(protected model:Model) {
+    constructor(protected model:IModel) {
+        super();
     }
 
     public createShip(p5:P5){
@@ -29,7 +31,6 @@ export class PlayerShipManager {
 
     public update(timeDelta:number) {
         this.timeElapsed+=timeDelta;
-        console.log(this.timeElapsed);
         if(this.thrusting)
             this.ship.thrust();
         if(this.firing)
@@ -38,13 +39,10 @@ export class PlayerShipManager {
                 this.fireProjectile()
                 this.lastShot=this.timeElapsed;
             }
-        this.projectiles=this.projectiles.filter((p,i)=>!p.expired)
-        // for(let i=this.projectiles.length;i>0;i--) {
-        //     if(this.projectiles[i].expired)
-        //         this.projectiles.slice(i,1);
-        // }  
-        //this.actors.push(this.ship);
-        //this.actors.push(...this.projectiles);   
+        this.projectiles=this.projectiles.filter((p,i)=>!p.expired) 
+    }
+    public checkCollisions(manager:Manager) {
+        
     }
 
     public getActors() {
@@ -86,7 +84,6 @@ export class PlayerShipManager {
         const startPos=gunPos.add(this.ship.position);
         const vel=Vector.fromAngle(heading).mult(4);
         const proj=new Projectile(startPos,vel);
-        //this.actors.push(proj) 
         this.projectiles.push(proj);
     } 
 } 

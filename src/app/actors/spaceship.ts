@@ -1,6 +1,6 @@
 
 import P5, { Vector } from "p5";
-import { Actor, Model } from "./actor";
+import { Actor, IModel } from "./actor";
 
 export class Spaceship extends Actor {
   _shipHeading:number=0;
@@ -8,7 +8,7 @@ export class Spaceship extends Actor {
   firing:boolean;
   
 
-  constructor(model:Model) {
+  constructor(model:IModel) {
     super(model);
   }
 

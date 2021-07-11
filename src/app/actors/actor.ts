@@ -1,20 +1,20 @@
 import P5, { Vector } from "p5";
 
-export interface Model {
+export interface IModel {
   vertexes: number[][];
   vertices: number[][];
   radius: number;
 }
 
 export class Actor {
-  protected _transModel: Model;
+  protected _transModel: IModel;
   public position: Vector;
   public heading: number = 0.0;
   public scale: number = 1.0;
   public velocity: Vector = new Vector().set(0, 0);
   public rotationVel: number = 0.0;
 
-  constructor(protected _model: Model) {
+  constructor(protected _model: IModel) {
     this._transModel = {
       vertexes: [],
       vertices: this._model.vertices,
