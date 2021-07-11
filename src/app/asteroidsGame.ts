@@ -11,7 +11,6 @@ import { Asteroid } from "./asteroid";
 export class AsteroidsGame {
   _prevElapsed = 0;
   private _ship: Spaceship;    
-  _actors:Actor[]=[];
   _asteroids:Asteroid[]=[];
   _playerManager:PlayerShipManager;
 
@@ -36,7 +35,7 @@ export class AsteroidsGame {
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
 
-    this._playerManager=new PlayerShipManager(this._actors,configData.spaceship.model)
+    this._playerManager=new PlayerShipManager(configData.spaceship.model)
     this._playerManager.createShip(p5);
 
     for(let i=0;i<=10;i++) {
@@ -48,7 +47,7 @@ export class AsteroidsGame {
       this._asteroids.push(asteroid);
     }
 
-    this._actors.push(...this._asteroids);
+    //this._actors.push(...this._asteroids);
     
   };
 
@@ -66,16 +65,17 @@ export class AsteroidsGame {
     if (p5.keyCode == 32) this._playerManager.fire(false);
   };
 
-  public addActor(actor:Actor) {
-    this._actors.push(actor);
-  }
 
   public gameLoop = (p5: P5) => {
+    let actors:Actor[]=[];
     const timeDelta = this.getTimeDelta(p5);
 
     p5.background(0);
+    this._playerManager.update(timeDelta);
+    actors.push(...this._playerManager.getActors());
+    actors.push(...this._asteroids);
 
-    this._actors.forEach(actor => {
+    actors.forEach(actor => {
       actor.update(timeDelta);
       actor.edgeWrap(p5.width,p5.height);
       p5.push();
@@ -83,7 +83,7 @@ export class AsteroidsGame {
       p5.pop();
     });
 
-    this._playerManager.update(timeDelta);
+    
     
     // const collided=this._ship.hasCollided(this._asteroids);
     // if(collided)

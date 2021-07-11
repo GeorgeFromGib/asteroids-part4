@@ -11,21 +11,20 @@ export enum ShipTurn {
 
 export class PlayerShipManager {
     ship:Spaceship;
-    _rotDelta: number = 0;
     rotAmnt = Math.PI / 70;
     thrusting:boolean=false;
     firing:boolean;
     timeElapsed:number=0;
     lastShot=0;
+    projectiles:Projectile[]=[];
 
 
-    constructor(protected actors:Actor[],protected model:Model) {
+    constructor(protected model:Model) {
     }
 
     public createShip(p5:P5){
         this.ship=new Spaceship(this.model);
         this.ship.positionXY(p5.width / 2, p5.height / 2);
-        this.actors.push(this.ship);
     }
 
     public update(timeDelta:number) {
@@ -39,23 +38,37 @@ export class PlayerShipManager {
                 this.fireProjectile()
                 this.lastShot=this.timeElapsed;
             }
-                
+        this.projectiles=this.projectiles.filter((p,i)=>!p.expired)
+        // for(let i=this.projectiles.length;i>0;i--) {
+        //     if(this.projectiles[i].expired)
+        //         this.projectiles.slice(i,1);
+        // }  
+        //this.actors.push(this.ship);
+        //this.actors.push(...this.projectiles);   
+    }
+
+    public getActors() {
+        let actors:Actor[]=[];
+        actors.push(this.ship);
+        actors.push(...this.projectiles);
+        return actors;
     }
 
     public turn(turn:ShipTurn) {
+        let rotDelta=0;
         switch (turn) {
             case ShipTurn.LEFT:
-                this._rotDelta = -this.rotAmnt;
+                rotDelta = -this.rotAmnt;
                 break;
             case ShipTurn.RIGHT:
-                this._rotDelta = this.rotAmnt;
+                rotDelta = this.rotAmnt;
                 break;
             case ShipTurn.STOP:
-                this._rotDelta=0;
+                rotDelta=0;
             default:
                 break;
         }
-        this.ship.rotationVel=this._rotDelta;
+        this.ship.rotationVel=rotDelta;
     }
 
     public thrust(on:boolean) {
@@ -71,8 +84,9 @@ export class PlayerShipManager {
         const heading=this.ship.heading-Math.PI/2;
         const gunPos=new Vector().set(radius,0).rotate(heading);
         const startPos=gunPos.add(this.ship.position);
-        const vel=Vector.fromAngle(heading).mult(5);
+        const vel=Vector.fromAngle(heading).mult(4);
         const proj=new Projectile(startPos,vel);
-        this.actors.push(proj) 
+        //this.actors.push(proj) 
+        this.projectiles.push(proj);
     } 
 } 
