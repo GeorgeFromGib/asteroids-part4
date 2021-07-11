@@ -9,10 +9,10 @@ export interface Model {
 export class Actor {
   protected _transModel: Model;
   public position: Vector;
-  public heading: number = 0;
-  public scale: number = 1;
+  public heading: number = 0.0;
+  public scale: number = 1.0;
   public velocity: Vector = new Vector().set(0, 0);
-  public rotationVel: number = 0;
+  public rotationVel: number = 0.0;
 
   constructor(protected _model: Model) {
     this._transModel = {
@@ -71,12 +71,11 @@ export class Actor {
   }
 
   public render(p5: P5) {
-    p5.push();
     this._transModel.vertices.forEach((v) => {
       const vx1 = this._transModel.vertexes[v[0]];
       const vx2 = this._transModel.vertexes[v[1]];
       p5.line(vx1[0], vx1[1], vx2[0], vx2[1]);
     });
-    p5.pop();
+
   }
 }

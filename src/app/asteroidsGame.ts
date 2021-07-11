@@ -1,3 +1,4 @@
+import { PlayerShipManager, ShipTurn } from './playerShipManager';
 import { Spaceship } from "./spaceship";
 import P5, { Vector } from "p5";
 import { sketch } from "./p5-sketch";
@@ -8,12 +9,11 @@ import { Asteroid } from "./asteroid";
 
 
 export class AsteroidsGame {
-  _rotDelta: number = 0;
   _prevElapsed = 0;
-  private _ship: Spaceship;
-  _thrusting: boolean = false;
+  private _ship: Spaceship;    
   _actors:Actor[]=[];
   _asteroids:Asteroid[]=[];
+  _playerManager:PlayerShipManager;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -36,10 +36,8 @@ export class AsteroidsGame {
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
 
-    this._ship = new Spaceship(configData.spaceship.model);
-    this._ship.positionXY(p5.width / 2, p5.height / 2);
-
-    this.addActor(this._ship);
+    this._playerManager=new PlayerShipManager(this._actors,configData.spaceship.model)
+    this._playerManager.createShip(p5);
 
     for(let i=0;i<=10;i++) {
       const asteroid=new Asteroid(configData.asteroids.designs[0].model);
@@ -55,16 +53,17 @@ export class AsteroidsGame {
   };
 
   public keyPressed = (p5: P5) => {
-    const rotAmnt = p5.PI / 70;
-    if (p5.keyCode == p5.RIGHT_ARROW) this._rotDelta = rotAmnt;
-    if (p5.keyCode == p5.LEFT_ARROW) this._rotDelta = -rotAmnt;
-    if (p5.keyCode == p5.UP_ARROW) this._thrusting = true;
+    if (p5.keyCode == p5.RIGHT_ARROW) this._playerManager.turn(ShipTurn.RIGHT)
+    if (p5.keyCode == p5.LEFT_ARROW) this._playerManager.turn(ShipTurn.LEFT)
+    if (p5.keyCode == p5.UP_ARROW) this._playerManager.thrust(true);
+    if (p5.keyCode == 32) this._playerManager.fire(true);
   };
 
   public keyReleased = (p5: P5) => {
     if (p5.keyCode == p5.RIGHT_ARROW || p5.keyCode == p5.LEFT_ARROW)
-      this._rotDelta = 0;
-    if (p5.keyCode == p5.UP_ARROW) this._thrusting = false;
+      this._playerManager.turn(ShipTurn.STOP);
+    if (p5.keyCode == p5.UP_ARROW) this._playerManager.thrust(false);
+    if (p5.keyCode == 32) this._playerManager.fire(false);
   };
 
   public addActor(actor:Actor) {
@@ -72,30 +71,34 @@ export class AsteroidsGame {
   }
 
   public gameLoop = (p5: P5) => {
-    const elapsedNow = p5.millis();
-    const timeDelta = elapsedNow - this._prevElapsed;
-    this._prevElapsed = p5.millis();
+    const timeDelta = this.getTimeDelta(p5);
 
     p5.background(0);
-    
-    //Draw the spaceship
-    if (this._thrusting) this._ship.thrust();
-    this._ship.rotateBy(this._rotDelta);
 
     this._actors.forEach(actor => {
       actor.update(timeDelta);
       actor.edgeWrap(p5.width,p5.height);
+      p5.push();
       actor.render(p5);
+      p5.pop();
     });
+
+    this._playerManager.update(timeDelta);
     
-    const collided=this._ship.hasCollided(this._asteroids);
-    if(collided)
-      console.log(collided)
+    // const collided=this._ship.hasCollided(this._asteroids);
+    // if(collided)
+    //   console.log(collided)
 
     p5.stroke("white");
-    p5.textSize(32);
-    p5.text((1000/timeDelta).toFixed(2).toString(), 10, 30);
+    p5.textSize(20);
+    p5.text((1000/timeDelta).toFixed(2).toString(),p5.width/2,p5.height);
 
-    
   };
+
+  private getTimeDelta(p5: P5) {
+    const elapsedNow = Math.trunc(p5.millis());
+    const timeDelta = elapsedNow - this._prevElapsed;
+    this._prevElapsed = elapsedNow
+    return timeDelta;
+  }
 }
