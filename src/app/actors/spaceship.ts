@@ -1,3 +1,4 @@
+import { AsteroidsGame } from './../asteroidsGame';
 
 import P5, { Vector } from "p5";
 import { Actor, IModel } from "./actor";
@@ -23,5 +24,6 @@ export class Spaceship extends Actor {
     this.velocity.mult(0.995);
     super.update(deltaTime);
   }
+
   
 }

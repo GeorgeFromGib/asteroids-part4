@@ -24,9 +24,9 @@ export class PlayerShipManager extends Manager {
     super(gameEngine);
   }
 
-  public createShip(p5: P5) {
+  public createShip() {
     this.ship = new Spaceship(this.model);
-    this.ship.positionXY(p5.width / 2, p5.height / 2);
+    this.ship.positionXY(this.gameEngine._screenSize.width / 2, this.gameEngine._screenSize.height / 2);
   }
 
   public update(timeDelta: number) {
@@ -40,6 +40,9 @@ export class PlayerShipManager extends Manager {
     this.projectiles = this.projectiles.filter(
       (p, i) => !p.expired && !p.collidedWith
     );
+    this._actors=[];
+    this._actors.push(this.ship);
+    this._actors.push(...this.projectiles);
     super.update(timeDelta);
   }
 
@@ -48,17 +51,10 @@ export class PlayerShipManager extends Manager {
     //const col=this.ship.hasCollided(asteroids)
     this.projectiles.forEach((p) => {
       const col = p.hasCollided(asteroids);
-      // if(col!==undefined)
-      //     p.expired=true;
+      if(col!==undefined)
+          col.collidedWith=p;
     });
   }
-
-  // public getActors() {
-  //     let actors:Actor[]=[];
-  //     actors.push(this.ship);
-  //     actors.push(...this.projectiles);
-  //     return actors;
-  // }
 
   public turn(turn: ShipTurn) {
     let rotDelta = 0;
@@ -90,7 +86,7 @@ export class PlayerShipManager extends Manager {
     const heading = this.ship.heading - Math.PI / 2;
     const gunPos = new Vector().set(radius, 0).rotate(heading);
     const startPos = gunPos.add(this.ship.position);
-    const vel = Vector.fromAngle(heading).mult(4);
+    const vel = Vector.fromAngle(heading).mult(8);
     const proj = new Projectile(startPos, vel);
     this.projectiles.push(proj);
   }

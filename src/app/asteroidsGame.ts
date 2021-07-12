@@ -1,12 +1,9 @@
 import { PlayerShipManager, ShipTurn } from './managers/playerShipManager';
-import { Spaceship } from "./spaceship";
-import P5, { Vector } from "p5";
+import P5 from "p5";
 import { sketch } from "./p5-sketch";
 import * as configData from '../assets/config.json' 
-import { Actor } from "./actors/actor";
+import { Actor, IModel } from "./actors/actor";
 import { AsteroidsManager } from './managers/asteroidsManager';
-import { Asteroid } from './actors/asteroid';
-import { Manager } from './managers/manager';
 
 export class ScreenSize {
   width:number;
@@ -18,13 +15,14 @@ export class AsteroidsGame {
   _prevElapsed = 0; 
   _playerManager:PlayerShipManager;
   _asteroidsManager: AsteroidsManager;
+  _ge:P5;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
   }
 
   public setup = (p5: P5) => {
-
+    this._ge=p5;
     // Creating canvas
     const scr_reduction = 0.8;
     const canvas = p5.createCanvas(
@@ -36,7 +34,7 @@ export class AsteroidsGame {
     this._prevElapsed = p5.millis();
 
     // Redirect sketch functions
-    p5.draw = () => this.gameLoop(p5);
+    p5.draw = () => this.gameLoop();
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
 
@@ -44,7 +42,7 @@ export class AsteroidsGame {
     
     // setup managers
     this._playerManager=new PlayerShipManager(this,configData.spaceship.model);
-    this._playerManager.createShip(p5);
+    this._playerManager.createShip();
     this._asteroidsManager=new AsteroidsManager(this,configData.asteroids);
     this._asteroidsManager.createAsteroids(10,p5.width,p5.height);
     
@@ -65,11 +63,11 @@ export class AsteroidsGame {
   };
 
 
-  public gameLoop = (p5: P5) => {
+  public gameLoop = () => {
     let actors:Actor[]=[];
-    const timeDelta = this.getTimeDelta(p5);
+    const timeDelta = this.getTimeDelta();
 
-    p5.background(0);
+    this._ge.background(0);
     this._playerManager.update(timeDelta);
     this._asteroidsManager.update(timeDelta);
 
@@ -79,31 +77,46 @@ export class AsteroidsGame {
     this._playerManager.checkCollisions(this._asteroidsManager);
 
     actors.forEach(actor => {
-      p5.push();
-      actor.render(p5);
-      p5.pop();
+      this._ge.push();
+      actor.render(this);
+      this._ge.pop();
     });
 
-    
-    
-    // const collided=this._ship.hasCollided(this._asteroids);
-    // if(collided)
-    //   console.log(collided)
-
-    p5.stroke("white");
-    p5.textSize(20);
-    p5.text((1000/timeDelta).toFixed(2).toString(),p5.width/2,p5.height);
+    this._ge.stroke("white");
+    this._ge.textSize(20);
+    this._ge.text((1000/timeDelta).toFixed(2).toString(),this._ge.width/2,this._ge.height);
 
   };
 
-  private getTimeDelta(p5: P5) {
-    const elapsedNow = Math.trunc(p5.millis());
+  public drawClosedShape(model:IModel) {
+    this._ge.noFill();
+    this._ge.beginShape();
+    model.vertexes.forEach(v=>{
+      this._ge.vertex(v[0],v[1]);
+    })
+    this._ge.endShape(this._ge.CLOSE);
+  }
+
+  public drawVerticedShape(model:IModel) {
+    model.vertices.forEach((v) => {
+      const vx1 = model.vertexes[v[0]];
+      const vx2 = model.vertexes[v[1]];
+      this._ge.line(vx1[0], vx1[1], vx2[0], vx2[1]);
+    })
+  }
+  public drawPoint(x:number,y:number) {
+    this._ge.strokeWeight(2);
+    this._ge.point(x,y);
+  }
+
+  private getTimeDelta() {
+    const elapsedNow = Math.trunc(this._ge.millis());
     const timeDelta = elapsedNow - this._prevElapsed;
     this._prevElapsed = elapsedNow
     return timeDelta;
   }
 
-  public static random(max:number) {
-    return Math.floor(Math.random() * max);
+  public random(max:number) {
+    return this._ge.random(0,max);
   }
 }

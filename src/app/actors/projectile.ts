@@ -1,8 +1,9 @@
+import { AsteroidsGame } from './../asteroidsGame';
 import P5, { Vector } from 'p5';
 import { Actor } from "./actor";
 
 export class Projectile extends Actor {
-    lifeTime:number=2000;
+    lifeTime:number=1000;
     expired:boolean=false;
 
     constructor(pos:Vector,vel:Vector) {
@@ -18,8 +19,7 @@ export class Projectile extends Actor {
         super.update(timeDelta);
     }
 
-    public render(p5: P5) {
-        p5.strokeWeight(3);
-        p5.point(this.position.x,this.position.y);
+    public render(gameEngine:AsteroidsGame) {
+        gameEngine.drawPoint(this.position.x,this.position.y);
     }
 }

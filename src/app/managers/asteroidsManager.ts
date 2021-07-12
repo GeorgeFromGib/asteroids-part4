@@ -21,10 +21,10 @@ export class AsteroidsManager extends Manager {
 
     public createAsteroids(noOfAsteroids:number,width:number,height:number) {
         for(let i=0;i<=noOfAsteroids;i++) {
-            const designIndex=AsteroidsGame.random(this.asteroidModels.designs.length-1)
+            const designIndex=Math.floor(this.gameEngine.random(this.asteroidModels.designs.length));
             const asteroid=new Asteroid(this.asteroidModels.designs[designIndex]);
-            asteroid.position=new Vector().set(AsteroidsGame.random(width),AsteroidsGame.random(height));
-            asteroid.rotationVel=Math.PI/1000
+            asteroid.position=new Vector().set(this.gameEngine.random(width),this.gameEngine.random(height));
+            asteroid.heading=this.gameEngine.random(2*Math.PI)
             asteroid.velocity=Vector.random2D().mult(0.5);
             asteroid.scale=4;
             this.asteroids.push(asteroid);
@@ -32,10 +32,20 @@ export class AsteroidsManager extends Manager {
     }
 
     public update(timeDelta:number) {
+        this.asteroids.forEach(a=>{
+            if(a.collidedWith!==undefined)
+                this.hit()
+        })
+        this.asteroids=this.asteroids.filter((a,i)=>a.collidedWith==undefined);
 
+        this._actors=[];
+        this._actors.push(...this.asteroids);
+        super.update(timeDelta);
     }
 
-    public getActors() {
-        return this.asteroids;
+    public hit() {
+        console.log('asteroid hit');
+        
     }
+
 }
