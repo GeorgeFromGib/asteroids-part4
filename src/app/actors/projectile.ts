@@ -19,6 +19,7 @@ export class Projectile extends Actor {
     }
 
     public render(p5: P5) {
-        p5.point(this.position.x,this.position.y)
+        p5.strokeWeight(3);
+        p5.point(this.position.x,this.position.y);
     }
 }

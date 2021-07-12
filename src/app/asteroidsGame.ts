@@ -8,12 +8,14 @@ import { AsteroidsManager } from './managers/asteroidsManager';
 import { Asteroid } from './actors/asteroid';
 import { Manager } from './managers/manager';
 
-
+export class ScreenSize {
+  width:number;
+  height:number;
+}
 
 export class AsteroidsGame {
-  _prevElapsed = 0;
-  private _ship: Spaceship;    
-  _asteroids:Asteroid[]=[];
+  _screenSize:ScreenSize;
+  _prevElapsed = 0; 
   _playerManager:PlayerShipManager;
   _asteroidsManager: AsteroidsManager;
 
@@ -38,21 +40,13 @@ export class AsteroidsGame {
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
 
-    this._playerManager=new PlayerShipManager(configData.spaceship.model)
+    this._screenSize=<ScreenSize>{width:p5.width,height:p5.height}
+    
+    // setup managers
+    this._playerManager=new PlayerShipManager(this,configData.spaceship.model);
     this._playerManager.createShip(p5);
-    this._asteroidsManager=new AsteroidsManager(configData.asteroids);
+    this._asteroidsManager=new AsteroidsManager(this,configData.asteroids);
     this._asteroidsManager.createAsteroids(10,p5.width,p5.height);
-
-    // for(let i=0;i<=10;i++) {
-    //   const asteroid=new Asteroid(configData.asteroids.designs[0].model);
-    //   asteroid.position=new Vector().set(p5.random(p5.width),p5.random(p5.height));
-    //   asteroid.rotationVel=Math.PI/1000
-    //   asteroid.velocity=Vector.random2D().mult(0.5);
-    //   asteroid.scale=4;
-    //   this._asteroids.push(asteroid);
-    // }
-
-    //this._actors.push(...this._asteroids);
     
   };
 
@@ -79,14 +73,12 @@ export class AsteroidsGame {
     this._playerManager.update(timeDelta);
     this._asteroidsManager.update(timeDelta);
 
+    actors.push(...this._playerManager.allActors);
+    actors.push(...this._asteroidsManager.allActors);
+
     this._playerManager.checkCollisions(this._asteroidsManager);
 
-    actors.push(...this._playerManager.getActors());
-    actors.push(...this._asteroidsManager.getActors());
-
     actors.forEach(actor => {
-      actor.update(timeDelta);
-      actor.edgeWrap(p5.width,p5.height);
       p5.push();
       actor.render(p5);
       p5.pop();

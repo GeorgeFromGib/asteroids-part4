@@ -1,7 +1,7 @@
 import { Vector } from "p5";
 import { Actor, IModel } from "../actors/actor";
 import { Asteroid } from "../actors/asteroid";
-import { AsteroidsGame } from "../asteroidsGame";
+import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
 import { Manager } from "./manager";
 
 export interface IAsteroids {
@@ -11,8 +11,8 @@ export interface IAsteroids {
 export class AsteroidsManager extends Manager {
     asteroids:Actor[]=[];
 
-    constructor(protected asteroidModels:IAsteroids) {
-        super();
+    constructor(gameEngine:AsteroidsGame,protected asteroidModels:IAsteroids) {
+        super(gameEngine);
     }
 
     public createAsteroid() {
