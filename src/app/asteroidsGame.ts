@@ -41,7 +41,7 @@ export class AsteroidsGame {
     this._screenSize=<ScreenSize>{width:p5.width,height:p5.height}
     
     // setup managers
-    this._playerManager=new PlayerShipManager(this,configData.spaceship.model);
+    this._playerManager=new PlayerShipManager(this,configData.spaceship);
     this._playerManager.createShip();
     this._asteroidsManager=new AsteroidsManager(this,configData.asteroids);
     this._asteroidsManager.createAsteroids(10,p5.width,p5.height);
@@ -51,14 +51,14 @@ export class AsteroidsGame {
   public keyPressed = (p5: P5) => {
     if (p5.keyCode == p5.RIGHT_ARROW) this._playerManager.turn(ShipTurn.RIGHT)
     if (p5.keyCode == p5.LEFT_ARROW) this._playerManager.turn(ShipTurn.LEFT)
-    if (p5.keyCode == p5.UP_ARROW) this._playerManager.thrust(true);
+    if (p5.keyCode == p5.UP_ARROW) this._playerManager.engine(true);
     if (p5.keyCode == 32) this._playerManager.fire(true);
   };
 
   public keyReleased = (p5: P5) => {
     if (p5.keyCode == p5.RIGHT_ARROW || p5.keyCode == p5.LEFT_ARROW)
       this._playerManager.turn(ShipTurn.STOP);
-    if (p5.keyCode == p5.UP_ARROW) this._playerManager.thrust(false);
+    if (p5.keyCode == p5.UP_ARROW) this._playerManager.engine(false);
     if (p5.keyCode == 32) this._playerManager.fire(false);
   };
 

@@ -1,4 +1,4 @@
-import { AsteroidsGame } from './../asteroidsGame';
+import { AsteroidsGame } from "./../asteroidsGame";
 import P5, { Vector } from "p5";
 
 export interface IModel {
@@ -9,13 +9,16 @@ export interface IModel {
 
 export class Actor {
   protected _transModel: IModel;
-  public position: Vector;
+  public position: Vector= new Vector().set(0, 0);
   public heading: number = 0.0;
   public scale: number = 1.0;
   public velocity: Vector = new Vector().set(0, 0);
   public rotationVel: number = 0.0;
   public collidedWith: Actor;
   public radius: number = 0;
+  public show: boolean = true;
+  public parent: Actor;
+  public parentOffset: Vector;
 
   constructor(protected _model: IModel) {
     this._transModel = {
@@ -24,6 +27,11 @@ export class Actor {
       radius: this._model.radius,
     };
     this.radius = this._transModel.radius;
+  }
+
+  public setParent(parent:Actor, offset:Vector) {
+    this.parent=parent;
+    this.parentOffset=offset;
   }
 
   public positionXY = (x: number, y: number) => {
@@ -67,18 +75,26 @@ export class Actor {
     this._model.vertexes.forEach((av) => {
       let v = new Vector().set(av[0], av[1]);
       v.mult(this.scale);
-      v.rotate(this.heading);
-      v.add(this.position);
+      if(!this.parent) {
+        v.rotate(this.heading);
+        v.add(this.position);
+      }
+      else{
+        v.add(this.parentOffset)
+        v.rotate(this.parent.heading);
+        v.add(this.parent.position);
+      }
       this._transModel.vertexes.push([v.x, v.y]);
     });
   }
 
-  public render(gameEngine:AsteroidsGame) {
-    if(this._transModel.vertices.length==0)
+  public render(gameEngine: AsteroidsGame) {
+    if (!this.show) return;
+
+    if (this._transModel.vertices.length == 0)
       gameEngine.drawClosedShape(this._transModel);
-    else  
-      gameEngine.drawVerticedShape(this._transModel);
-      // p5.noFill();
-      // p5.circle(this.position.x,this.position.y,this.radius*2);
+    else gameEngine.drawVerticedShape(this._transModel);
+    // p5.noFill();
+    // p5.circle(this.position.x,this.position.y,this.radius*2);
   }
 }
