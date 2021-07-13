@@ -93,7 +93,8 @@ export class Actor {
 
     if (this._transModel.vertices.length == 0)
       gameEngine.drawClosedShape(this._transModel);
-    else gameEngine.drawVerticedShape(this._transModel);
+    else 
+      gameEngine.drawVerticedShape(this._transModel);
     // p5.noFill();
     // p5.circle(this.position.x,this.position.y,this.radius*2);
   }
