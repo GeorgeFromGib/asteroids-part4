@@ -1,3 +1,4 @@
+import { TextManager } from './managers/textManager';
 import { ExplosionManager } from './managers/explosionManager';
 import { PlayerShipManager, ShipTurn } from './managers/playerShipManager';
 import P5 from "p5";
@@ -20,6 +21,7 @@ export class AsteroidsGame {
   _ge:P5;
   _explosionsManager: ExplosionManager;
   _managers:Manager[]=[];
+  _textManager: TextManager;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -50,8 +52,9 @@ export class AsteroidsGame {
     this._asteroidsManager=new AsteroidsManager(this,configData.asteroids);
     this._asteroidsManager.createAsteroids(10,p5.width,p5.height);
     this._explosionsManager=new ExplosionManager(this);
-    
-    this._managers.push(...[this._playerManager,this._asteroidsManager,this._explosionsManager])
+    this._textManager=new TextManager(this,configData.text);
+    this._textManager.write("score","0123",p5.createVector(20,100),1);
+    this._managers.push(...[this._playerManager,this._asteroidsManager,this._explosionsManager, this._textManager])
   };
 
   public keyPressed = (p5: P5) => {
