@@ -15,6 +15,14 @@ export abstract class Manager {
         })
     }
 
+    public render() {
+        this._actors.forEach(actor => {
+            this.gameEngine._ge.push();
+            actor.render(this.gameEngine);
+            this.gameEngine._ge.pop();
+          });
+    }
+
     public get allActors() : Actor[] {
         return this._actors;
     }

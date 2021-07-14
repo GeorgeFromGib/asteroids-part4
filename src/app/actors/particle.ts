@@ -1,13 +1,12 @@
-import { AsteroidsGame } from './../asteroidsGame';
+import { AsteroidsGame } from '../asteroidsGame';
 import P5, { Vector } from 'p5';
 import { Actor } from "./actor";
 
-export class Projectile extends Actor {
-    lifeTime:number=1000;
+export class Particle extends Actor {
     expired:boolean=false;
 
-    constructor(pos:Vector,vel:Vector) {
-        super({vertexes:[],vertices:[],radius:1});
+    constructor(pos:Vector,vel:Vector,protected lifeTime=1000) {
+        super({vertexes:[],vertices:[],radius:1},"DOT");
         this.position=pos;
         this.velocity=vel;
     }
@@ -19,7 +18,5 @@ export class Projectile extends Actor {
         super.update(timeDelta);
     }
 
-    public render(gameEngine:AsteroidsGame) {
-        gameEngine.drawPoint(this.position.x,this.position.y);
-    }
+
 }

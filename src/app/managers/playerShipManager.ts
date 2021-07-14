@@ -1,4 +1,4 @@
-import { Projectile } from "../actors/projectile";
+import { Particle } from "../actors/particle";
 import P5, { Vector } from "p5";
 import { Actor, IModel } from "../actors/actor";
 import { Manager } from "./manager";
@@ -24,7 +24,7 @@ export class PlayerShipManager extends Manager {
   firing: boolean;
   timeElapsed: number = 0;
   lastShot = 0;
-  projectiles: Projectile[] = [];
+  projectiles: Particle[] = [];
 
   constructor(gameEngine: AsteroidsGame, protected spaceship: ISpaceShip) {
     super(gameEngine);
@@ -95,7 +95,7 @@ export class PlayerShipManager extends Manager {
     const gunPos = new Vector().set(radius, 0).rotate(heading);
     const startPos = gunPos.add(this.ship.position);
     const vel = Vector.fromAngle(heading).mult(8);
-    const proj = new Projectile(startPos, vel);
+    const proj = new Particle(startPos, vel);
     this.projectiles.push(proj);
   }
 }

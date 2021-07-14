@@ -58,7 +58,10 @@ export class AsteroidsManager extends Manager {
     }
 
     public hit(hitAsteroid:Asteroid) {
-        if(hitAsteroid.size===sizeType.SMALL) return;
+        if(hitAsteroid.size===sizeType.SMALL) {
+            this.gameEngine._explosionsManager.createExplosion(hitAsteroid.position);
+            return
+        };
         const nextSize=hitAsteroid.size===sizeType.LARGE?sizeType.MEDIUM:sizeType.SMALL;
         const pos=hitAsteroid.position;
         this.createAsteroid(pos,nextSize)

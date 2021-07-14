@@ -20,7 +20,7 @@ export class Actor {
   public parent: Actor;
   public parentOffset: Vector;
 
-  constructor(protected _model: IModel) {
+  constructor(protected _model: IModel,public renderType:"CLOSED"|"VERTICED"|"DOT"="CLOSED") {
     this._transModel = {
       vertexes: [],
       vertices: this._model.vertices,
@@ -90,12 +90,20 @@ export class Actor {
 
   public render(gameEngine: AsteroidsGame) {
     if (!this.show) return;
-
-    if (this._transModel.vertices.length == 0)
-      gameEngine.drawClosedShape(this._transModel);
-    else 
-      gameEngine.drawVerticedShape(this._transModel);
+    
+    switch (this.renderType) {
+      case "CLOSED":
+        gameEngine.drawClosedShape(this._transModel);
+        break;
+      case "VERTICED":
+        gameEngine.drawVerticedShape(this._transModel);
+        break;
+      case "DOT":
+        gameEngine.drawPoint(this.position.x,this.position.y);
+        break;
+    }
     // p5.noFill();
     // p5.circle(this.position.x,this.position.y,this.radius*2);
   }
 }
+

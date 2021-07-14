@@ -1,9 +1,11 @@
+import { ExplosionManager } from './managers/explosionManager';
 import { PlayerShipManager, ShipTurn } from './managers/playerShipManager';
 import P5 from "p5";
 import { sketch } from "./p5-sketch";
 import * as configData from '../assets/config.json' 
 import { Actor, IModel } from "./actors/actor";
 import { AsteroidsManager } from './managers/asteroidsManager';
+import { Manager } from './managers/manager';
 
 export class ScreenSize {
   width:number;
@@ -16,6 +18,8 @@ export class AsteroidsGame {
   _playerManager:PlayerShipManager;
   _asteroidsManager: AsteroidsManager;
   _ge:P5;
+  _explosionsManager: ExplosionManager;
+  _managers:Manager[]=[];
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -45,7 +49,9 @@ export class AsteroidsGame {
     this._playerManager.createShip();
     this._asteroidsManager=new AsteroidsManager(this,configData.asteroids);
     this._asteroidsManager.createAsteroids(10,p5.width,p5.height);
+    this._explosionsManager=new ExplosionManager(this);
     
+    this._managers.push(...[this._playerManager,this._asteroidsManager,this._explosionsManager])
   };
 
   public keyPressed = (p5: P5) => {
@@ -64,22 +70,15 @@ export class AsteroidsGame {
 
 
   public gameLoop = () => {
-    let actors:Actor[]=[];
     const timeDelta = this.getTimeDelta();
 
     this._ge.background(0);
-    this._playerManager.update(timeDelta);
-    this._asteroidsManager.update(timeDelta);
-
-    actors.push(...this._playerManager.allActors);
-    actors.push(...this._asteroidsManager.allActors);
 
     this._playerManager.checkCollisions(this._asteroidsManager);
 
-    actors.forEach(actor => {
-      this._ge.push();
-      actor.render(this);
-      this._ge.pop();
+    this._managers.forEach(manager => {
+      manager.update(timeDelta);
+      manager.render();
     });
 
     this._ge.stroke("white");
