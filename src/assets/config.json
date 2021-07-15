@@ -92,22 +92,22 @@
     ],
     "sizes":[
       {
-        "size":"LARGE",
-        "score":1000,
+        "size":"ASTEROID_LARGE",
         "scale":6,
-        "speed":1
+        "speed":1,
+        "points":20
       },
       {
-        "size":"MEDIUM",
-        "score":1000,
+        "size":"ASTEROID_MEDIUM",
         "scale":4,
-        "speed":2
+        "speed":2,
+        "points":50
       },
       {
-        "size":"SMALL",
-        "score":1000,
+        "size":"ASTEROID_SMALL",
         "scale":1.5,
-        "speed":3
+        "speed":3,
+        "points":100
       }
     ]
   },
@@ -136,7 +136,21 @@
         [2,5]
       ],
       "radius": 10
-    }
+    },
+    "sizes":[
+      {
+        "size":"SAUCER_LARGE",
+        "scale":6,
+        "speed":1,
+        "points":200
+      },
+      {
+        "size":"SAUCER_SMALL",
+        "scale":4,
+        "speed":2,
+        "points":1000
+      }
+    ]
   },
   "text":{
     "vertexes":[

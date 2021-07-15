@@ -3,7 +3,7 @@ import { Actor } from "../actors/actor";
 import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
 
 export abstract class Manager {
-    protected _actors:Actor[];
+    protected _actors:Actor[]=[];
 
     constructor(protected gameEngine:AsteroidsGame) {
     }

@@ -28,24 +28,27 @@ export class TextManager extends Manager {
         super(gameEngine);
     }
 
-    public write(name:string, message:string,position:Vector, scale:number) {
+    public write(name:string, message:string,xPos:number,yPos:number, scale:number) {
         const messChars=[...message];
-        const space=6;
-        let xpos=0;
+        const space=5;
+        const adjXpos=xPos-((this.textModel.radius + space)*scale*messChars.length);
+        const pos=new Vector().set(adjXpos,yPos);
+        let l_xpos=0;
         const actors:Actor[]=[];
         messChars.forEach(c => {
             const model:IModel={
-                vertexes:this.textModel.vertexes.map(v=>[v[0]+xpos,v[1]]),
+                vertexes:this.textModel.vertexes.map(v=>[v[0]+l_xpos,v[1]]),
                 vertices:this.textModel.characters.find(h=>h.char===c).vertices,
                 radius:this.textModel.radius
             }
             const charActor=new Actor(model,"VERTICED");
-            charActor.position=position.copy();
+            charActor.position=pos;
+            charActor.scale=scale;
             actors.push(charActor);
-            xpos+=(this.textModel.radius*scale) + space;
+            l_xpos+=this.textModel.radius + space;
         });
         this.texts=this.texts.filter(t=>t.name!==name);
-        const text:IText={name:name,characters:actors,position:position.copy()}
+        const text:IText={name:name,characters:actors,position:pos}
         this.texts.push(text);
     }
 

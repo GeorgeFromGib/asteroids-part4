@@ -5,15 +5,16 @@ import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
 import { Manager } from "./manager";
 
 export enum sizeType{
-    LARGE="LARGE",
-    MEDIUM="MEDIUM",
-    SMALL="SMALL"
+    LARGE="ASTEROID_LARGE",
+    MEDIUM="ASTEROID_MEDIUM",
+    SMALL="ASTEROID_SMALL"
 }
 export interface IAsteroidSize {
     size:string;//"LARGE"|"MEDIUM"|"SMALL"
-    score:number;
     scale:number;
     speed:number;
+    points:number;
+
 }
 export interface IAsteroids {
     designs:IModel[];
@@ -34,6 +35,7 @@ export class AsteroidsManager extends Manager {
         asteroid.position=pos.copy();
         asteroid.velocity=Vector.random2D().mult(0.5*aSize.speed);
         asteroid.size=aSize.size as sizeType;
+        asteroid.points=aSize.points;
         asteroid.scale=aSize.scale;
         this.asteroids.push(asteroid);
     }
@@ -58,6 +60,8 @@ export class AsteroidsManager extends Manager {
     }
 
     public hit(hitAsteroid:Asteroid) {
+        this.gameEngine._scoresManager.addToScore(hitAsteroid.points);
+        
         if(hitAsteroid.size===sizeType.SMALL) {
             this.gameEngine._explosionsManager.createExplosion(hitAsteroid.position);
             return

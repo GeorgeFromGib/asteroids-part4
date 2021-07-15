@@ -25,7 +25,6 @@ export class PlayerShipManager extends Manager {
   timeElapsed: number = 0;
   lastShot = 0;
   projectiles: Particle[] = [];
-  counter=0;
 
   constructor(gameEngine: AsteroidsGame, protected spaceship: ISpaceShip) {
     super(gameEngine);
@@ -39,7 +38,6 @@ export class PlayerShipManager extends Manager {
 
   public update(timeDelta: number) {
     this.timeElapsed += timeDelta;
-    this.counter++;
     //this.ship.thrusting=this.thrusting;
     if (this.firing)
       if (this.timeElapsed - this.lastShot > 150) {
@@ -53,7 +51,6 @@ export class PlayerShipManager extends Manager {
     this._actors.push(this.ship);
     this._actors.push(this.thrust);
     this._actors.push(...this.projectiles);
-    this.gameEngine._textManager.write("score",this.counter.toString(),new Vector().set(20,100),1)
     super.update(timeDelta);
   }
 
