@@ -1,4 +1,8 @@
 {
+  "settings":{
+    "lives":3,
+    "extraLife":10000
+  },
   "spaceship": {
     "ship": {
       "vertexes": [

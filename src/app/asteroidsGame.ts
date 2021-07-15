@@ -14,6 +14,11 @@ export class ScreenSize {
   height:number;
 }
 
+export interface ISettings {
+  lives:number;
+  extraLife:number;
+}
+
 export class AsteroidsGame {
   _screenSize:ScreenSize;
   _prevElapsed = 0; 
@@ -24,6 +29,7 @@ export class AsteroidsGame {
   _managers:Manager[]=[];
   _textManager: TextManager;
   _scoresManager:ScoresManager;
+  settings:ISettings;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -31,6 +37,7 @@ export class AsteroidsGame {
 
   public setup = (p5: P5) => {
     this._ge=p5;
+    this.settings=configData.settings;
     // Creating canvas
     const scr_reduction = 0.8;
     const canvas = p5.createCanvas(
@@ -45,7 +52,7 @@ export class AsteroidsGame {
     p5.draw = () => this.gameLoop();
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
-
+    p5.frameRate(30);
     this._screenSize=<ScreenSize>{width:p5.width,height:p5.height}
     
     // setup managers
@@ -55,7 +62,7 @@ export class AsteroidsGame {
     this._asteroidsManager.createAsteroids(10,p5.width,p5.height);
     this._explosionsManager=new ExplosionManager(this);
     this._textManager=new TextManager(this,configData.text);
-    this._scoresManager=new ScoresManager(this);
+    this._scoresManager=new ScoresManager(this,configData.spaceship.ship);
     this._managers.push(...[this._playerManager,
       this._asteroidsManager,
       this._explosionsManager, 
@@ -82,8 +89,6 @@ export class AsteroidsGame {
     const timeDelta = this.getTimeDelta();
 
     this._ge.background(0);
-
-    this._playerManager.checkCollisions(this._asteroidsManager);
 
     this._managers.forEach(manager => {
       manager.update(timeDelta);

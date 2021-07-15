@@ -39,6 +39,7 @@ export class PlayerShipManager extends Manager {
   public update(timeDelta: number) {
     this.timeElapsed += timeDelta;
     //this.ship.thrusting=this.thrusting;
+    this.checkCollisions()
     if (this.firing)
       if (this.timeElapsed - this.lastShot > 150) {
         this.addProjectile();
@@ -54,8 +55,8 @@ export class PlayerShipManager extends Manager {
     super.update(timeDelta);
   }
 
-  public checkCollisions(manager: Manager) {
-    const asteroids = manager.allActors;
+  public checkCollisions() {
+    const asteroids = this.gameEngine._asteroidsManager.allActors;
     //const col=this.ship.hasCollided(asteroids)
     this.projectiles.forEach((p) => {
       const col = p.hasCollided(asteroids);
