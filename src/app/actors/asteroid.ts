@@ -1,8 +1,9 @@
 
 import { sizeType } from "../managers/asteroidsManager";
-import { Actor, IModel } from "./actor";
+import { Actor, IModel } from "./base/actor";
+import { ClosedShapeActor } from "./base/ClosedShapeActor";
 
-export class Asteroid extends Actor {
+export class Asteroid extends ClosedShapeActor {
     size:sizeType
     points:number;
 

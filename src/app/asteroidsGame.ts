@@ -5,7 +5,7 @@ import { PlayerShipManager, ShipTurn } from './managers/playerShipManager';
 import P5 from "p5";
 import { sketch } from "./p5-sketch";
 import * as configData from '../assets/config.json' 
-import { Actor, IModel } from "./actors/actor";
+import { Actor, IModel } from "./actors/base/actor";
 import { AsteroidsManager } from './managers/asteroidsManager';
 import { Manager } from './managers/manager';
 
@@ -52,14 +52,14 @@ export class AsteroidsGame {
     p5.draw = () => this.gameLoop();
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
-    p5.frameRate(30);
+    //p5.frameRate(30);
     this._screenSize=<ScreenSize>{width:p5.width,height:p5.height}
     
     // setup managers
     this._playerManager=new PlayerShipManager(this,configData.spaceship);
     this._playerManager.createShip();
     this._asteroidsManager=new AsteroidsManager(this,configData.asteroids);
-    this._asteroidsManager.createAsteroids(10,p5.width,p5.height);
+    this._asteroidsManager.createAsteroids(10);
     this._explosionsManager=new ExplosionManager(this);
     this._textManager=new TextManager(this,configData.text);
     this._scoresManager=new ScoresManager(this,configData.spaceship.ship);

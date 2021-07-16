@@ -1,5 +1,6 @@
 import { Vector } from 'p5';
-import { Actor, IModel } from '../actors/actor';
+import { Actor, IModel } from '../actors/base/actor';
+import { VerticedShapeActor } from '../actors/base/VerticedShapeActor';
 import { AsteroidsGame } from './../asteroidsGame';
 import { Manager } from "./manager";
 
@@ -41,7 +42,7 @@ export class TextManager extends Manager {
                 vertices:this.textModel.characters.find(h=>h.char===c).vertices,
                 radius:this.textModel.radius
             }
-            const charActor=new Actor(model,"VERTICED");
+            const charActor=new VerticedShapeActor(model);
             charActor.position=pos;
             charActor.scale=scale;
             actors.push(charActor);

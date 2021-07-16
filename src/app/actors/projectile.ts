@@ -1,12 +1,13 @@
-import { AsteroidsGame } from '../asteroidsGame';
+import { AsteroidsGame } from './../asteroidsGame';
 import P5, { Vector } from 'p5';
 import { Actor } from "./base/actor";
-import { PointActor } from "./base/PointActor";
+import { PointActor } from './base/PointActor';
 
-export class Particle extends PointActor {
+export class Projectile extends PointActor {
+    lifeTime:number=1000;
     expired:boolean=false;
 
-    constructor(pos:Vector,vel:Vector,protected lifeTime=1000) {
+    constructor(pos:Vector,vel:Vector) {
         super({vertexes:[],vertices:[],radius:1});
         this.position=pos;
         this.velocity=vel;
@@ -18,6 +19,5 @@ export class Particle extends PointActor {
             this.expired=true;
         super.update(timeDelta);
     }
-
 
 }

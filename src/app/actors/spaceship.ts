@@ -1,9 +1,10 @@
 import { AsteroidsGame } from './../asteroidsGame';
 
 import P5, { Vector } from "p5";
-import { Actor, IModel } from "./actor";
+import { Actor, IModel } from "./base/actor";
+import { ClosedShapeActor } from "./base/ClosedShapeActor";
 
-export class Spaceship extends Actor {
+export class Spaceship extends ClosedShapeActor {
   _shipHeading:number=0;
   thrusting:boolean;
 
@@ -14,16 +15,16 @@ export class Spaceship extends Actor {
 
   public thrust() {
     const force=Vector.fromAngle(this.heading- Math.PI/2);
-    force.mult(0.1);
+    force.mult(4/1000);
     this.velocity.add(force);
 
   }
 
-  public update=(deltaTime:number)=> {
+  public update=(timeDelta:number)=> {
     if(this.thrusting) this.thrust();
     this.engineThrust.show=this.thrusting;
-    this.velocity.mult(0.995);
-    super.update(deltaTime);
+    this.velocity.mult(0.997);
+    super.update(timeDelta);
   }
 
   

@@ -1,7 +1,8 @@
 
 import { Manager } from "./manager";
 import { AsteroidsGame } from "../asteroidsGame";
-import { Actor, IModel } from "../actors/actor";
+import { Actor, IModel } from "../actors/base/actor";
+import { ClosedShapeActor } from "../actors/base/ClosedShapeActor";
 
 
 export class ScoresManager extends Manager {
@@ -35,7 +36,7 @@ export class ScoresManager extends Manager {
     this._actors=[];
     let xpos=190
     for(let i=0;i<this._lives;i++) {
-        const ship=new Actor(this.shipModel);
+        const ship=new ClosedShapeActor(this.shipModel);
         ship.positionXY(xpos,45);
         xpos+=ship.radius+6;
         this._actors.push(ship);

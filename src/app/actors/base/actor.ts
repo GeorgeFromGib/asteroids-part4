@@ -1,4 +1,4 @@
-import { AsteroidsGame } from "./../asteroidsGame";
+import { AsteroidsGame } from "../../asteroidsGame";
 import P5, { Vector } from "p5";
 
 export interface IModel {
@@ -7,7 +7,7 @@ export interface IModel {
   radius: number;
 }
 
-export class Actor {
+export abstract class Actor {
   protected _transModel: IModel;
   public position: Vector= new Vector().set(0, 0);
   public heading: number = 0.0;
@@ -20,7 +20,7 @@ export class Actor {
   public parent: Actor;
   public parentOffset: Vector;
 
-  constructor(protected _model: IModel,public renderType:"CLOSED"|"VERTICED"|"DOT"="CLOSED") {
+  constructor(protected _model: IModel) {
     this._transModel = {
       vertexes: [],
       vertices: this._model.vertices,
@@ -69,8 +69,8 @@ export class Actor {
 
   public update(timeDelta: number) {
     this.radius = this._model.radius * this.scale;
-    this.position.add(this.velocity);
-    this.heading += this.rotationVel;
+    this.position.add(this.velocity.copy().mult(timeDelta));
+    this.heading += this.rotationVel*timeDelta;
     this._transModel.vertexes = [];
     this._model.vertexes.forEach((av) => {
       let v = new Vector().set(av[0], av[1]);
@@ -88,22 +88,12 @@ export class Actor {
     });
   }
 
-  public render(gameEngine: AsteroidsGame) {
+  public render (gameEngine:AsteroidsGame) {
     if (!this.show) return;
-    
-    switch (this.renderType) {
-      case "CLOSED":
-        gameEngine.drawClosedShape(this._transModel);
-        break;
-      case "VERTICED":
-        gameEngine.drawVerticedShape(this._transModel);
-        break;
-      case "DOT":
-        gameEngine.drawPoint(this.position.x,this.position.y);
-        break;
-    }
-    // p5.noFill();
-    // p5.circle(this.position.x,this.position.y,this.radius*2);
+    this.draw(gameEngine);
   }
+
+  public abstract draw(gameEngine: AsteroidsGame);
+    
 }
 

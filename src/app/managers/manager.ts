@@ -1,5 +1,5 @@
 import { Vector } from "p5";
-import { Actor } from "../actors/actor";
+import { Actor } from "../actors/base/actor";
 import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
 
 export abstract class Manager {

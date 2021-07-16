@@ -1,6 +1,7 @@
 import { Particle } from "../actors/particle";
 import P5, { Vector } from "p5";
-import { Actor, IModel } from "../actors/actor";
+import { Actor, IModel } from "../actors/base/actor";
+import { ClosedShapeActor } from "../actors/base/ClosedShapeActor";
 import { Manager } from "./manager";
 import { Spaceship } from "../actors/spaceship";
 import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
@@ -19,7 +20,7 @@ export interface ISpaceShip {
 export class PlayerShipManager extends Manager {
   ship: Spaceship;
   thrust:Actor;
-  rotAmnt = Math.PI / 70;
+  rotAmnt = Math.PI/1000;
   thrusting: boolean = false;
   firing: boolean;
   timeElapsed: number = 0;
@@ -31,7 +32,7 @@ export class PlayerShipManager extends Manager {
   }
 
   public createShip() {
-    this.thrust=new Actor(this.spaceship.thrust);
+    this.thrust=new ClosedShapeActor(this.spaceship.thrust);
     this.ship = new Spaceship(this.spaceship.ship,this.thrust);
     this.ship.positionXY(this.gameEngine._screenSize.width / 2, this.gameEngine._screenSize.height / 2);
   }
@@ -95,7 +96,7 @@ export class PlayerShipManager extends Manager {
     const heading = this.ship.heading - Math.PI / 2;
     const gunPos = new Vector().set(radius, 0).rotate(heading);
     const startPos = gunPos.add(this.ship.position);
-    const vel = Vector.fromAngle(heading).mult(8);
+    const vel = Vector.fromAngle(heading).mult(0.3);
     const proj = new Particle(startPos, vel);
     this.projectiles.push(proj);
   }
