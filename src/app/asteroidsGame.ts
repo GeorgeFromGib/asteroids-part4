@@ -132,4 +132,8 @@ export class AsteroidsGame {
   public random(max:number) {
     return this._ge.random(0,max);
   }
+
+  public randomRange(min:number,max:number) {
+    return this._ge.random(min,max);
+  }
 }

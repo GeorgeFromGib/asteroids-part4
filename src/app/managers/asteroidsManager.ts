@@ -1,5 +1,5 @@
 import { Vector } from "p5";
-import { Actor, IModel } from "../actors/base/actor";
+import { IModel } from "../actors/base/actor";
 import { Asteroid } from "../actors/asteroid";
 import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
 import { Manager } from "./manager";
@@ -32,8 +32,9 @@ export class AsteroidsManager extends Manager {
         const aSize=this.asteroidModels.sizes.find(s=>s.size==size);
         const designIndex=Math.floor(this.gameEngine.random(this.asteroidModels.designs.length));
         const asteroid=new Asteroid(this.asteroidModels.designs[designIndex]);
+        const vel=this.gameEngine.randomRange(40,80*aSize.speed);
         asteroid.position=pos.copy();
-        asteroid.velocity=Vector.random2D().mult(40*aSize.speed/1000);
+        asteroid.velocity=Vector.random2D().mult(vel/1000);
         asteroid.size=aSize.size as sizeType;
         asteroid.points=aSize.points;
         asteroid.scale=aSize.scale;
@@ -49,6 +50,8 @@ export class AsteroidsManager extends Manager {
     }
 
     public update(timeDelta:number) {
+        if(this.asteroids.length==0)
+            this.createAsteroids(10);
         this.asteroids.forEach(a=>{
             if(a.collidedWith!==undefined)
                 this.hit(a)

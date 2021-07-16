@@ -34,7 +34,7 @@ export class ScoresManager extends Manager {
 
   public showLives() {
     this._actors=[];
-    let xpos=190
+    let xpos=this.gameEngine._screenSize.width/4-54
     for(let i=0;i<this._lives;i++) {
         const ship=new ClosedShapeActor(this.shipModel);
         ship.positionXY(xpos,45);
@@ -45,12 +45,20 @@ export class ScoresManager extends Manager {
   }
 
   public addToScore(points: number) {
+    const xpos=this.gameEngine._screenSize.width/4
     this.score += points;
     this.gameEngine._textManager.write(
       "score",
       this.score.toString().padStart(2,'0'),
-      250,
+      xpos,
       17,
+      2.3
+    );
+    this.gameEngine._textManager.write(
+      "coin",
+      "GAME OVER",
+      this.gameEngine._screenSize.width/2,
+      60,
       2.3
     );
   }

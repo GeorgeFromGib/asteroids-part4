@@ -8,14 +8,15 @@ export class Spaceship extends ClosedShapeActor {
   _shipHeading:number=0;
   thrusting:boolean;
 
-  constructor(model:IModel,protected engineThrust:Actor) {
+
+  constructor(model:IModel,protected velAcc:number,protected friction:number,protected engineThrust:Actor) {
     super(model);
     engineThrust.setParent(this, new Vector().set(0,7))
   }
 
   public thrust() {
     const force=Vector.fromAngle(this.heading- Math.PI/2);
-    force.mult(4/1000);
+    force.mult(this.velAcc);
     this.velocity.add(force);
 
   }
@@ -23,7 +24,7 @@ export class Spaceship extends ClosedShapeActor {
   public update=(timeDelta:number)=> {
     if(this.thrusting) this.thrust();
     this.engineThrust.show=this.thrusting;
-    this.velocity.mult(0.997);
+    this.velocity.mult(this.friction);
     super.update(timeDelta);
   }
 

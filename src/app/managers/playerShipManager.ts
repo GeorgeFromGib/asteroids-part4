@@ -7,20 +7,25 @@ import { Spaceship } from "../actors/spaceship";
 import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
 
 export enum ShipTurn {
-  LEFT,
-  RIGHT,
-  STOP,
+  LEFT=-1,
+  RIGHT=1,
+  STOP=0,
 }
 
 export interface ISpaceShip {
   ship:IModel;
   thrust:IModel;
+  rotationVel:number;
+  thrustVel:number;
+  friction:number;
+  projectileVel:number;
+  rateOfFire:number;
+  projectileLife:number;
 }
 
 export class PlayerShipManager extends Manager {
   ship: Spaceship;
   thrust:Actor;
-  rotAmnt = Math.PI/1000;
   thrusting: boolean = false;
   firing: boolean;
   timeElapsed: number = 0;
@@ -33,7 +38,7 @@ export class PlayerShipManager extends Manager {
 
   public createShip() {
     this.thrust=new ClosedShapeActor(this.spaceship.thrust);
-    this.ship = new Spaceship(this.spaceship.ship,this.thrust);
+    this.ship = new Spaceship(this.spaceship.ship,this.spaceship.thrustVel,this.spaceship.friction,this.thrust);
     this.ship.positionXY(this.gameEngine._screenSize.width / 2, this.gameEngine._screenSize.height / 2);
   }
 
@@ -42,7 +47,7 @@ export class PlayerShipManager extends Manager {
     //this.ship.thrusting=this.thrusting;
     this.checkCollisions()
     if (this.firing)
-      if (this.timeElapsed - this.lastShot > 150) {
+      if (this.timeElapsed - this.lastShot > this.spaceship.rateOfFire) {
         this.addProjectile();
         this.lastShot = this.timeElapsed;
       }
@@ -67,20 +72,7 @@ export class PlayerShipManager extends Manager {
   }
 
   public turn(turn: ShipTurn) {
-    let rotDelta = 0;
-    switch (turn) {
-      case ShipTurn.LEFT:
-        rotDelta = -this.rotAmnt;
-        break;
-      case ShipTurn.RIGHT:
-        rotDelta = this.rotAmnt;
-        break;
-      case ShipTurn.STOP:
-        rotDelta = 0;
-      default:
-        break;
-    }
-    this.ship.rotationVel = rotDelta;
+    this.ship.rotationVel = this.spaceship.rotationVel * turn
   }
 
   public engine(on: boolean) {
@@ -96,8 +88,8 @@ export class PlayerShipManager extends Manager {
     const heading = this.ship.heading - Math.PI / 2;
     const gunPos = new Vector().set(radius, 0).rotate(heading);
     const startPos = gunPos.add(this.ship.position);
-    const vel = Vector.fromAngle(heading).mult(0.3);
-    const proj = new Particle(startPos, vel);
+    const vel = Vector.fromAngle(heading).mult(this.spaceship.projectileVel);
+    const proj = new Particle(startPos, vel,this.spaceship.projectileLife);
     this.projectiles.push(proj);
   }
 }

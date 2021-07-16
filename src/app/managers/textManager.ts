@@ -30,8 +30,8 @@ export class TextManager extends Manager {
     }
 
     public write(name:string, message:string,xPos:number,yPos:number, scale:number) {
-        const messChars=[...message];
-        const space=5;
+        const messChars=[...message.toUpperCase()];
+        const space=4;
         const adjXpos=xPos-((this.textModel.radius + space)*scale*messChars.length);
         const pos=new Vector().set(adjXpos,yPos);
         let l_xpos=0;
