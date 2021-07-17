@@ -24,9 +24,11 @@ export interface IText {
 
 export class TextManager extends Manager {
     texts:IText[]=[];
+    protected textModel:ITextModel
 
-    constructor(gameEngine:AsteroidsGame,protected textModel:ITextModel) {
+    constructor(gameEngine:AsteroidsGame) {
         super(gameEngine);
+        this.textModel=gameEngine.configData.text;
     }
 
     public write(name:string, message:string,xPos:number,yPos:number, scale:number) {

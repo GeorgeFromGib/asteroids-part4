@@ -4,7 +4,7 @@ import { ExplosionManager } from './managers/explosionManager';
 import { PlayerShipManager, ShipTurn } from './managers/playerShipManager';
 import P5 from "p5";
 import { sketch } from "./p5-sketch";
-import * as configData from '../assets/config.json' 
+import * as ConfigData from '../assets/config.json' 
 import { Actor, IModel } from "./actors/base/actor";
 import { AsteroidsManager } from './managers/asteroidsManager';
 import { Manager } from './managers/manager';
@@ -30,6 +30,7 @@ export class AsteroidsGame {
   _textManager: TextManager;
   _scoresManager:ScoresManager;
   settings:ISettings;
+  configData:typeof ConfigData;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -37,7 +38,8 @@ export class AsteroidsGame {
 
   public setup = (p5: P5) => {
     this._ge=p5;
-    this.settings=configData.settings;
+    this.settings=ConfigData.settings;
+    this.configData=ConfigData;
     // Creating canvas
     const scr_reduction = 0.8;
     const canvas = p5.createCanvas(
@@ -56,13 +58,13 @@ export class AsteroidsGame {
     this._screenSize=<ScreenSize>{width:p5.width,height:p5.height}
     
     // setup managers
-    this._playerManager=new PlayerShipManager(this,configData.spaceship);
+    this._playerManager=new PlayerShipManager(this);
     this._playerManager.createShip();
-    this._asteroidsManager=new AsteroidsManager(this,configData.asteroids);
+    this._asteroidsManager=new AsteroidsManager(this);
     this._asteroidsManager.createAsteroids(10);
     this._explosionsManager=new ExplosionManager(this);
-    this._textManager=new TextManager(this,configData.text);
-    this._scoresManager=new ScoresManager(this,configData.spaceship.ship);
+    this._textManager=new TextManager(this);
+    this._scoresManager=new ScoresManager(this);
     this._managers.push(...[this._playerManager,
       this._asteroidsManager,
       this._explosionsManager, 

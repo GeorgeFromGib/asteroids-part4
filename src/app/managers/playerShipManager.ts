@@ -31,9 +31,12 @@ export class PlayerShipManager extends Manager {
   timeElapsed: number = 0;
   lastShot = 0;
   projectiles: Particle[] = [];
+  spaceship:ISpaceShip
+  
 
-  constructor(gameEngine: AsteroidsGame, protected spaceship: ISpaceShip) {
+  constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
+    this.spaceship=gameEngine.configData.spaceship
   }
 
   public createShip() {

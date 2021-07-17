@@ -8,12 +8,14 @@ import { ClosedShapeActor } from "../actors/base/ClosedShapeActor";
 export class ScoresManager extends Manager {
   score: number = 0;
   protected _lives:number;
-  nextLife:number=10000
+  nextLife:number=1000;
+  protected shipModel:IModel
 
-  constructor(gameEngine: AsteroidsGame,protected shipModel:IModel) {
+  constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
     this.addToScore(0);
     this.lives=gameEngine.settings.lives;
+    this.shipModel=gameEngine.configData.spaceship.ship;
   }
 
   public update(timeDelta:number) {

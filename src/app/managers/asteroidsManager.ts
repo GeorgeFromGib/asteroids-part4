@@ -23,22 +23,24 @@ export interface IAsteroids {
 
 export class AsteroidsManager extends Manager {
     asteroids:Asteroid[]=[];
+    asteroidModels: IAsteroids;
 
-    constructor(gameEngine:AsteroidsGame,protected asteroidModels:IAsteroids) {
+    constructor(gameEngine:AsteroidsGame) {
         super(gameEngine);
+        this.asteroidModels=gameEngine.configData.asteroids;
     }
 
     public createAsteroid(pos:Vector,size:sizeType) {
         const aSize=this.asteroidModels.sizes.find(s=>s.size==size);
         const designIndex=Math.floor(this.gameEngine.random(this.asteroidModels.designs.length));
-        const asteroid=new Asteroid(this.asteroidModels.designs[designIndex]);
+        const l_asteroid=new Asteroid(this.asteroidModels.designs[designIndex]);
         const vel=this.gameEngine.randomRange(40,80*aSize.speed);
-        asteroid.position=pos.copy();
-        asteroid.velocity=Vector.random2D().mult(vel/1000);
-        asteroid.size=aSize.size as sizeType;
-        asteroid.points=aSize.points;
-        asteroid.scale=aSize.scale;
-        this.asteroids.push(asteroid);
+        l_asteroid.position=pos.copy();
+        l_asteroid.velocity=Vector.random2D().mult(vel/1000);
+        l_asteroid.size=aSize.size as sizeType;
+        l_asteroid.points=aSize.points;
+        l_asteroid.scale=aSize.scale;
+        this.asteroids.push(l_asteroid);
     }
 
     public createAsteroids(noOfAsteroids:number) {
