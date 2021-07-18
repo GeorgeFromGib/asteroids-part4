@@ -1,13 +1,15 @@
+import P5 from 'p5';
+
 import { ScoresManager } from './managers/scoreManager';
 import { TextManager } from './managers/textManager';
 import { ExplosionManager } from './managers/explosionManager';
 import { PlayerShipManager, ShipTurn } from './managers/playerShipManager';
-import P5 from "p5";
 import { sketch } from "./p5-sketch";
 import * as ConfigData from '../assets/config.json' 
-import { Actor, IModel } from "./actors/base/actor";
+import { IModel } from "./actors/base/actor";
 import { AsteroidsManager } from './managers/asteroidsManager';
 import { Manager } from './managers/manager';
+import { GameState, InitialGameState } from './gameStates/gameState';
 
 export class ScreenSize {
   width:number;
@@ -19,18 +21,31 @@ export interface ISettings {
   extraLife:number;
 }
 
+export enum Keys {
+  RIGHT_ARROW,
+  LEFT_ARROW,
+  UP_ARROW,
+  SPACE,
+}
+
 export class AsteroidsGame {
-  _screenSize:ScreenSize;
-  _prevElapsed = 0; 
-  _playerManager:PlayerShipManager;
-  _asteroidsManager: AsteroidsManager;
-  _ge:P5;
-  _explosionsManager: ExplosionManager;
-  _managers:Manager[]=[];
-  _textManager: TextManager;
-  _scoresManager:ScoresManager;
+  screenSize:ScreenSize;
+  playerManager:PlayerShipManager;
+  asteroidsManager: AsteroidsManager;
+  explosionsManager: ExplosionManager;
+  managers:Manager[]=[];
+  textManager: TextManager;
+  scoresManager:ScoresManager;
   settings:ISettings;
   configData:typeof ConfigData;
+  elapsedTime:number=0;
+  gameState:GameState
+
+
+
+  private _ge:P5;
+  private _prevElapsed = 0; 
+  private _keyMapper:Map<number,Keys>=new Map();
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -38,7 +53,6 @@ export class AsteroidsGame {
 
   public setup = (p5: P5) => {
     this._ge=p5;
-    this.settings=ConfigData.settings;
     this.configData=ConfigData;
     // Creating canvas
     const scr_reduction = 0.8;
@@ -48,42 +62,47 @@ export class AsteroidsGame {
     );
     canvas.parent("app");
 
+    this._keyMapper=new Map([
+      [p5.LEFT_ARROW,Keys.LEFT_ARROW],
+      [p5.RIGHT_ARROW,Keys.RIGHT_ARROW],
+      [p5.UP_ARROW,Keys.UP_ARROW],
+      [32,Keys.SPACE]
+    ]);
+
     this._prevElapsed = p5.millis();
 
     // Redirect sketch functions
     p5.draw = () => this.gameLoop();
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
-    //p5.frameRate(30);
-    this._screenSize=<ScreenSize>{width:p5.width,height:p5.height}
+
+    this.screenSize=<ScreenSize>{width:p5.width,height:p5.height}
     
     // setup managers
-    this._playerManager=new PlayerShipManager(this);
-    this._playerManager.createShip();
-    this._asteroidsManager=new AsteroidsManager(this);
-    this._asteroidsManager.createAsteroids(10);
-    this._explosionsManager=new ExplosionManager(this);
-    this._textManager=new TextManager(this);
-    this._scoresManager=new ScoresManager(this);
-    this._managers.push(...[this._playerManager,
-      this._asteroidsManager,
-      this._explosionsManager, 
-      this._textManager,
-      this._scoresManager])
+    this.playerManager=new PlayerShipManager(this);
+    //this.playerManager.createShip();
+    this.asteroidsManager=new AsteroidsManager(this);
+    //this.asteroidsManager.createAsteroids(10);
+    this.explosionsManager=new ExplosionManager(this);
+    this.textManager=new TextManager(this);
+    this.scoresManager=new ScoresManager(this);
+    this.managers.push(...[this.playerManager,
+      this.asteroidsManager,
+      this.explosionsManager, 
+      this.textManager,
+      this.scoresManager])
+
+    this.gameState=new InitialGameState(this);
   };
 
   public keyPressed = (p5: P5) => {
-    if (p5.keyCode == p5.RIGHT_ARROW) this._playerManager.turn(ShipTurn.RIGHT)
-    if (p5.keyCode == p5.LEFT_ARROW) this._playerManager.turn(ShipTurn.LEFT)
-    if (p5.keyCode == p5.UP_ARROW) this._playerManager.engine(true);
-    if (p5.keyCode == 32) this._playerManager.fire(true);
+    const key=this._keyMapper.get(p5.keyCode);
+    this.gameState.handleKeyPress(key)
   };
 
   public keyReleased = (p5: P5) => {
-    if (p5.keyCode == p5.RIGHT_ARROW || p5.keyCode == p5.LEFT_ARROW)
-      this._playerManager.turn(ShipTurn.STOP);
-    if (p5.keyCode == p5.UP_ARROW) this._playerManager.engine(false);
-    if (p5.keyCode == 32) this._playerManager.fire(false);
+    const key=this._keyMapper.get(p5.keyCode);
+    this.gameState.handleKeyRelease(key)
   };
 
 
@@ -92,14 +111,18 @@ export class AsteroidsGame {
 
     this._ge.background(0);
 
-    this._managers.forEach(manager => {
+    this.gameState.update(timeDelta);
+
+    this.managers.forEach(manager => {
       manager.update(timeDelta);
+      this._ge.push();
       manager.render();
+      this._ge.pop();
     });
 
     this._ge.stroke("white");
     this._ge.textSize(20);
-    this._ge.text((1000/timeDelta).toFixed(2).toString(),this._ge.width/2,this._ge.height);
+    //this._ge.text((1000/timeDelta).toFixed(2).toString(),this._ge.width/2,this._ge.height);
 
   };
 
@@ -125,9 +148,9 @@ export class AsteroidsGame {
   }
 
   private getTimeDelta() {
-    const elapsedNow = Math.trunc(this._ge.millis());
-    const timeDelta = elapsedNow - this._prevElapsed;
-    this._prevElapsed = elapsedNow
+    this.elapsedTime=Math.trunc(this._ge.millis());
+    const timeDelta = this.elapsedTime - this._prevElapsed;
+    this._prevElapsed = this.elapsedTime
     return timeDelta;
   }
 

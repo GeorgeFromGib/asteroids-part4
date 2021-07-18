@@ -11,15 +11,13 @@ export abstract class Manager {
     public update(timeDelta:number):void {
         this._actors.forEach(a=> {
             a.update(timeDelta);
-            a.edgeWrap(this.gameEngine._screenSize.width,this.gameEngine._screenSize.height);
+            a.edgeWrap(this.gameEngine.screenSize.width,this.gameEngine.screenSize.height);
         })
     }
 
     public render() {
         this._actors.forEach(actor => {
-            this.gameEngine._ge.push();
             actor.render(this.gameEngine);
-            this.gameEngine._ge.pop();
           });
     }
 

@@ -4,6 +4,11 @@ import { VerticedShapeActor } from '../actors/base/VerticedShapeActor';
 import { AsteroidsGame } from './../asteroidsGame';
 import { Manager } from "./manager";
 
+export enum Justify {
+    LEFT,
+    RIGHT,
+    CENTER
+}
 export interface ICharacterModel {
     char:string;
     vertices:number[][];
@@ -31,10 +36,14 @@ export class TextManager extends Manager {
         this.textModel=gameEngine.configData.text;
     }
 
-    public write(name:string, message:string,xPos:number,yPos:number, scale:number) {
+    public write(name:string, message:string,xPos:number,yPos:number, scale:number, justify:Justify) {
         const messChars=[...message.toUpperCase()];
         const space=4;
-        const adjXpos=xPos-((this.textModel.radius + space)*scale*messChars.length);
+        let adjXpos=0;
+        if(justify===Justify.RIGHT)
+            adjXpos=xPos-((this.textModel.radius + space)*scale*messChars.length);
+        else if (justify===Justify.CENTER)
+            adjXpos=xPos-((this.textModel.radius + space)*scale*messChars.length/2);
         const pos=new Vector().set(adjXpos,yPos);
         let l_xpos=0;
         const actors:Actor[]=[];
@@ -50,9 +59,13 @@ export class TextManager extends Manager {
             actors.push(charActor);
             l_xpos+=this.textModel.radius + space;
         });
-        this.texts=this.texts.filter(t=>t.name!==name);
+        this.clear(name);
         const text:IText={name:name,characters:actors,position:pos}
         this.texts.push(text);
+    }
+
+    public clear(name:string) {
+        this.texts=this.texts.filter(t=>t.name!==name);
     }
 
     public update(timeDelta:number) {

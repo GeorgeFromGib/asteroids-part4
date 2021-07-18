@@ -34,7 +34,7 @@ export class AsteroidsManager extends Manager {
         const aSize=this.asteroidModels.sizes.find(s=>s.size==size);
         const designIndex=Math.floor(this.gameEngine.random(this.asteroidModels.designs.length));
         const l_asteroid=new Asteroid(this.asteroidModels.designs[designIndex]);
-        const vel=this.gameEngine.randomRange(40,80*aSize.speed);
+        const vel=this.gameEngine.randomRange(30,80*aSize.speed);
         l_asteroid.position=pos.copy();
         l_asteroid.velocity=Vector.random2D().mult(vel/1000);
         l_asteroid.size=aSize.size as sizeType;
@@ -44,11 +44,15 @@ export class AsteroidsManager extends Manager {
     }
 
     public createAsteroids(noOfAsteroids:number) {
-        const screen=this.gameEngine._screenSize;
+        const screen=this.gameEngine.screenSize;
         for(let i=0;i<=noOfAsteroids;i++) {
             const position=new Vector().set(this.gameEngine.random(screen.width),this.gameEngine.random(screen.height));
             this.createAsteroid(position,sizeType.LARGE);
         }
+    }
+
+    public clear() {
+        this.asteroids=[];
     }
 
     public update(timeDelta:number) {
@@ -66,10 +70,10 @@ export class AsteroidsManager extends Manager {
     }
 
     public hit(hitAsteroid:Asteroid) {
-        this.gameEngine._scoresManager.addToScore(hitAsteroid.points);
+        this.gameEngine.scoresManager.addToScore(hitAsteroid.points);
         
         if(hitAsteroid.size===sizeType.SMALL) {
-            this.gameEngine._explosionsManager.createExplosion(hitAsteroid.position);
+            this.gameEngine.explosionsManager.createExplosion(hitAsteroid.position);
             return
         };
         const nextSize=hitAsteroid.size===sizeType.LARGE?sizeType.MEDIUM:sizeType.SMALL;
