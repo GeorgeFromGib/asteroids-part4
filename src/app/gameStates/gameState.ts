@@ -16,20 +16,23 @@ export abstract class GameState {
 }
 
 export class InitialGameState extends GameState {
+  showPlayer: boolean=false;
+  timer: number;
+
   public setup() {
     this.gameEngine.asteroidsManager.createAsteroids(10);
     this.gameEngine.textManager.write(
-      "coin",
+      "init",
       "1 COIN 1 PLAY",
       this.gameEngine.screenSize.width / 2,
-      this.gameEngine.screenSize.height - 80,
+      this.gameEngine.screenSize.height /4 * 3,
       2.3,
       Justify.CENTER
     );
   }
 
   public handleKeyPress(key: Keys) {
-    if (key === Keys.SPACE) this.nextLevel();
+    if (key === Keys.SPACE) this.startShowPlayer();
   }
 
   public handleKeyRelease(key: Keys) {}
@@ -39,11 +42,33 @@ export class InitialGameState extends GameState {
     this.gameEngine.gameState = new PlayGameState(this.gameEngine);
   }
 
-  public update(timeDelta: number) {}
+  public update(timeDelta: number) {
+    if(this.showPlayer) {
+      if(this.timer>0) {
+        this.timer-=timeDelta;
+      } else {
+        this.nextLevel();
+      }
+    }
+  }
+
+  private startShowPlayer() {
+    if(this.showPlayer) return;
+    this.gameEngine.textManager.write(
+      "init",
+      "PLAYER 1",
+      this.gameEngine.screenSize.width / 2,
+      this.gameEngine.screenSize.height / 4,
+      2.3,
+      Justify.CENTER
+    );
+    this.showPlayer=true;
+    this.timer=2000;
+  }
 
   public cleanUp() {
     this.gameEngine.asteroidsManager.clear();
-    this.gameEngine.textManager.clear("coin");
+    this.gameEngine.textManager.clear("init");
   }
 }
 
