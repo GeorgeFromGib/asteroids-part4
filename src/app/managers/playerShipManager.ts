@@ -25,7 +25,6 @@ export interface ISpaceShip {
 
 export class PlayerShipManager extends Manager {
   ship: Spaceship;
-  thrustActor: Actor;
   firing: boolean;
   lastShot = 0;
   projectiles: Particle[] = [];
@@ -34,20 +33,26 @@ export class PlayerShipManager extends Manager {
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
     this.spaceship = gameEngine.configData.spaceship;
+    this.createShip();
   }
 
   public createShip() {
-    this.thrustActor = new ClosedShapeActor(this.spaceship.thrust);
+    const thrustActor = new ClosedShapeActor(this.spaceship.thrust);
     this.ship = new Spaceship(
       this.spaceship.ship,
       this.spaceship.thrustVel,
       this.spaceship.friction,
-      this.thrustActor
+      thrustActor
     );
     this.ship.positionXY(
       this.gameEngine.screenSize.width / 2,
       this.gameEngine.screenSize.height / 2
     );
+    this.ship.show=false;
+  }
+
+  public showShip(show:boolean) {
+      this.ship.show=show;
   }
 
   public update(timeDelta: number) {
@@ -64,7 +69,7 @@ export class PlayerShipManager extends Manager {
       (p) => !p.expired && !p.collidedWith
     );
     this._actors = [];
-    if (this.ship) {
+    if (this.ship.show) {
       this._actors.push(this.ship);
       this._actors.push(this.thrustActor);
     }
@@ -74,16 +79,14 @@ export class PlayerShipManager extends Manager {
 
   public checkCollisions() {
     const asteroids = this.gameEngine.asteroidsManager.allActors;
-    if (this.ship) {
+    if (this.ship.show) {
       const col = this.ship.hasCollided(asteroids);
       if (col != undefined) {
-        col.collidedWith = this.ship;
         this.gameEngine.scoresManager.lives--;
       }
     }
     this.projectiles.forEach((p) => {
       const col = p.hasCollided(asteroids);
-      if (col !== undefined) col.collidedWith = p;
     });
   }
 

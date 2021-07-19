@@ -19,6 +19,7 @@ export abstract class Actor {
   public show: boolean = true;
   public parent: Actor;
   public parentOffset: Vector;
+  public childActors:Actor[]=[];
 
   constructor(protected _model: IModel) {
     this._transModel = {
@@ -27,6 +28,10 @@ export abstract class Actor {
       radius: this._model.radius,
     };
     this.radius = this._transModel.radius;
+  }
+
+  public addChildActor(actor:Actor) {
+    this.childActors.push(actor);
   }
 
   public setParent(parent:Actor, offset:Vector) {
@@ -60,6 +65,7 @@ export abstract class Actor {
       if (this.position.dist(actor.position) < actor.radius + this.radius) {
         if (this != actor) {
           this.collidedWith = actor;
+          actor.collidedWith=this;
           return;
         }
       }

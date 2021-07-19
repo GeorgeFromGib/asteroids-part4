@@ -81,7 +81,7 @@ export class PlayGameState extends GameState {
 
   public setup() {
     this.gameEngine.asteroidsManager.createAsteroids(10);
-    this.gameEngine.playerManager.createShip();
+    this.gameEngine.playerManager.showShip(true);
     this.player = this.gameEngine.playerManager;
   }
 
