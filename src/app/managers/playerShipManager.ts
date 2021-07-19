@@ -1,3 +1,4 @@
+import { Asteroid } from './../actors/asteroid';
 import { Particle } from "../actors/particle";
 import P5, { Vector } from "p5";
 import { Actor, IModel } from "../actors/base/actor";
@@ -87,10 +88,16 @@ export class PlayerShipManager extends Manager {
       const col = this.ship.hasCollided(asteroids);
       if (col != undefined) {
         this.gameEngine.scoresManager.lives--;
+        const astrd=col as Asteroid;
+        this.gameEngine.scoresManager.addToScore(astrd.points);
       }
     }
     this.projectiles.forEach((p) => {
       const col = p.hasCollided(asteroids);
+      if(col!=undefined) {
+        const astrd=col as Asteroid;
+        this.gameEngine.scoresManager.addToScore(astrd.points);
+      }
     });
   }
 

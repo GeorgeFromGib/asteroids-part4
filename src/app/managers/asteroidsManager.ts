@@ -24,10 +24,16 @@ export interface IAsteroids {
 export class AsteroidsManager extends Manager {
     asteroids:Asteroid[]=[];
     asteroidModels: IAsteroids;
+    levelCompleted:boolean=false;
 
     constructor(gameEngine:AsteroidsGame) {
         super(gameEngine);
         this.asteroidModels=gameEngine.configData.asteroids;
+    }
+
+    public startLevel() {
+        this.levelCompleted=false;
+        this.createAsteroids(2);
     }
 
     public createAsteroid(pos:Vector,size:sizeType) {
@@ -45,7 +51,7 @@ export class AsteroidsManager extends Manager {
 
     public createAsteroids(noOfAsteroids:number) {
         const screen=this.gameEngine.screenSize;
-        const noGoRadius=screen.width;
+        const noGoRadius=screen.width/4 
         const scrCntr=new Vector().set(screen.width/2,screen.height/2);
         for(let i=0;i<=noOfAsteroids;i++) {
             let outside=false;
@@ -65,7 +71,7 @@ export class AsteroidsManager extends Manager {
 
     public update(timeDelta:number) {
         if(this.asteroids.length==0)
-            this.createAsteroids(10);
+            this.levelCompleted=true;
         this.asteroids.forEach(a=>{
             if(a.collidedWith!==undefined)
                 this.hit(a)

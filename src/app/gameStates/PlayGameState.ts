@@ -1,21 +1,33 @@
 import { PlayerShipManager, ShipTurn } from "../managers/playerShipManager";
-import { Keys } from "./../asteroidsGame";
+import { GameTimer, Keys } from "./../asteroidsGame";
 import { GameOverState } from "./GameOverState";
 import { GameState } from "./GameState";
 
 export class PlayGameState extends GameState {
   player: PlayerShipManager;
+  timer: GameTimer;
+  levelWait: boolean;
 
   public setup() {
-    this.gameEngine.asteroidsManager.createAsteroids(10);
+    this.newLevel();
     this.gameEngine.playerManager.createShip();
     this.gameEngine.playerManager.showShip(true);
     this.player = this.gameEngine.playerManager;
+    this.timer=this.gameEngine.createTimer(2000,()=>{this.newLevel()});
   }
 
   public update(timeDelta: number) {
     if (this.gameEngine.scoresManager.lives <= 0)
       this.nextState();
+    if(this.gameEngine.asteroidsManager.levelCompleted && this.timer.expired) {
+      this.timer.reset();
+      this.timer.start();
+    }
+
+  }
+
+  public newLevel() {
+    this.gameEngine.asteroidsManager.startLevel();
   }
 
   public handleKeyPress(key: Keys) {

@@ -167,8 +167,8 @@ export class AsteroidsGame {
     return this._ge.random(min,max);
   }
 
-  public createTimer(time:number):GameTimer {
-    const timer=new GameTimer(this,time);
+  public createTimer(time:number, callback?:()=>void):GameTimer {
+    const timer=new GameTimer(time,callback);
     this.timers.push(timer);
     return timer;
   }
@@ -178,7 +178,7 @@ export class GameTimer {
   countDown:number;
   expired:boolean=true;
 
-  constructor(AsteroidsGame:AsteroidsGame,protected time:number) {
+  constructor(protected time:number,protected callback?:()=>void) {
     this.countDown=time;
   }
 
@@ -194,7 +194,11 @@ export class GameTimer {
   public update(timeDelta:number) {
     if(!this.expired) {
       this.countDown-=timeDelta;
-      this.expired=(this.countDown<=0);
+      if(this.countDown<=0) {
+        this.expired=true;
+        if(this.callback)
+          this.callback();
+      }
     }
   }
 }
