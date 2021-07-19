@@ -11,7 +11,8 @@ export class Spaceship extends ClosedShapeActor {
 
   constructor(model:IModel,protected velAcc:number,protected friction:number,protected engineThrust:Actor) {
     super(model);
-    engineThrust.setParent(this, new Vector().set(0,7))
+    this.addChildActor(engineThrust,new Vector().set(0,7))
+    //engineThrust.setParent(this, new Vector().set(0,7))
   }
 
   public thrust() {

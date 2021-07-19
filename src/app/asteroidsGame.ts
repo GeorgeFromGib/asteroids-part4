@@ -1,3 +1,4 @@
+
 import P5 from 'p5';
 
 import { ScoresManager } from './managers/scoreManager';
@@ -9,7 +10,8 @@ import * as ConfigData from '../assets/config.json'
 import { IModel } from "./actors/base/actor";
 import { AsteroidsManager } from './managers/asteroidsManager';
 import { Manager } from './managers/manager';
-import { GameState, InitialGameState } from './gameStates/gameState';
+import { InitialGameState } from "./gameStates/InitialGameState";
+import { GameState } from "./gameStates/GameState";
 
 export class ScreenSize {
   width:number;
@@ -40,6 +42,7 @@ export class AsteroidsGame {
   configData:typeof ConfigData;
   elapsedTime:number=0;
   gameState:GameState
+  timers:GameTimer[]=[];
 
 
 
@@ -111,6 +114,8 @@ export class AsteroidsGame {
 
     this._ge.background(0);
 
+    this.timers.forEach(timer=>timer.update(timeDelta));
+
     this.gameState.update(timeDelta);
 
     this.managers.forEach(manager => {
@@ -160,5 +165,36 @@ export class AsteroidsGame {
 
   public randomRange(min:number,max:number) {
     return this._ge.random(min,max);
+  }
+
+  public createTimer(time:number):GameTimer {
+    const timer=new GameTimer(this,time);
+    this.timers.push(timer);
+    return timer;
+  }
+}
+
+export class GameTimer {
+  countDown:number;
+  expired:boolean=true;
+
+  constructor(AsteroidsGame:AsteroidsGame,protected time:number) {
+    this.countDown=time;
+  }
+
+  public start() {
+    this.expired=false;
+  }
+
+  public reset(){
+    this.countDown=this.time;
+    this.expired=true;
+  }
+
+  public update(timeDelta:number) {
+    if(!this.expired) {
+      this.countDown-=timeDelta;
+      this.expired=(this.countDown<=0);
+    }
   }
 }

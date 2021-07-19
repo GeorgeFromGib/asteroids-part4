@@ -53,6 +53,11 @@ export class PlayerShipManager extends Manager {
 
   public showShip(show:boolean) {
       this.ship.show=show;
+      if(!show) {
+        this.ship.thrusting=false;
+        this.firing=false;
+      }
+
   }
 
   public update(timeDelta: number) {
@@ -71,7 +76,6 @@ export class PlayerShipManager extends Manager {
     this._actors = [];
     if (this.ship.show) {
       this._actors.push(this.ship);
-      this._actors.push(this.thrustActor);
     }
     this._actors.push(...this.projectiles);
     super.update(timeDelta);

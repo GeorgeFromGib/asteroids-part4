@@ -30,13 +30,10 @@ export abstract class Actor {
     this.radius = this._transModel.radius;
   }
 
-  public addChildActor(actor:Actor) {
+  public addChildActor(actor:Actor,offset:Vector) {
     this.childActors.push(actor);
-  }
-
-  public setParent(parent:Actor, offset:Vector) {
-    this.parent=parent;
-    this.parentOffset=offset;
+    actor.parent=this;
+    actor.parentOffset=offset;
   }
 
   public positionXY = (x: number, y: number) => {
@@ -91,11 +88,17 @@ export abstract class Actor {
         v.add(this.parent.position);
       }
       this._transModel.vertexes.push([v.x, v.y]);
+      this.childActors.forEach(child=>{
+        child.update(timeDelta);
+      });
     });
   }
 
   public render (gameEngine:AsteroidsGame) {
     if (!this.show) return;
+    this.childActors.forEach(child=>{
+      child.render(gameEngine);
+    })
     this.draw(gameEngine);
   }
 

@@ -45,8 +45,16 @@ export class AsteroidsManager extends Manager {
 
     public createAsteroids(noOfAsteroids:number) {
         const screen=this.gameEngine.screenSize;
+        const noGoRadius=screen.width;
+        const scrCntr=new Vector().set(screen.width/2,screen.height/2);
         for(let i=0;i<=noOfAsteroids;i++) {
-            const position=new Vector().set(this.gameEngine.random(screen.width),this.gameEngine.random(screen.height));
+            let outside=false;
+            let randPos:Vector;
+            while(!outside) {
+                randPos=new Vector().set(this.gameEngine.random(screen.width),this.gameEngine.random(screen.height));
+                outside=(Vector.dist(randPos,scrCntr)>noGoRadius);
+            }
+            const position=new Vector().set(randPos);
             this.createAsteroid(position,sizeType.LARGE);
         }
     }
