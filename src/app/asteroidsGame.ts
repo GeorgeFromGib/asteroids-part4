@@ -121,7 +121,7 @@ export class AsteroidsGame {
     });
 
     this._ge.stroke("white");
-    this._ge.textSize(20);
+    //this._ge.textSize(20);
     //this._ge.text((1000/timeDelta).toFixed(2).toString(),this._ge.width/2,this._ge.height);
 
   };

@@ -13,6 +13,8 @@ export abstract class GameState {
   public abstract handleKeyPress(key: Keys);
 
   public abstract handleKeyRelease(key: Keys);
+
+  public abstract nextState();
 }
 
 export class InitialGameState extends GameState {
@@ -20,6 +22,8 @@ export class InitialGameState extends GameState {
   timer: number;
 
   public setup() {
+    this.gameEngine.scoresManager.score=0;
+    this.gameEngine.scoresManager.lives=this.gameEngine.configData.settings.lives;
     this.gameEngine.asteroidsManager.createAsteroids(10);
     this.gameEngine.textManager.write(
       "init",
@@ -37,7 +41,7 @@ export class InitialGameState extends GameState {
 
   public handleKeyRelease(key: Keys) {}
 
-  nextLevel() {
+  nextState() {
     this.cleanUp();
     this.gameEngine.gameState = new PlayGameState(this.gameEngine);
   }
@@ -47,7 +51,7 @@ export class InitialGameState extends GameState {
       if(this.timer>0) {
         this.timer-=timeDelta;
       } else {
-        this.nextLevel();
+        this.nextState();
       }
     }
   }
@@ -81,7 +85,10 @@ export class PlayGameState extends GameState {
     this.player = this.gameEngine.playerManager;
   }
 
-  public update(timeDelta: number) {}
+  public update(timeDelta: number) {
+    if (this.gameEngine.scoresManager.lives<=0)
+      this.nextState();
+  }
 
   public handleKeyPress(key: Keys) {
     if (key == Keys.RIGHT_ARROW) this.player.turn(ShipTurn.RIGHT);
@@ -95,5 +102,34 @@ export class PlayGameState extends GameState {
       this.player.turn(ShipTurn.STOP);
     if (key == Keys.UP_ARROW) this.player.engine(false);
     if (key == Keys.SPACE) this.player.fire(false);
+  }
+
+  public nextState() {
+    this.gameEngine.gameState=new GameOverState(this.gameEngine);
+  }
+}
+
+export class GameOverState extends GameState {
+  
+  public setup() {
+    this.gameEngine.textManager.write(
+      "gameover",
+      "GAME OVER",
+      this.gameEngine.screenSize.width / 2,
+      this.gameEngine.screenSize.height / 2,
+      2.3,
+      Justify.CENTER)
+  }
+  public update(timeDelta: number) {
+
+  }
+  public handleKeyPress(key: Keys) {
+ 
+  }
+  public handleKeyRelease(key: Keys) {
+  }
+
+  public nextState() {
+    this.gameEngine.gameState=new InitialGameState(this.gameEngine);
   }
 }

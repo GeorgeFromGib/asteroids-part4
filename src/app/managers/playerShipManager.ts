@@ -74,7 +74,13 @@ export class PlayerShipManager extends Manager {
 
   public checkCollisions() {
     const asteroids = this.gameEngine.asteroidsManager.allActors;
-    //const col=this.ship.hasCollided(asteroids)
+    if (this.ship) {
+      const col = this.ship.hasCollided(asteroids);
+      if (col != undefined) {
+        col.collidedWith = this.ship;
+        this.gameEngine.scoresManager.lives--;
+      }
+    }
     this.projectiles.forEach((p) => {
       const col = p.hasCollided(asteroids);
       if (col !== undefined) col.collidedWith = p;
