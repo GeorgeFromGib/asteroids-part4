@@ -30,13 +30,12 @@ export class PlayerShipManager extends Manager {
   lastShot = 0;
   projectiles: Particle[] = [];
   spaceship: ISpaceShip;
-  shipTimer:GameTimer;
-  InHyperSpace: boolean;
+  shipShowTimer:GameTimer;
   hyperSpaceTimer:GameTimer;
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
-    this.shipTimer=gameEngine.createTimer(3000,()=>{this.placeShipInSafeSpace(gameEngine.screenSize.center)});
+    this.shipShowTimer=gameEngine.createTimer(3000,()=>{this.placeShipInSafeSpace(gameEngine.screenSize.center)});
     this.hyperSpaceTimer=gameEngine.createTimer(1000,()=>{this.placeShipInSafeSpace(gameEngine.getRandomScreenPosition(0.2),20)});
     this.spaceship = gameEngine.configData.spaceship;
     this.createShip();
@@ -57,7 +56,7 @@ export class PlayerShipManager extends Manager {
   }
 
   public startNewLife() {
-    this.shipTimer.restart();
+    this.shipShowTimer.restart();
   }
 
   public placeShipInSafeSpace(position:Vector,safeRadius:number=100) {
@@ -97,21 +96,19 @@ export class PlayerShipManager extends Manager {
   public checkCollisions() {
     const asteroids = this.gameEngine.asteroidsManager.allActors;
     if (this.ship.show) {
-      const col = this.ship.hasCollided(asteroids);
+      const col = this.ship.hasCollided(asteroids) as Asteroid;
       if (col != undefined) {
         this.gameEngine.scoresManager.lives--;
-        const astrd=col as Asteroid;
-        this.gameEngine.scoresManager.addToScore(astrd.points);
+        this.gameEngine.scoresManager.addToScore(col.points);
         this.showShip(false);
         if(this.gameEngine.scoresManager.lives>0)
           this.startNewLife();
       }
     }
     this.projectiles.forEach((p) => {
-      const col = p.hasCollided(asteroids);
+      const col = p.hasCollided(asteroids) as Asteroid;
       if(col!=undefined) {
-        const astrd=col as Asteroid;
-        this.gameEngine.scoresManager.addToScore(astrd.points);
+        this.gameEngine.scoresManager.addToScore(col.points);
       }
     });
   }
