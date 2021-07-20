@@ -1,3 +1,4 @@
+import { AsteroidsManager } from './../managers/asteroidsManager';
 import { PlayerShipManager, ShipTurn } from "../managers/playerShipManager";
 import { GameTimer, Keys } from "./../asteroidsGame";
 import { GameOverState } from "./GameOverState";
@@ -5,42 +6,29 @@ import { GameState } from "./GameState";
 
 export class PlayGameState extends GameState {
   player: PlayerShipManager;
+  asteroidsMan:AsteroidsManager;
   timer: GameTimer;
-  shipHidden=true;
+
 
   public setup() {
+    this.asteroidsMan=this.gameEngine.asteroidsManager;
     this.newLevel();
-    this.gameEngine.playerManager.createShip();
-    this.player = this.gameEngine.playerManager;
     this.timer=this.gameEngine.createTimer(2000,()=>{this.newLevel()});
+    this.player = this.gameEngine.playerManager;
+    this.player.placeShipInSafeSpace(this.gameEngine.screenSize.center);
   }
 
   public update(timeDelta: number) {
-    if(!this.player.ship.show)
-      this.showShip();
+   
     if (this.gameEngine.scoresManager.lives <= 0)
       this.nextState();
-    if(this.gameEngine.asteroidsManager.levelCompleted && this.timer.expired) {
+    if(this.asteroidsMan.levelCompleted && this.timer.expired) {
       this.timer.restart();
     }
-
-  }
-
-  public showShip() {
-    const ctrPos=this.gameEngine.screenSize.center;
-    const safeRadius=60;
-    let show=false;
-    while(!show) {
-      this.gameEngine.asteroidsManager.asteroids.forEach(asteroid=>{
-        show=ctrPos.dist(asteroid.position)>safeRadius;
-        if(!show) return;
-      })
-    }
-    this.gameEngine.playerManager.showShip(true);
   }
 
   public newLevel() {
-    this.gameEngine.asteroidsManager.startLevel();
+    this.asteroidsMan.startLevel();
   }
 
   public handleKeyPress(key: Keys) {
@@ -52,6 +40,8 @@ export class PlayGameState extends GameState {
       this.player.engine(true);
     if (key == Keys.SPACE)
       this.player.fire(true);
+    if(key==Keys.RIGHT_CTRL)
+      this.player.hyperSpace();
   }
 
   public handleKeyRelease(key: Keys) {
@@ -64,6 +54,7 @@ export class PlayGameState extends GameState {
   }
 
   public nextState() {
+    this.player.showShip(false);
     this.gameEngine.gameState = new GameOverState(this.gameEngine);
   }
 }

@@ -1,11 +1,11 @@
+import { GameTimer } from './../asteroidsGame';
 import { Asteroid } from './../actors/asteroid';
 import { Particle } from "../actors/particle";
-import P5, { Vector } from "p5";
-import { Actor, IModel } from "../actors/base/actor";
-import { ClosedShapeActor } from "../actors/base/ClosedShapeActor";
+import { Vector } from "p5";
+import {  IModel } from "../actors/base/actor";
 import { Manager } from "./manager";
 import { Spaceship } from "../actors/spaceship";
-import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
+import { AsteroidsGame } from "../asteroidsGame";
 
 export enum ShipTurn {
   LEFT = -1,
@@ -30,25 +30,21 @@ export class PlayerShipManager extends Manager {
   lastShot = 0;
   projectiles: Particle[] = [];
   spaceship: ISpaceShip;
+  shipTimer:GameTimer;
+  InHyperSpace: boolean;
+  hyperSpaceTimer:GameTimer;
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
+    this.shipTimer=gameEngine.createTimer(3000,()=>{this.placeShipInSafeSpace(gameEngine.screenSize.center)});
+    this.hyperSpaceTimer=gameEngine.createTimer(1000,()=>{this.placeShipInSafeSpace(gameEngine.getRandomScreenPosition(0.2),20)});
     this.spaceship = gameEngine.configData.spaceship;
     this.createShip();
   }
 
   public createShip() {
-    const thrustActor = new ClosedShapeActor(this.spaceship.thrust);
-    this.ship = new Spaceship(
-      this.spaceship.ship,
-      this.spaceship.thrustVel,
-      this.spaceship.friction,
-      thrustActor
-    );
-    this.ship.positionXY(
-      this.gameEngine.screenSize.width / 2,
-      this.gameEngine.screenSize.height / 2
-    );
+    this.ship = new Spaceship(this.spaceship);
+    this.ship.position=this.gameEngine.screenSize.center;
     this.ship.show=false;
   }
 
@@ -58,7 +54,23 @@ export class PlayerShipManager extends Manager {
         this.ship.thrusting=false;
         this.firing=false;
       }
+  }
 
+  public startNewLife() {
+    this.shipTimer.restart();
+  }
+
+  public placeShipInSafeSpace(position:Vector,safeRadius:number=100) {
+    this.createShip();
+    let show=false;
+    while(!show) {
+      this.gameEngine.asteroidsManager.asteroids.forEach(asteroid=>{
+        show=position.dist(asteroid.position)>safeRadius;
+        if(!show) return;
+      })
+    }
+    this.ship.position=position.copy();
+    this.showShip(true);
   }
 
   public update(timeDelta: number) {
@@ -91,6 +103,8 @@ export class PlayerShipManager extends Manager {
         const astrd=col as Asteroid;
         this.gameEngine.scoresManager.addToScore(astrd.points);
         this.showShip(false);
+        if(this.gameEngine.scoresManager.lives>0)
+          this.startNewLife();
       }
     }
     this.projectiles.forEach((p) => {
@@ -103,7 +117,7 @@ export class PlayerShipManager extends Manager {
   }
 
   public turn(turn: ShipTurn) {
-    this.ship.rotationVel = this.spaceship.rotationVel * turn;
+    this.ship.turn(turn)
   }
 
   public engine(on: boolean) {
@@ -112,6 +126,12 @@ export class PlayerShipManager extends Manager {
 
   public fire(on: boolean) {
     this.firing = on;
+  }
+
+  public hyperSpace() {
+    if(!this.hyperSpaceTimer.expired) return;
+    this.showShip(false);
+    this.hyperSpaceTimer.restart();
   }
 
   private addProjectile() {

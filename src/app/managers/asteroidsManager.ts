@@ -33,7 +33,7 @@ export class AsteroidsManager extends Manager {
 
     public startLevel() {
         this.levelCompleted=false;
-        this.createAsteroids(2);
+        this.createAsteroids(10);
     }
 
     public createAsteroid(pos:Vector,size:sizeType) {
@@ -52,12 +52,12 @@ export class AsteroidsManager extends Manager {
     public createAsteroids(noOfAsteroids:number) {
         const screen=this.gameEngine.screenSize;
         const noGoRadius=screen.width/4 
-        const scrCntr=new Vector().set(screen.width/2,screen.height/2);
+        const scrCntr=this.gameEngine.screenSize.center;
         for(let i=0;i<=noOfAsteroids;i++) {
             let outside=false;
             let randPos:Vector;
             while(!outside) {
-                randPos=new Vector().set(this.gameEngine.random(screen.width),this.gameEngine.random(screen.height));
+                randPos=new Vector().set(this.gameEngine.getRandomScreenPosition(1));
                 outside=(Vector.dist(randPos,scrCntr)>noGoRadius);
             }
             const position=new Vector().set(randPos);
@@ -84,8 +84,6 @@ export class AsteroidsManager extends Manager {
     }
 
     public hit(hitAsteroid:Asteroid) {
-        this.gameEngine.scoresManager.addToScore(hitAsteroid.points);
-        
         if(hitAsteroid.size===sizeType.SMALL) {
             this.gameEngine.explosionsManager.createExplosion(hitAsteroid.position);
             return

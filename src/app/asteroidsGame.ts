@@ -29,6 +29,7 @@ export enum Keys {
   LEFT_ARROW,
   UP_ARROW,
   SPACE,
+  RIGHT_CTRL
 }
 
 export class AsteroidsGame {
@@ -70,7 +71,8 @@ export class AsteroidsGame {
       [p5.LEFT_ARROW,Keys.LEFT_ARROW],
       [p5.RIGHT_ARROW,Keys.RIGHT_ARROW],
       [p5.UP_ARROW,Keys.UP_ARROW],
-      [32,Keys.SPACE]
+      [32,Keys.SPACE],
+      [p5.CONTROL,Keys.RIGHT_CTRL]
     ]);
 
     this._prevElapsed = p5.millis();
@@ -172,6 +174,12 @@ export class AsteroidsGame {
     const timer=new GameTimer(time,callback);
     this.timers.push(timer);
     return timer;
+  }
+
+  public getRandomScreenPosition(constraintPct:number):Vector {
+    const widthConstraint=this.screenSize.width*constraintPct;
+    const heightConstraint=this.screenSize.height*constraintPct;
+    return new Vector().set(this.randomRange(widthConstraint,this.screenSize.width-widthConstraint),this.randomRange(heightConstraint,this.screenSize.height-heightConstraint))
   }
 }
 

@@ -5,17 +5,20 @@ import { ClosedShapeActor } from "../actors/base/ClosedShapeActor";
 import { Justify } from "./textManager";
 
 export class ScoresManager extends Manager {
+  protected nextLife: number;
   protected _score: number = 0;
   protected _lives: number;
-  nextLife: number = 1000;
-  protected shipModel: IModel;
-  protected _bestScore:number=0;
+  protected _shipModel: IModel;
+  protected _bestScore: number = 0;
+  protected _extraLife: number;
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
-    this.shipModel = gameEngine.configData.spaceship.ship;
+    this._shipModel = gameEngine.configData.spaceship.ship;
     this.lives = gameEngine.configData.settings.lives;
-    this.addToScore(0);
+    this._extraLife = gameEngine.configData.settings.extraLife;
+    this.nextLife = this._extraLife;
+    this.score = 0;
   }
 
   public update(timeDelta: number) {
@@ -25,7 +28,8 @@ export class ScoresManager extends Manager {
 
   public set score(n: number) {
     this._score = n;
-    this._bestScore=this._score>this._bestScore?this._score:this._bestScore;
+    this._bestScore =
+      this._score > this._bestScore ? this._score : this._bestScore;
     this.writeScore();
     this.writeBestScore();
   }
@@ -47,7 +51,7 @@ export class ScoresManager extends Manager {
     this._actors = [];
     let xpos = this.gameEngine.screenSize.width / 4 - 54;
     for (let i = 0; i < this._lives; i++) {
-      const ship = new ClosedShapeActor(this.shipModel);
+      const ship = new ClosedShapeActor(this._shipModel);
       ship.positionXY(xpos, 45);
       xpos += ship.radius + 6;
       this._actors.push(ship);
@@ -70,7 +74,7 @@ export class ScoresManager extends Manager {
     this.gameEngine.textManager.write(
       "bestcore",
       this._bestScore.toString().padStart(2, "0"),
-      this.gameEngine.screenSize.width/2,
+      this.gameEngine.screenSize.width / 2,
       17,
       1.5,
       Justify.RIGHT
@@ -78,12 +82,12 @@ export class ScoresManager extends Manager {
   }
 
   public addToScore(points: number) {
-    this.score += points;  
+    this.score += points;
   }
 
   private checkForExtraLife() {
     if (this._score > this.nextLife) {
-      this.nextLife += this.gameEngine.configData.settings.extraLife;
+      this.nextLife += this._extraLife;
       this.lives++;
     }
   }

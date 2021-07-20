@@ -1,6 +1,6 @@
 {
   "settings":{
-    "lives":9,
+    "lives":3,
     "extraLife":10000
   },
   "spaceship": {
