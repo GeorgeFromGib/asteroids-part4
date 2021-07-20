@@ -1,5 +1,5 @@
 
-import P5 from 'p5';
+import P5, { Vector } from 'p5';
 
 import { ScoresManager } from './managers/scoreManager';
 import { TextManager } from './managers/textManager';
@@ -16,6 +16,7 @@ import { GameState } from "./gameStates/GameState";
 export class ScreenSize {
   width:number;
   height:number;
+  center:Vector;
 }
 
 export interface ISettings {
@@ -79,7 +80,7 @@ export class AsteroidsGame {
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
 
-    this.screenSize=<ScreenSize>{width:p5.width,height:p5.height}
+    this.screenSize=<ScreenSize>{width:p5.width,height:p5.height,center:p5.createVector(p5.width/2,p5.height/2)}
     
     // setup managers
     this.playerManager=new PlayerShipManager(this);
@@ -189,6 +190,11 @@ export class GameTimer {
   public reset(){
     this.countDown=this.time;
     this.expired=true;
+  }
+
+  public restart() {
+    this.reset();
+    this.start();
   }
 
   public update(timeDelta:number) {

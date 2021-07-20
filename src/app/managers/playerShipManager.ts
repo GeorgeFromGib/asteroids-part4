@@ -90,6 +90,7 @@ export class PlayerShipManager extends Manager {
         this.gameEngine.scoresManager.lives--;
         const astrd=col as Asteroid;
         this.gameEngine.scoresManager.addToScore(astrd.points);
+        this.showShip(false);
       }
     }
     this.projectiles.forEach((p) => {

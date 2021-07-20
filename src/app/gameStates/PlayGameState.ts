@@ -6,24 +6,37 @@ import { GameState } from "./GameState";
 export class PlayGameState extends GameState {
   player: PlayerShipManager;
   timer: GameTimer;
-  levelWait: boolean;
+  shipHidden=true;
 
   public setup() {
     this.newLevel();
     this.gameEngine.playerManager.createShip();
-    this.gameEngine.playerManager.showShip(true);
     this.player = this.gameEngine.playerManager;
     this.timer=this.gameEngine.createTimer(2000,()=>{this.newLevel()});
   }
 
   public update(timeDelta: number) {
+    if(!this.player.ship.show)
+      this.showShip();
     if (this.gameEngine.scoresManager.lives <= 0)
       this.nextState();
     if(this.gameEngine.asteroidsManager.levelCompleted && this.timer.expired) {
-      this.timer.reset();
-      this.timer.start();
+      this.timer.restart();
     }
 
+  }
+
+  public showShip() {
+    const ctrPos=this.gameEngine.screenSize.center;
+    const safeRadius=60;
+    let show=false;
+    while(!show) {
+      this.gameEngine.asteroidsManager.asteroids.forEach(asteroid=>{
+        show=ctrPos.dist(asteroid.position)>safeRadius;
+        if(!show) return;
+      })
+    }
+    this.gameEngine.playerManager.showShip(true);
   }
 
   public newLevel() {
