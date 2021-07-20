@@ -45,13 +45,14 @@ export class PlayerShipManager extends Manager {
     this.ship = new Spaceship(this.spaceship);
     this.ship.position=this.gameEngine.screenSize.center;
     this.ship.show=false;
+    this.firing=false;
   }
 
   public showShip(show:boolean) {
       this.ship.show=show;
       if(!show) {
         this.ship.thrusting=false;
-        this.firing=false;
+        //this.firing=false;
       }
   }
 
@@ -74,7 +75,7 @@ export class PlayerShipManager extends Manager {
 
   public update(timeDelta: number) {
     this.checkCollisions();
-    if (this.firing)
+    if (this.firing && this.ship.show)
       if (
         this.gameEngine.elapsedTime - this.lastShot >
         this.spaceship.rateOfFire
