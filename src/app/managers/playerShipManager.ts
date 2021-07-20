@@ -136,7 +136,7 @@ export class PlayerShipManager extends Manager {
     const heading = this.ship.heading - Math.PI / 2;
     const gunPos = new Vector().set(radius, 0).rotate(heading);
     const startPos = gunPos.add(this.ship.position);
-    const vel = Vector.fromAngle(heading).mult(this.spaceship.projectileVel);
+    const vel = Vector.fromAngle(heading).mult(this.spaceship.projectileVel).add(this.ship.velocity);
     const proj = new Particle(startPos, vel, this.spaceship.projectileLife);
     this.projectiles.push(proj);
   }
