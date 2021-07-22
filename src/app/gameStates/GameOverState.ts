@@ -22,7 +22,7 @@ export class GameOverState extends GameState {
     
   }
   public update(timeDelta: number) {
-    if(this.timer.expired)
+    if(this.timer._expired)
       this.nextState();
   }
 

@@ -36,7 +36,7 @@ export class InitialGameState extends GameState {
 
   public update(timeDelta: number) {
     if (this.showPlayer) {
-     if(this.timer.expired)
+     if(this.timer._expired)
         this.nextState();
     }
   }

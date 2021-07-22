@@ -1,6 +1,5 @@
-import { AsteroidsGame } from '../asteroidsGame';
-import P5, { Vector } from 'p5';
-import { Actor } from "./base/actor";
+
+import { Vector } from 'p5';
 import { PointActor } from "./base/PointActor";
 
 export class Particle extends PointActor {

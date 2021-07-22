@@ -1,3 +1,4 @@
+import { Saucer } from './../actors/saucer';
 import { GameTimer } from './../asteroidsGame';
 import { Asteroid } from './../actors/asteroid';
 import { Particle } from "../actors/particle";
@@ -96,6 +97,7 @@ export class PlayerShipManager extends Manager {
 
   public checkCollisions() {
     const asteroids = this.gameEngine.asteroidsManager.allActors;
+    const saucers=this.gameEngine.saucerManager.allActors;
     if (this.ship.show) {
       const col = this.ship.hasCollided(asteroids) as Asteroid;
       if (col != undefined) {
@@ -107,10 +109,15 @@ export class PlayerShipManager extends Manager {
       }
     }
     this.projectiles.forEach((p) => {
-      const col = p.hasCollided(asteroids) as Asteroid;
-      if(col!=undefined) {
-        this.gameEngine.scoresManager.addToScore(col.points);
+      const colA = p.hasCollided(asteroids) as Asteroid;
+      if(colA!=undefined) {
+        this.gameEngine.scoresManager.addToScore(colA.points);
       }
+      const colS = p.hasCollided(saucers) as Saucer;
+      if(colS!=undefined) {
+        this.gameEngine.scoresManager.addToScore(colS.points);
+      }
+
     });
   }
 

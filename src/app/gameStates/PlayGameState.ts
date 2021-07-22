@@ -22,7 +22,7 @@ export class PlayGameState extends GameState {
    
     if (this.gameEngine.scoresManager.lives <= 0)
       this.nextState();
-    if(this.asteroidsMan.levelCompleted && this.timer.expired) {
+    if(this.asteroidsMan.levelCompleted && this.timer._expired) {
       this.timer.restart();
     }
   }

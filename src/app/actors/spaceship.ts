@@ -32,6 +32,6 @@ export class Spaceship extends ClosedShapeActor {
     this.velocity.mult(this.shipData.friction);
     super.update(timeDelta);
   }
-
-  
+ 
 }
+

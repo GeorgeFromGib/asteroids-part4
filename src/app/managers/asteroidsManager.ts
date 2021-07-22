@@ -33,7 +33,7 @@ export class AsteroidsManager extends Manager {
 
     public startLevel() {
         this.levelCompleted=false;
-        this.createAsteroids(10);
+        this.createAsteroids(4);
     }
 
     public createAsteroid(pos:Vector,size:sizeType) {
@@ -70,7 +70,7 @@ export class AsteroidsManager extends Manager {
     }
 
     public update(timeDelta:number) {
-        if(this.asteroids.length==0)
+        if(this.asteroids.length==0 && this.gameEngine.saucerManager.allActors.length==0)
             this.levelCompleted=true;
         this.asteroids.forEach(a=>{
             if(a.collidedWith!==undefined)

@@ -1,3 +1,4 @@
+import { SaucerManager } from './managers/saucerManager';
 
 import P5, { Vector } from 'p5';
 
@@ -51,6 +52,7 @@ export class AsteroidsGame {
   private _ge:P5;
   private _prevElapsed = 0; 
   private _keyMapper:Map<number,Keys>=new Map();
+  saucerManager: SaucerManager;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -92,11 +94,14 @@ export class AsteroidsGame {
     this.explosionsManager=new ExplosionManager(this);
     this.textManager=new TextManager(this);
     this.scoresManager=new ScoresManager(this);
+    this.saucerManager=new SaucerManager(this);
     this.managers.push(...[this.playerManager,
       this.asteroidsManager,
       this.explosionsManager, 
       this.textManager,
-      this.scoresManager])
+      this.scoresManager,
+      this.saucerManager
+    ])
 
     this.gameState=new InitialGameState(this);
   };
@@ -184,20 +189,24 @@ export class AsteroidsGame {
 }
 
 export class GameTimer {
-  countDown:number;
-  expired:boolean=true;
+  protected _countDown:number;
+  protected _expired:boolean=true;
 
-  constructor(protected time:number,protected callback?:()=>void) {
-    this.countDown=time;
+  constructor(public time:number,protected callback?:()=>void) {
+    this._countDown=time;
   }
 
+  public get expired() : boolean {
+    return this._expired;
+  }
+  
   public start() {
-    this.expired=false;
+    this._expired=false;
   }
 
   public reset(){
-    this.countDown=this.time;
-    this.expired=true;
+    this._countDown=this.time;
+    this._expired=true;
   }
 
   public restart() {
@@ -206,12 +215,11 @@ export class GameTimer {
   }
 
   public update(timeDelta:number) {
-    if(!this.expired) {
-      this.countDown-=timeDelta;
-      if(this.countDown<=0) {
-        this.expired=true;
-        if(this.callback)
-          this.callback();
+    if(!this._expired) {
+      this._countDown-=timeDelta;
+      if(this._countDown<=0) {
+        this._expired=true;
+        this.callback && this.callback();
       }
     }
   }
