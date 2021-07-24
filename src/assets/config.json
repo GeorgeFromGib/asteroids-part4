@@ -160,7 +160,10 @@
         "speed":2,
         "points":1000
       }
-    ]
+    ],
+    "projectileVel":0.7,
+    "projectileLife":700,
+    "rateOfFire":1000
   },
   "text":{
     "vertexes":[

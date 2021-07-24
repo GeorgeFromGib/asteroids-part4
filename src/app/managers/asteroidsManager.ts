@@ -4,7 +4,7 @@ import { Asteroid } from "../actors/asteroid";
 import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
 import { Manager } from "./manager";
 
-export enum sizeType{
+export enum SizeTypes {
     LARGE="ASTEROID_LARGE",
     MEDIUM="ASTEROID_MEDIUM",
     SMALL="ASTEROID_SMALL"
@@ -33,17 +33,17 @@ export class AsteroidsManager extends Manager {
 
     public startLevel() {
         this.levelCompleted=false;
-        this.createAsteroids(4);
+        this.createAsteroids(2);
     }
 
-    public createAsteroid(pos:Vector,size:sizeType) {
+    public createAsteroid(pos:Vector,size:SizeTypes) {
         const aSize=this.asteroidModels.sizes.find(s=>s.size==size);
         const designIndex=Math.floor(this.gameEngine.random(this.asteroidModels.designs.length));
         const l_asteroid=new Asteroid(this.asteroidModels.designs[designIndex]);
         const vel=this.gameEngine.randomRange(30,80*aSize.speed);
         l_asteroid.position=pos.copy();
         l_asteroid.velocity=Vector.random2D().mult(vel/1000);
-        l_asteroid.size=aSize.size as sizeType;
+        l_asteroid.size=aSize.size as SizeTypes;
         l_asteroid.points=aSize.points;
         l_asteroid.scale=aSize.scale;
         this.asteroids.push(l_asteroid);
@@ -61,7 +61,7 @@ export class AsteroidsManager extends Manager {
                 outside=(Vector.dist(randPos,scrCntr)>noGoRadius);
             }
             const position=new Vector().set(randPos);
-            this.createAsteroid(position,sizeType.LARGE);
+            this.createAsteroid(position,SizeTypes.LARGE);
         }
     }
 
@@ -84,11 +84,11 @@ export class AsteroidsManager extends Manager {
     }
 
     public hit(hitAsteroid:Asteroid) {
-        if(hitAsteroid.size===sizeType.SMALL) {
+        if(hitAsteroid.size===SizeTypes.SMALL) {
             this.gameEngine.explosionsManager.createExplosion(hitAsteroid.position);
             return
         };
-        const nextSize=hitAsteroid.size===sizeType.LARGE?sizeType.MEDIUM:sizeType.SMALL;
+        const nextSize=hitAsteroid.size===SizeTypes.LARGE?SizeTypes.MEDIUM:SizeTypes.SMALL;
         const pos=hitAsteroid.position;
         this.createAsteroid(pos,nextSize)
         this.createAsteroid(pos,nextSize)

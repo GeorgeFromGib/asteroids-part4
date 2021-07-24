@@ -1,16 +1,16 @@
 import { VerticedShapeActor } from './base/VerticedShapeActor';
 
 
-import { ISaucerSize, saucerType } from "../managers/saucerManager";
+import { ISaucerType, SaucerTypes } from "../managers/saucerManager";
 import { IModel } from "./base/actor";
 import { ClosedShapeActor } from "./base/ClosedShapeActor";
 
 
 export class Saucer extends VerticedShapeActor {
-  type:ISaucerSize
+  type:ISaucerType
   points:number;
 
-  constructor(SaucerModel:IModel,type:ISaucerSize) {
+  constructor(SaucerModel:IModel,type:ISaucerType) {
     super(SaucerModel);
     this.type=type;
     this.scale=type.scale;
