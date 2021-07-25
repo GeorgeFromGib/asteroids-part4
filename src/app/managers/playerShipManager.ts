@@ -101,11 +101,7 @@ export class PlayerShipManager extends Manager {
     if (this.ship.show) {
       const col = this.ship.hasCollided(asteroids) as Asteroid;
       if (col != undefined) {
-        this.gameEngine.scoresManager.lives--;
-        this.gameEngine.scoresManager.addToScore(col.points);
-        this.showShip(false);
-        if(this.gameEngine.scoresManager.lives>0)
-          this.startNewLife();
+        this.shipHit(col);
       }
     }
     this.projectiles.forEach((p) => {
@@ -120,6 +116,16 @@ export class PlayerShipManager extends Manager {
 
     });
   }
+
+  public shipHit(hitBy:Asteroid) {
+    this.gameEngine.scoresManager.lives--;
+    this.gameEngine.scoresManager.addToScore(hitBy.points);
+    this.showShip(false);
+    this.gameEngine.explosionsManager.createShipExplosion(this.spaceship.ship,this.ship)
+    if(this.gameEngine.scoresManager.lives>0)
+      this.startNewLife();
+  }
+
 
   public turn(turn: ShipTurn) {
     this.ship.turn(turn)
