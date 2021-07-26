@@ -1,5 +1,5 @@
 import { AsteroidsGame } from "../../asteroidsGame";
-import P5, { Vector } from "p5";
+import { Vector } from "p5";
 
 export interface IModel {
   vertexes: number[][];
@@ -21,11 +21,11 @@ export abstract class Actor {
   public parentOffset: Vector;
   public childActors:Actor[]=[];
 
-  constructor(protected _model: IModel) {
+  constructor(public model: IModel) {
     this._transModel = {
       vertexes: [],
-      vertices: this._model.vertices,
-      radius: this._model.radius,
+      vertices: this.model.vertices,
+      radius: this.model.radius,
     };
     this.radius = this._transModel.radius;
   }
@@ -45,15 +45,15 @@ export abstract class Actor {
   };
 
   public edgeWrap = (screen_width: number, screen_height: number) => {
-    if (this.position.x > screen_width + this._model.radius)
-      this.position.x = -this._model.radius;
-    else if (this.position.x < -this._model.radius)
-      this.position.x = screen_width + this._model.radius;
+    if (this.position.x > screen_width + this.model.radius)
+      this.position.x = -this.model.radius;
+    else if (this.position.x < -this.model.radius)
+      this.position.x = screen_width + this.model.radius;
 
-    if (this.position.y > screen_height + this._model.radius)
-      this.position.y = -this._model.radius;
-    else if (this.position.y < -this._model.radius)
-      this.position.y = screen_height + this._model.radius;
+    if (this.position.y > screen_height + this.model.radius)
+      this.position.y = -this.model.radius;
+    else if (this.position.y < -this.model.radius)
+      this.position.y = screen_height + this.model.radius;
   };
 
   public hasCollided(otherActors: Actor[]): Actor {
@@ -71,11 +71,11 @@ export abstract class Actor {
   }
 
   public update(timeDelta: number) {
-    this.radius = this._model.radius * this.scale;
+    this.radius = this.model.radius * this.scale;
     this.position.add(this.velocity.copy().mult(timeDelta));
     this.heading += this.rotationVel*timeDelta;
     this._transModel.vertexes = [];
-    this._model.vertexes.forEach((av) => {
+    this.model.vertexes.forEach((av) => {
       let v = new Vector().set(av[0], av[1]);
       v.mult(this.scale);
       if(!this.parent) {

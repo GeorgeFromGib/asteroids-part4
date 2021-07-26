@@ -1,9 +1,10 @@
+import { ExpiringActorDecorator } from './../actors/base/decorators/ExpiringActorDecorator';
 import { Saucer } from './../actors/saucer';
 import { GameTimer } from './../asteroidsGame';
 import { Asteroid } from './../actors/asteroid';
 import { Particle } from "../actors/particle";
 import { Vector } from "p5";
-import {  IModel } from "../actors/base/actor";
+import {  Actor, IModel } from "../actors/base/actor";
 import { Manager } from "./manager";
 import { Spaceship } from "../actors/spaceship";
 import { AsteroidsGame } from "../asteroidsGame";
@@ -29,7 +30,7 @@ export class PlayerShipManager extends Manager {
   ship: Spaceship;
   firing: boolean;
   lastShot = 0;
-  projectiles: Particle[] = [];
+  projectiles: ExpiringActorDecorator[] = [];
   spaceship: ISpaceShip;
   shipShowTimer:GameTimer;
   hyperSpaceTimer:GameTimer;
@@ -117,9 +118,11 @@ export class PlayerShipManager extends Manager {
     });
   }
 
-  public shipHit(hitBy:Asteroid) {
+  public shipHit(hitBy:Actor) {
     this.gameEngine.scoresManager.lives--;
-    this.gameEngine.scoresManager.addToScore(hitBy.points);
+    const ast=hitBy as Asteroid;
+    // if(ast!==undefined)
+    //   this.gameEngine.scoresManager.addToScore(ast.points);
     this.showShip(false);
     this.gameEngine.explosionsManager.createShipExplosion(this.spaceship.ship,this.ship)
     if(this.gameEngine.scoresManager.lives>0)
@@ -151,7 +154,7 @@ export class PlayerShipManager extends Manager {
     const gunPos = new Vector().set(radius, 0).rotate(heading);
     const startPos = gunPos.add(this.ship.position);
     const vel = Vector.fromAngle(heading).mult(this.spaceship.projectileVel).add(this.ship.velocity);
-    const proj = new Particle(startPos, vel, this.spaceship.projectileLife);
+    const proj = new ExpiringActorDecorator(new Particle(startPos, vel), this.spaceship.projectileLife);
     this.projectiles.push(proj);
   }
 }

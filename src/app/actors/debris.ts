@@ -1,18 +1,13 @@
-import { Vector } from "p5";
-import { IModel } from "./base/actor";
-import { VerticedShapeActor } from "./base/VerticedShapeActor";
+import { VerticedShapeActor } from './base/VerticedShapeActor';
+import { Vector } from 'p5';
+import { IModel } from './base/actor';
+
 
 export class Debris extends VerticedShapeActor {
-    expired:boolean=false;
-
-    constructor(model:IModel,protected lifeTime:number=1000) {
+    constructor(model: IModel, pos: Vector, vel: Vector, heading:number) {
         super(model);
-    }
-
-    public update(timeDelta:number) {
-        this.lifeTime-=timeDelta;
-        if(this.lifeTime<0)
-            this.expired=true;
-        super.update(timeDelta);
+        this.position = pos;
+        this.velocity = vel;
+        this.heading=heading;
     }
 }

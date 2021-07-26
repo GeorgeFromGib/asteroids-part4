@@ -4,7 +4,7 @@ import { Vector } from "p5";
 import { ClosedShapeActor } from "./base/ClosedShapeActor";
 import { ShipTurn } from '../managers/playerShipManager';
 
-export class Spaceship extends VerticedShapeActor {
+export class Spaceship extends ClosedShapeActor {
   protected _shipHeading:number=0;
   thrusting:boolean;
   engineThrust:ClosedShapeActor
