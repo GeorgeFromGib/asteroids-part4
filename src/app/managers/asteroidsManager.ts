@@ -34,7 +34,7 @@ export class AsteroidsManager extends Manager {
 
     public startLevel(level:number) {
         this.levelCompleted=false;
-        this.level=1; 
+        this.level=level;
         this.createAsteroids(6);
     }
 

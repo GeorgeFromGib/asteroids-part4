@@ -9,7 +9,7 @@ export class PlayGameState extends GameState {
   player: PlayerShipManager;
   asteroidsMan:AsteroidsManager;
   timer:GameTimer;
-  mylevel:number=1;
+  mylevel:number=0;
   dummy:string="Hello";
   saucerTimer: GameTimer;
 
@@ -40,9 +40,9 @@ export class PlayGameState extends GameState {
   }
 
   public newLevel(){
-    //that.mylevel;
+    this.mylevel++;
     console.log(this.mylevel);
-    this.asteroidsMan.startLevel(1);
+    this.asteroidsMan.startLevel(this.mylevel);
   }
 
   public handleKeyPress(key: Keys) {
