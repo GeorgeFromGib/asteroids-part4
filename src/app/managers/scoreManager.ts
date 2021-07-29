@@ -72,7 +72,7 @@ export class ScoresManager extends Manager {
 
   public writeBestScore() {
     this.gameEngine.textManager.write(
-      "bestcore",
+      "bestscore",
       this._bestScore.toString().padStart(2, "0"),
       this.gameEngine.screenSize.width / 2,
       17,

@@ -30,13 +30,14 @@ export class InitialGameState extends GameState {
   public handleKeyRelease(key: Keys) { }
 
   nextState() {
-    this.cleanUp();
+    this.gameEngine.asteroidsManager.clear();
+    this.gameEngine.textManager.clear("init");
     this.gameEngine.gameState = new PlayGameState(this.gameEngine);
   }
 
   public update(timeDelta: number) {
     if (this.showPlayer) {
-     if(this.timer._expired)
+     if(this.timer.expired)
         this.nextState();
     }
   }
@@ -56,8 +57,4 @@ export class InitialGameState extends GameState {
     this.timer.start();
   }
 
-  public cleanUp() {
-    this.gameEngine.asteroidsManager.clear();
-    this.gameEngine.textManager.clear("init");
-  }
 }

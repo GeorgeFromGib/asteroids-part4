@@ -64,13 +64,7 @@ export class SaucerManager extends Manager {
 
   public update(timeDelta: number) {
     this._actors = [];
-    this.checkCollisions();
-
-    if (this.gameEngine.asteroidsManager.asteroids.length < 4) {
-      if (!this.saucer && this.saucerTimer.expired) {
-        this.saucerTimer.restart();
-      }
-    }
+    
     if (this.saucer) {
       this._actors.push(this.saucer);
 
@@ -79,14 +73,13 @@ export class SaucerManager extends Manager {
       if (this.saucer.collidedWith) {
         this.gameEngine.explosionsManager.createExplosion(this.saucer.position);
         this.saucer = undefined;
-        this.saucerTimer.time = this.gameEngine.randomRange(10000, 15000);
       }
     }
 
     this.projectiles = this.projectiles.filter(
         (p) => !p.expired && !p.collidedWith
       );
-
+    this.checkCollisions();
     this._actors.push(...this.projectiles);
     super.update(timeDelta);
   }
@@ -103,7 +96,7 @@ export class SaucerManager extends Manager {
       if(player && player.show) {
         const colP=p.hasCollided([player]) as Spaceship;
         if(colP)
-          this,this.gameEngine.playerManager.shipHit(p);
+          this.gameEngine.playerManager.shipHit();
       
     }});
   }
@@ -111,7 +104,7 @@ export class SaucerManager extends Manager {
   public addProjectile() { 
     if(!this.saucer) return;
     const radius = this.saucer.radius;
-    const projHeading = this.getRangeAndDirection(this.gameEngine.playerManager.ship.position,this.saucer.position,0).heading;
+    const projHeading = this.getRangeAndDirection(this.gameEngine.playerManager.ship.position,this.saucer.position,Math.PI/4).heading;
     const gunPos = new Vector().set(radius, 0).rotate(projHeading);
     const startPos = gunPos.add(this.saucer.position);
     const vel = Vector.fromAngle(projHeading).mult(0.7)

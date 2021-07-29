@@ -25,22 +25,25 @@ export class AsteroidsManager extends Manager {
     asteroids:Asteroid[]=[];
     asteroidModels: IAsteroids;
     levelCompleted:boolean=false;
+    level:number=1;
 
     constructor(gameEngine:AsteroidsGame) {
         super(gameEngine);
         this.asteroidModels=gameEngine.configData.asteroids;
     }
 
-    public startLevel() {
+    public startLevel(level:number) {
         this.levelCompleted=false;
-        this.createAsteroids(2);
+        this.level=1; 
+        this.createAsteroids(6);
     }
 
     public createAsteroid(pos:Vector,size:SizeTypes) {
         const aSize=this.asteroidModels.sizes.find(s=>s.size==size);
         const designIndex=Math.floor(this.gameEngine.random(this.asteroidModels.designs.length));
         const l_asteroid=new Asteroid(this.asteroidModels.designs[designIndex]);
-        const vel=this.gameEngine.randomRange(30,80*aSize.speed);
+        const lowSpeed=30*(1+this.level/100);
+        const vel=this.gameEngine.randomRange(lowSpeed,80*aSize.speed);
         l_asteroid.position=pos.copy();
         l_asteroid.velocity=Vector.random2D().mult(vel/1000);
         l_asteroid.size=aSize.size as SizeTypes;

@@ -14,7 +14,7 @@ export abstract class Actor {
   public scale: number = 1.0;
   public velocity: Vector = new Vector().set(0, 0);
   public rotationVel: number = 0.0;
-  public collidedWith: Actor;
+  public collidedWith: Actor=undefined;
   public radius: number = 0;
   public show: boolean = true;
   public parent: Actor;

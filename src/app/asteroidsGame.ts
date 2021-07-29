@@ -49,6 +49,7 @@ export class AsteroidsGame {
 
 
 
+
   private _ge:P5;
   private _prevElapsed = 0; 
   private _keyMapper:Map<number,Keys>=new Map();
@@ -86,6 +87,7 @@ export class AsteroidsGame {
 
     this.screenSize=<ScreenSize>{width:p5.width,height:p5.height,center:p5.createVector(p5.width/2,p5.height/2)}
     
+
     // setup managers
     this.playerManager=new PlayerShipManager(this);
     //this.playerManager.createShip();
