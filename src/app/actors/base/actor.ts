@@ -44,23 +44,11 @@ export abstract class Actor {
     this.heading += angle;
   };
 
-  public edgeWrap = (screen_width: number, screen_height: number) => {
-    if (this.position.x > screen_width + this.model.radius)
-      this.position.x = -this.model.radius;
-    else if (this.position.x < -this.model.radius)
-      this.position.x = screen_width + this.model.radius;
-
-    if (this.position.y > screen_height + this.model.radius)
-      this.position.y = -this.model.radius;
-    else if (this.position.y < -this.model.radius)
-      this.position.y = screen_height + this.model.radius;
-  };
-
   public hasCollided(otherActors: Actor[]): Actor {
     this.collidedWith = undefined;
     otherActors.forEach((actor) => {
       if (this.position.dist(actor.position) < actor.radius + this.radius) {
-        if (this != actor) {
+        if (this != actor && !actor.collidedWith) {
           this.collidedWith = actor;
           actor.collidedWith=this;
           return;

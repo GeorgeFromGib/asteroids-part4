@@ -1,12 +1,10 @@
-import { VerticedShapeActor } from './base/VerticedShapeActor';
+
+import { ISaucerType } from "../managers/saucerManager";
+import { Actor, IModel } from "./base/actor";
+import { AsteroidsGame } from '../asteroidsGame';
 
 
-import { ISaucerType, SaucerTypes } from "../managers/saucerManager";
-import { IModel } from "./base/actor";
-import { ClosedShapeActor } from "./base/ClosedShapeActor";
-
-
-export class Saucer extends VerticedShapeActor {
+export class Saucer extends Actor {
   type:ISaucerType
   points:number;
 
@@ -15,6 +13,10 @@ export class Saucer extends VerticedShapeActor {
     this.type=type;
     this.scale=type.scale;
     this.points=type.points;
+  }
+
+  public draw(gameEngine: AsteroidsGame): void {
+    gameEngine.drawVerticedShape(this._transModel);
   }
 
 }

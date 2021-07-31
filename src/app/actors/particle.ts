@@ -1,14 +1,19 @@
 
 import { Vector } from 'p5';
-import { PointActor } from "./base/PointActor";
+import { AsteroidsGame } from '../asteroidsGame';
+import { Actor } from './base/actor';
 
-export class Particle extends PointActor {
+export class Particle extends Actor {
 
     constructor(pos:Vector,vel:Vector) {
         super({vertexes:[],vertices:[],radius:1});
         this.position=pos;
         this.velocity=vel;
     }
+
+    public draw(gameEngine: AsteroidsGame): void {
+        gameEngine.drawPoint(this.position.x, this.position.y);
+      }
 
 }
 

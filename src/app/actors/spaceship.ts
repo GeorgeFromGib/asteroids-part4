@@ -1,18 +1,19 @@
-import { VerticedShapeActor } from './base/VerticedShapeActor';
 import { ISpaceShip } from './../managers/playerShipManager';
 import { Vector } from "p5";
-import { ClosedShapeActor } from "./base/ClosedShapeActor";
 import { ShipTurn } from '../managers/playerShipManager';
+import { AsteroidsGame } from '../asteroidsGame';
+import { Actor } from './base/actor';
+import { Thrust } from './thrust';
 
-export class Spaceship extends ClosedShapeActor {
+export class Spaceship extends Actor {
   protected _shipHeading:number=0;
   thrusting:boolean;
-  engineThrust:ClosedShapeActor
+  engineThrust:Thrust
 
 
   constructor(protected shipData:ISpaceShip) {
     super(shipData.ship);
-    this.engineThrust=new ClosedShapeActor(shipData.thrust)
+    this.engineThrust=new Thrust(shipData.thrust)
     this.addChildActor(this.engineThrust,new Vector().set(0,7))
   }
 
@@ -33,6 +34,10 @@ export class Spaceship extends ClosedShapeActor {
     this.velocity.mult(this.shipData.friction);
     super.update(timeDelta);
   }
+
+  public draw(gameEngine: AsteroidsGame): void {
+    gameEngine.drawClosedShape(this._transModel);
+}
  
 }
 

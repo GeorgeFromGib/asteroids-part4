@@ -13,9 +13,9 @@ export class InitialGameState extends GameState {
     this.gameEngine.asteroidsManager.createAsteroids(10);
     this.gameEngine.textManager.write(
       "init",
-      "1 COIN 1 PLAY",
+      "PUSH START",
       this.gameEngine.screenSize.width / 2,
-      this.gameEngine.screenSize.height / 4 * 3,
+      this.gameEngine.screenSize.height / 4 ,
       2.3,
       Justify.CENTER
     );

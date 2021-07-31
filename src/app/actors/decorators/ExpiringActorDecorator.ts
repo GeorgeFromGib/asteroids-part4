@@ -1,6 +1,6 @@
 
-import { AsteroidsGame } from "../../../asteroidsGame";
-import { Actor } from "../actor";
+import { AsteroidsGame } from "../../asteroidsGame";
+import { Actor } from "../base/actor";
 import { ActorDecorator } from "./actorDecorator";
 
 

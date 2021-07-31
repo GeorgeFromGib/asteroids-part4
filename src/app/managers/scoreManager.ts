@@ -1,7 +1,7 @@
+import { Spaceship } from './../actors/spaceship';
 import { Manager } from "./manager";
 import { AsteroidsGame } from "../asteroidsGame";
 import { IModel } from "../actors/base/actor";
-import { ClosedShapeActor } from "../actors/base/ClosedShapeActor";
 import { Justify } from "./textManager";
 
 export class ScoresManager extends Manager {
@@ -51,7 +51,7 @@ export class ScoresManager extends Manager {
     this._actors = [];
     let xpos = this.gameEngine.screenSize.width / 4 - 54;
     for (let i = 0; i < this._lives; i++) {
-      const ship = new ClosedShapeActor(this._shipModel);
+      const ship = new Spaceship(this.gameEngine.configData.spaceship);
       ship.positionXY(xpos, 45);
       xpos += ship.radius + 6;
       this._actors.push(ship);

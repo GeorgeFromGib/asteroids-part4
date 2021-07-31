@@ -1,4 +1,5 @@
-import { Actor } from "../actor";
+import { Actor } from "../base/actor";
+
 
 export abstract class ActorDecorator extends Actor {
 

@@ -25,7 +25,7 @@
     "friction":0.998,
     "projectileVel":0.7,
     "projectileLife":700,
-    "rateOfFire":150
+    "rateOfFire":200
   },
   "asteroids": {
     "designs": [
@@ -152,13 +152,15 @@
         "size":"SAUCER_LARGE",
         "scale":2.5,
         "speed":110,
-        "points":200
+        "points":200,
+        "fudgeAim":0.78
       },
       {
         "size":"SAUCER_SMALL",
-        "scale":1,
-        "speed":2,
-        "points":1000
+        "scale":1.5,
+        "speed":200,
+        "points":1000,
+        "fudgeAim":0.1
       }
     ],
     "projectileVel":0.7,
@@ -278,6 +280,10 @@
       {
         "char":"T",
         "vertices":[[7,1],[0,4]]
+      },
+      {
+        "char":"U",
+        "vertices":[[1,3],[3,5],[5,7]]
       },
       {
         "char":"V",

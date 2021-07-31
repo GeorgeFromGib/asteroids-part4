@@ -4,6 +4,9 @@ import { PlayerShipManager, ShipTurn } from "../managers/playerShipManager";
 import { GameTimer, Keys } from "./../asteroidsGame";
 import { GameOverState } from "./GameOverState";
 import { GameState } from "./GameState";
+import { Asteroid } from '../actors/asteroid';
+import { Saucer } from '../actors/saucer';
+import { Spaceship } from '../actors/spaceship';
 
 export class PlayGameState extends GameState {
   player: PlayerShipManager;
@@ -37,7 +40,44 @@ export class PlayGameState extends GameState {
         this.saucerTimer.restart();
       }
     }
+    this.checkCollisions();
   }
+
+  public checkCollisions() {
+    const asteroids = this.gameEngine.asteroidsManager.allActors;
+    const saucers = this.gameEngine.saucerManager.allActors;
+    const ship=this.gameEngine.playerManager.ship;
+    const shipProjectiles=this.gameEngine.playerManager.projectiles;
+    const saucerProjectiles=this.gameEngine.saucerManager.projectiles;
+    if (ship.show) {
+      const colA = ship.hasCollided(asteroids) as Asteroid;
+      const colS=ship.hasCollided(saucers) as Saucer;
+      if (colA != undefined || colS !=undefined) {
+        this.gameEngine.playerManager.shipHit();
+      }
+    }
+    saucers.forEach(s=>{
+      const colA=s.hasCollided(asteroids) as Asteroid;
+    })
+    shipProjectiles.forEach((p) => {
+      const colA = p.hasCollided(asteroids) as Asteroid;
+      if (colA != undefined) {
+        this.gameEngine.scoresManager.addToScore(colA.points);
+      }
+      const colS = p.hasCollided(saucers) as Saucer;
+      if (colS != undefined) {
+        this.gameEngine.scoresManager.addToScore(colS.points);
+      }
+    });
+    saucerProjectiles.forEach((p) => {
+      const colA = p.hasCollided(asteroids) as Asteroid;
+      if(ship && ship.show) {
+        const colP=p.hasCollided([ship]) as Spaceship;
+        if(colP)
+          this.gameEngine.playerManager.shipHit()
+        }
+      })
+    }
 
   public newLevel(){
     this.mylevel++;
@@ -69,7 +109,7 @@ export class PlayGameState extends GameState {
 
   public nextState() {
     this.player.showShip(false);
-    //this.level=0;
+    this.gameEngine.saucerManager.clear();
     this.gameEngine.gameState = new GameOverState(this.gameEngine);
   }
 }

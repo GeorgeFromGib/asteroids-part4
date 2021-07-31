@@ -4,9 +4,8 @@ import { Actor, IModel } from "../actors/base/actor";
 import { Particle } from "../actors/particle";
 import { AsteroidsGame } from "./../asteroidsGame";
 import { Manager } from "./manager";
-import { VerticedShapeActor } from '../actors/base/VerticedShapeActor';
-import { ExpiringActorDecorator } from "../actors/base/decorators/ExpiringActorDecorator";
 import { Debris } from "../actors/debris";
+import { ExpiringActorDecorator } from "../actors/decorators/ExpiringActorDecorator";
 
 export class ExplosionManager extends Manager {
   particles: ExpiringActorDecorator[]=[] ;
