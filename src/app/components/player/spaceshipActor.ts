@@ -2,11 +2,11 @@ import { ISpaceShip } from './playerShipManager';
 import { Vector } from "p5";
 import { ShipTurn } from './playerShipManager';
 import { AsteroidsGame } from '../../asteroidsGame';
-import { Actor } from '../../shared/actors/base/actor';
+import { ActorBase } from '../../shared/actors/base/actorBase';
 import { ThrustActor } from './thrustActor';
 
 
-export class SpaceshipActor extends Actor {
+export class SpaceshipActor extends ActorBase {
   protected _shipHeading:number=0;
   thrusting:boolean;
   engineThrust:ThrustActor

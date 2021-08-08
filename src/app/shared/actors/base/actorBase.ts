@@ -7,19 +7,19 @@ export interface IModel {
   radius: number;
 }
 
-export abstract class Actor {
+export abstract class ActorBase {
   protected _transModel: IModel;
   public position: Vector= new Vector().set(0, 0);
   public heading: number = 0.0;
   public scale: number = 1.0;
   public velocity: Vector = new Vector().set(0, 0);
   public rotationVel: number = 0.0;
-  public collidedWith: Actor=undefined;
+  public collidedWith: ActorBase=undefined;
   public radius: number = 0;
   public show: boolean = true;
-  public parent: Actor;
+  public parent: ActorBase;
   public parentOffset: Vector;
-  public childActors:Actor[]=[];
+  public childActors:ActorBase[]=[];
 
   constructor(public model: IModel) {
     this._transModel = {
@@ -30,7 +30,7 @@ export abstract class Actor {
     this.radius = this._transModel.radius;
   }
 
-  public addChildActor(actor:Actor,offset:Vector) {
+  public addChildActor(actor:ActorBase,offset:Vector) {
     this.childActors.push(actor);
     actor.parent=this;
     actor.parentOffset=offset;
@@ -44,7 +44,7 @@ export abstract class Actor {
     this.heading += angle;
   };
 
-  public hasCollided(otherActors: Actor[]): Actor {
+  public hasCollided(otherActors: ActorBase[]): ActorBase {
     this.collidedWith = undefined;
     otherActors.forEach((actor) => {
       if (this.position.dist(actor.position) < actor.radius + this.radius) {

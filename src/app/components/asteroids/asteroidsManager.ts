@@ -1,8 +1,8 @@
 import { Vector } from "p5";
-import { IModel } from "../../shared/actors/base/actor";
+import { IModel } from "../../shared/actors/base/actorBase";
 import { Asteroid } from "./asteroid";
 import { AsteroidsGame } from "../../asteroidsGame";
-import { Manager } from "../../shared/managers/manager";
+import { ManagerBase } from "../../shared/managers/base/managerBase";
 
 export enum SizeTypes {
   LARGE = "ASTEROID_LARGE",
@@ -20,7 +20,7 @@ export interface IAsteroids {
   sizes: IAsteroidSize[];
 }
 
-export class AsteroidsManager extends Manager {
+export class AsteroidsManager extends ManagerBase {
   asteroids: Asteroid[] = [];
   asteroidModels: IAsteroids;
   levelCompleted: boolean = false;

@@ -1,6 +1,6 @@
-import { Actor, IModel } from "./actor";
+import { ActorBase, IModel } from "./actorBase";
 
-export abstract class ExpiringActor extends Actor {
+export abstract class ExpiringActor extends ActorBase {
     expired: boolean = false;
 
     constructor(model:IModel,protected lifeTime: number = 1000) {

@@ -1,9 +1,9 @@
 import { GameTimer } from "../../asteroidsGame";
 import { Particle } from "../../shared/actors/particle";
 import { Vector } from "p5";
-import { IModel } from "../../shared/actors/base/actor";
+import { IModel } from "../../shared/actors/base/actorBase";
 import { AsteroidsGame } from "../../asteroidsGame";
-import { Manager } from "../../shared/managers/manager";
+import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SpaceshipActor } from "./spaceshipActor";
 
 export enum ShipTurn {
@@ -23,7 +23,7 @@ export interface ISpaceShip {
     projectileLife: number;
 }
 
-export class PlayerShipManager extends Manager {
+export class PlayerShipManager extends ManagerBase {
     ship: SpaceshipActor;
     firing: boolean;
     lastShot = 0;

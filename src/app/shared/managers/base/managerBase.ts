@@ -1,8 +1,8 @@
-import { Actor } from "../actors/base/actor";
-import { AsteroidsGame, ScreenSize } from "../../asteroidsGame";
+import { ActorBase } from "../../actors/base/actorBase";
+import { AsteroidsGame, ScreenSize } from "../../../asteroidsGame";
 
-export abstract class Manager{
-  protected _actors: Actor[] = [];
+export abstract class ManagerBase{
+  protected _actors: ActorBase[] = [];
 
   constructor(protected gameEngine: AsteroidsGame) {
   }
@@ -14,7 +14,7 @@ export abstract class Manager{
     });
   }
 
-  public edgeWrap(actor:Actor)  {
+  public edgeWrap(actor:ActorBase)  {
     const screen=this.gameEngine.screenSize;
     if (actor.position.x > screen.width + actor.radius)
       actor.position.x = -actor.radius;
@@ -33,7 +33,7 @@ export abstract class Manager{
     });
   }
 
-  public get allActors(): Actor[] {
-    return this._actors;
-  }
+  // public get allActors(): ActorBase[] {
+  //   return this._actors;
+  // }
 }

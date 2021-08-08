@@ -4,8 +4,8 @@ import { ScoresManager } from './shared/managers/scoreManager';
 import { ExplosionManager } from './shared/managers/explosionManager';
 import { sketch } from "./p5-sketch";
 import * as ConfigData from '../assets/config.json' 
-import { IModel } from "./shared/actors/base/actor";
-import { Manager } from './shared/managers/manager';
+import { IModel } from "./shared/actors/base/actorBase";
+import { ManagerBase } from './shared/managers/base/managerBase';
 import { InitialGameState } from "./gameStates/InitialGameState";
 import { GameState } from "./gameStates/GameState";
 import { PlayerShipManager } from './components/player/playerShipManager';
@@ -38,7 +38,7 @@ export class AsteroidsGame {
   asteroidsManager: AsteroidsManager;
   explosionsManager: ExplosionManager;
   saucerManager: SaucerManager;
-  managers:Manager[]=[];
+  managers:ManagerBase[]=[];
   textManager: TextManager;
   scoresManager:ScoresManager;
   settings:ISettings;

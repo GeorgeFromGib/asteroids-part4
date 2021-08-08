@@ -1,8 +1,8 @@
 
 import { Vector } from "p5";
-import { Actor, IModel } from "../../shared/actors/base/actor";
+import { ActorBase, IModel } from "../../shared/actors/base/actorBase";
 import { Particle } from "../../shared/actors/particle";
-import { Manager } from "../../shared/managers/manager";
+import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SaucerActor } from "./saucerActor";
 import { AsteroidsGame, GameTimer } from "../../asteroidsGame";
 
@@ -28,7 +28,7 @@ export interface ISaucer {
   rateOfFire: number;
 }
 
-export class SaucerManager extends Manager {
+export class SaucerManager extends ManagerBase {
   saucerData: ISaucer;
   saucer: SaucerActor;
   saucerTimer: GameTimer;
@@ -76,7 +76,7 @@ export class SaucerManager extends Manager {
     super.update(timeDelta);
   }
 
-  public edgeWrap(actor:Actor) {}
+  public edgeWrap(actor:ActorBase) {}
 
   public createSaucer() {
     const sType = this.getSaucerType(this.getRandomSaucerType());
@@ -115,7 +115,7 @@ export class SaucerManager extends Manager {
     return type;
   }
 
-  private calcSaucerStartPos(saucer:Actor) {
+  private calcSaucerStartPos(saucer:ActorBase) {
     const screen=this.gameEngine.screenSize;
     const xPos =
       this.gameEngine.randomRange(0, 100) > 50
@@ -129,7 +129,7 @@ export class SaucerManager extends Manager {
     return new Vector().set(xPos,yPos)
   }
 
-  private isSaucerAtEnd(saucer:Actor, endX:number) {
+  private isSaucerAtEnd(saucer:ActorBase, endX:number) {
     return ((saucer.velocity.x<0 && saucer.position.x<endX) || (saucer.velocity.x>0 && saucer.position.x>endX))
   }
 

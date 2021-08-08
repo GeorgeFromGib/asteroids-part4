@@ -1,9 +1,9 @@
 
 import { SizeTypes } from "./asteroidsManager";
 import { AsteroidsGame } from "../../asteroidsGame";
-import { Actor, IModel } from "../../shared/actors/base/actor";
+import { ActorBase, IModel } from "../../shared/actors/base/actorBase";
 
-export class Asteroid extends Actor {
+export class Asteroid extends ActorBase {
     size:SizeTypes
     points:number;
 

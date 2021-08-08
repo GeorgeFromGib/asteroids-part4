@@ -1,6 +1,6 @@
 
 import { Vector } from 'p5';
-import { IModel } from './base/actor';
+import { IModel } from './base/actorBase';
 import { AsteroidsGame } from '../../asteroidsGame';
 import { ExpiringActor } from './base/expiringActor';
 

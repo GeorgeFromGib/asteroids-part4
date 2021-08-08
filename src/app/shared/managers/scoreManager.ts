@@ -1,11 +1,11 @@
 
-import { Manager } from "./manager";
+import { ManagerBase } from "./base/managerBase";
 import { AsteroidsGame } from "../../asteroidsGame";
-import { IModel } from "../actors/base/actor";
+import { IModel } from "../actors/base/actorBase";
 import { SpaceshipActor } from "../../components/player/spaceshipActor";
 import { Justify } from "../../components/text/textManager";
 
-export class ScoresManager extends Manager {
+export class ScoresManager extends ManagerBase {
   protected nextLife: number;
   protected _score: number = 0;
   protected _lives: number;

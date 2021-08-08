@@ -1,10 +1,10 @@
 
-import { Actor, IModel } from "../../shared/actors/base/actor";
+import { ActorBase, IModel } from "../../shared/actors/base/actorBase";
 import { AsteroidsGame } from '../../asteroidsGame';
 import { ISaucerType } from "./saucerManager";
 
 
-export class SaucerActor extends Actor {
+export class SaucerActor extends ActorBase {
   type:ISaucerType
   points:number;
 

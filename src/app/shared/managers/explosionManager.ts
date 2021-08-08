@@ -1,12 +1,12 @@
 
 import { Vector } from "p5";
-import { Actor, IModel } from "../actors/base/actor";
+import { ActorBase, IModel } from "../actors/base/actorBase";
 import { Particle } from "../actors/particle";
 import { AsteroidsGame } from "../../asteroidsGame";
-import { Manager } from "./manager";
+import { ManagerBase } from "./base/managerBase";
 import { Debris } from "../actors/debris";
 
-export class ExplosionManager extends Manager {
+export class ExplosionManager extends ManagerBase {
   particles: Particle[]=[] ;
   debris:Particle[]=[];
 
@@ -33,7 +33,7 @@ export class ExplosionManager extends Manager {
      }  
   }
 
-  public createShipExplosion(shipModel:IModel,ship:Actor) {
+  public createShipExplosion(shipModel:IModel,ship:ActorBase) {
     const vertexes=shipModel.vertexes;
     shipModel.vertices.forEach(vert=>{
       const model:IModel={vertexes:[vertexes[vert[0]],vertexes[vert[1]]],vertices:[[0,1]],radius:1}

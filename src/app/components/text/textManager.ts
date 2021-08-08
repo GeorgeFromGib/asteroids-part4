@@ -1,6 +1,6 @@
 import { Vector } from 'p5';
-import { Actor, IModel } from '../../shared/actors/base/actor';
-import { Manager } from '../../shared/managers/manager';
+import { ActorBase, IModel } from '../../shared/actors/base/actorBase';
+import { ManagerBase } from '../../shared/managers/base/managerBase';
 import { AsteroidsGame } from '../../asteroidsGame';
 import { TextActor } from './textActor';
 
@@ -22,12 +22,12 @@ export interface ITextModel {
 
 export interface IText {
     name:string;
-    characters:Actor[];
+    characters:ActorBase[];
     position:Vector;
 
 }
 
-export class TextManager extends Manager {
+export class TextManager extends ManagerBase {
     texts:IText[]=[];
     protected textModel:ITextModel
 
@@ -46,7 +46,7 @@ export class TextManager extends Manager {
             adjXpos=xPos-((this.textModel.radius + space)*scale*messChars.length/2);
         const pos=new Vector().set(adjXpos,yPos);
         let l_xpos=0;
-        const actors:Actor[]=[];
+        const actors:ActorBase[]=[];
         messChars.forEach(c => {
             const model:IModel={
                 vertexes:this.textModel.vertexes.map(v=>[v[0]+l_xpos,v[1]]),
