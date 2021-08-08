@@ -1,12 +1,12 @@
 
-import { AsteroidsManager } from './../managers/asteroidsManager';
-import { PlayerShipManager, ShipTurn } from "../managers/playerShipManager";
 import { GameTimer, Keys } from "./../asteroidsGame";
 import { GameOverState } from "./GameOverState";
 import { GameState } from "./GameState";
-import { Asteroid } from '../actors/asteroid';
-import { Saucer } from '../actors/saucer';
-import { Spaceship } from '../actors/spaceship';
+import { Asteroid } from '../components/asteroids/asteroid';
+import { SaucerActor } from '../components/saucer/saucerActor';
+import { PlayerShipManager, ShipTurn } from '../components/player/playerShipManager';
+import { SpaceshipActor } from '../components/player/spaceshipActor';
+import { AsteroidsManager } from "../components/asteroids/asteroidsManager";
 
 export class PlayGameState extends GameState {
   player: PlayerShipManager;
@@ -51,7 +51,7 @@ export class PlayGameState extends GameState {
     const saucerProjectiles=this.gameEngine.saucerManager.projectiles;
     if (ship.show) {
       const colA = ship.hasCollided(asteroids) as Asteroid;
-      const colS=ship.hasCollided(saucers) as Saucer;
+      const colS=ship.hasCollided(saucers) as SaucerActor;
       if (colA != undefined || colS !=undefined) {
         this.gameEngine.playerManager.shipHit();
       }
@@ -64,7 +64,7 @@ export class PlayGameState extends GameState {
       if (colA != undefined) {
         this.gameEngine.scoresManager.addToScore(colA.points);
       }
-      const colS = p.hasCollided(saucers) as Saucer;
+      const colS = p.hasCollided(saucers) as SaucerActor;
       if (colS != undefined) {
         this.gameEngine.scoresManager.addToScore(colS.points);
       }
@@ -72,7 +72,7 @@ export class PlayGameState extends GameState {
     saucerProjectiles.forEach((p) => {
       const colA = p.hasCollided(asteroids) as Asteroid;
       if(ship && ship.show) {
-        const colP=p.hasCollided([ship]) as Spaceship;
+        const colP=p.hasCollided([ship]) as SpaceshipActor;
         if(colP)
           this.gameEngine.playerManager.shipHit()
         }

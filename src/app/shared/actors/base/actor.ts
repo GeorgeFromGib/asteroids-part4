@@ -1,4 +1,4 @@
-import { AsteroidsGame } from "../../asteroidsGame";
+import { AsteroidsGame } from "../../../asteroidsGame";
 import { Vector } from "p5";
 
 export interface IModel {

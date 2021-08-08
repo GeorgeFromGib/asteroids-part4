@@ -1,8 +1,8 @@
 import { Vector } from 'p5';
-import { Actor, IModel } from '../actors/base/actor';
-import { Text } from '../actors/text';
-import { AsteroidsGame } from './../asteroidsGame';
-import { Manager } from "./manager";
+import { Actor, IModel } from '../../shared/actors/base/actor';
+import { Manager } from '../../shared/managers/manager';
+import { AsteroidsGame } from '../../asteroidsGame';
+import { TextActor } from './textActor';
 
 export enum Justify {
     LEFT,
@@ -53,7 +53,7 @@ export class TextManager extends Manager {
                 vertices:this.textModel.characters.find(h=>h.char===c).vertices,
                 radius:this.textModel.radius
             }
-            const charActor=new Text(model);
+            const charActor=new TextActor(model);
             charActor.position=pos;
             charActor.scale=scale;
             actors.push(charActor);

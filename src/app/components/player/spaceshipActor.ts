@@ -1,19 +1,20 @@
-import { ISpaceShip } from './../managers/playerShipManager';
+import { ISpaceShip } from './playerShipManager';
 import { Vector } from "p5";
-import { ShipTurn } from '../managers/playerShipManager';
-import { AsteroidsGame } from '../asteroidsGame';
-import { Actor } from './base/actor';
-import { Thrust } from './thrust';
+import { ShipTurn } from './playerShipManager';
+import { AsteroidsGame } from '../../asteroidsGame';
+import { Actor } from '../../shared/actors/base/actor';
+import { ThrustActor } from './thrustActor';
 
-export class Spaceship extends Actor {
+
+export class SpaceshipActor extends Actor {
   protected _shipHeading:number=0;
   thrusting:boolean;
-  engineThrust:Thrust
+  engineThrust:ThrustActor
 
 
   constructor(protected shipData:ISpaceShip) {
     super(shipData.ship);
-    this.engineThrust=new Thrust(shipData.thrust)
+    this.engineThrust=new ThrustActor(shipData.thrust)
     this.addChildActor(this.engineThrust,new Vector().set(0,7))
   }
 

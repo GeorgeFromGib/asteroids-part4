@@ -1,11 +1,11 @@
 
 import { Vector } from "p5";
-import { Actor, IModel } from "../actors/base/actor";
-import { ExpiringActorDecorator } from "../actors/decorators/ExpiringActorDecorator";
-import { Particle } from "../actors/particle";
-import { Saucer } from "./../actors/saucer";
-import { AsteroidsGame, GameTimer } from "./../asteroidsGame";
-import { Manager } from "./manager";
+import { Actor, IModel } from "../../shared/actors/base/actor";
+import { Particle } from "../../shared/actors/particle";
+import { Manager } from "../../shared/managers/manager";
+import { SaucerActor } from "./saucerActor";
+import { AsteroidsGame, GameTimer } from "../../asteroidsGame";
+
 
 export enum SaucerTypes {
   LARGE = "SAUCER_LARGE",
@@ -30,10 +30,10 @@ export interface ISaucer {
 
 export class SaucerManager extends Manager {
   saucerData: ISaucer;
-  saucer: Saucer;
+  saucer: SaucerActor;
   saucerTimer: GameTimer;
   firingTimer: GameTimer;
-  projectiles: ExpiringActorDecorator[] = [];
+  projectiles: Particle[] = [];
   firing: boolean = true;
   saucerEndXPos:number;
 
@@ -80,7 +80,7 @@ export class SaucerManager extends Manager {
 
   public createSaucer() {
     const sType = this.getSaucerType(this.getRandomSaucerType());
-    this.saucer = new Saucer(this.saucerData.model, sType);
+    this.saucer = new SaucerActor(this.saucerData.model, sType);
     this.saucer.position=this.calcSaucerStartPos(this.saucer);
     this.saucer.velocity = new Vector().set(this.calcSaucerDirection(), 0).mult(sType.speed / 1000);
     this.saucerEndXPos=this.calcSaucerEndXpos(this.saucer.position,this.saucer.radius)
@@ -144,7 +144,7 @@ export class SaucerManager extends Manager {
     const gunPos = new Vector().set(radius, 0).rotate(projHeading);
     const startPos = gunPos.add(this.saucer.position);
     const vel = Vector.fromAngle(projHeading).mult(0.7);
-    const proj = new ExpiringActorDecorator(new Particle(startPos, vel), 700);
+    const proj = new Particle(startPos, vel, 700);
     this.projectiles.push(proj);
   }
 

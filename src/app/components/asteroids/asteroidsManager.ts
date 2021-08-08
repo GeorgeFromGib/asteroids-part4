@@ -1,8 +1,8 @@
 import { Vector } from "p5";
-import { IModel } from "../actors/base/actor";
-import { Asteroid } from "../actors/asteroid";
-import { AsteroidsGame } from "../asteroidsGame";
-import { Manager } from "./manager";
+import { IModel } from "../../shared/actors/base/actor";
+import { Asteroid } from "./asteroid";
+import { AsteroidsGame } from "../../asteroidsGame";
+import { Manager } from "../../shared/managers/manager";
 
 export enum SizeTypes {
   LARGE = "ASTEROID_LARGE",

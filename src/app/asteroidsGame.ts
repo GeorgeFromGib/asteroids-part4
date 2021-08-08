@@ -1,18 +1,17 @@
-import { SaucerManager } from './managers/saucerManager';
 
 import P5, { Vector } from 'p5';
-
-import { ScoresManager } from './managers/scoreManager';
-import { TextManager } from './managers/textManager';
-import { ExplosionManager } from './managers/explosionManager';
-import { PlayerShipManager, ShipTurn } from './managers/playerShipManager';
+import { ScoresManager } from './shared/managers/scoreManager';
+import { ExplosionManager } from './shared/managers/explosionManager';
 import { sketch } from "./p5-sketch";
 import * as ConfigData from '../assets/config.json' 
-import { IModel } from "./actors/base/actor";
-import { AsteroidsManager } from './managers/asteroidsManager';
-import { Manager } from './managers/manager';
+import { IModel } from "./shared/actors/base/actor";
+import { Manager } from './shared/managers/manager';
 import { InitialGameState } from "./gameStates/InitialGameState";
 import { GameState } from "./gameStates/GameState";
+import { PlayerShipManager } from './components/player/playerShipManager';
+import { AsteroidsManager } from './components/asteroids/asteroidsManager';
+import { SaucerManager } from './components/saucer/saucerManager';
+import { TextManager } from './components/text/textManager';
 
 export class ScreenSize {
   width:number;
@@ -38,6 +37,7 @@ export class AsteroidsGame {
   playerManager:PlayerShipManager;
   asteroidsManager: AsteroidsManager;
   explosionsManager: ExplosionManager;
+  saucerManager: SaucerManager;
   managers:Manager[]=[];
   textManager: TextManager;
   scoresManager:ScoresManager;
@@ -53,7 +53,6 @@ export class AsteroidsGame {
   private _ge:P5;
   private _prevElapsed = 0; 
   private _keyMapper:Map<number,Keys>=new Map();
-  saucerManager: SaucerManager;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));

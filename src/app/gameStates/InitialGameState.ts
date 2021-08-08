@@ -1,4 +1,5 @@
-import { Justify } from "../managers/textManager";
+
+import { Justify } from "../components/text/textManager";
 import { GameTimer, Keys } from "./../asteroidsGame";
 import { GameState } from "./GameState";
 import { PlayGameState } from "./PlayGameState";

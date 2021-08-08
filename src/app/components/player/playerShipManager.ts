@@ -1,11 +1,10 @@
-import { GameTimer } from "./../asteroidsGame";
-import { Particle } from "../actors/particle";
+import { GameTimer } from "../../asteroidsGame";
+import { Particle } from "../../shared/actors/particle";
 import { Vector } from "p5";
-import { IModel } from "../actors/base/actor";
-import { Manager } from "./manager";
-import { Spaceship } from "../actors/spaceship";
-import { AsteroidsGame } from "../asteroidsGame";
-import { ExpiringActorDecorator } from "../actors/decorators/ExpiringActorDecorator";
+import { IModel } from "../../shared/actors/base/actor";
+import { AsteroidsGame } from "../../asteroidsGame";
+import { Manager } from "../../shared/managers/manager";
+import { SpaceshipActor } from "./spaceshipActor";
 
 export enum ShipTurn {
     LEFT = -1,
@@ -25,10 +24,10 @@ export interface ISpaceShip {
 }
 
 export class PlayerShipManager extends Manager {
-    ship: Spaceship;
+    ship: SpaceshipActor;
     firing: boolean;
     lastShot = 0;
-    projectiles: ExpiringActorDecorator[] = [];
+    projectiles: Particle[] = [];
     spaceship: ISpaceShip;
     shipShowTimer: GameTimer;
     hyperSpaceTimer: GameTimer;
@@ -49,7 +48,7 @@ export class PlayerShipManager extends Manager {
     }
 
     public createShip() {
-        this.ship = new Spaceship(this.spaceship);
+        this.ship = new SpaceshipActor(this.spaceship);
         this.ship.position = this.gameEngine.screenSize.center;
         this.ship.show = false;
         this.firing = false;
@@ -139,10 +138,7 @@ export class PlayerShipManager extends Manager {
         const vel = Vector.fromAngle(heading)
             .mult(this.spaceship.projectileVel)
             .add(this.ship.velocity);
-        const proj = new ExpiringActorDecorator(
-            new Particle(startPos, vel),
-            this.spaceship.projectileLife
-        );
+        const proj = new Particle(startPos, vel,this.spaceship.projectileLife);
         this.projectiles.push(proj);
     }
 }

@@ -1,7 +1,7 @@
 
-import { AsteroidsGame } from "../asteroidsGame";
-import { SizeTypes } from "../managers/asteroidsManager";
-import { Actor, IModel } from "./base/actor";
+import { SizeTypes } from "./asteroidsManager";
+import { AsteroidsGame } from "../../asteroidsGame";
+import { Actor, IModel } from "../../shared/actors/base/actor";
 
 export class Asteroid extends Actor {
     size:SizeTypes

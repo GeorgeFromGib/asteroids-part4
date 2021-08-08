@@ -1,5 +1,5 @@
 import { Actor } from "../actors/base/actor";
-import { AsteroidsGame, ScreenSize } from "../asteroidsGame";
+import { AsteroidsGame, ScreenSize } from "../../asteroidsGame";
 
 export abstract class Manager{
   protected _actors: Actor[] = [];
