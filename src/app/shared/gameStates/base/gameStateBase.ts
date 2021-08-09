@@ -1,6 +1,6 @@
-import { AsteroidsGame, Keys } from "../asteroidsGame";
+import { AsteroidsGame, Keys } from "../../../asteroidsGame";
 
-export abstract class GameState {
+export abstract class GameStateBase {
   constructor(protected gameEngine: AsteroidsGame) {
     this.setup();
   }

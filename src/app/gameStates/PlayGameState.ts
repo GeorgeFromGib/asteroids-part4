@@ -1,7 +1,8 @@
 
-import { GameTimer, Keys } from "./../asteroidsGame";
+import { Keys } from "./../asteroidsGame";
+import { GameTimer } from "../gameTimer";
 import { GameOverState } from "./GameOverState";
-import { GameState } from "./GameState";
+import { GameStateBase } from "../shared/gameStates/base/gameStateBase";
 import { Asteroid } from '../components/asteroids/asteroid';
 import { SaucerActor } from '../components/saucer/saucerActor';
 import { PlayerShipManager, ShipTurn } from '../components/player/playerShipManager';
@@ -9,12 +10,12 @@ import { SpaceshipActor } from '../components/player/spaceshipActor';
 import { AsteroidsManager } from "../components/asteroids/asteroidsManager";
 import { ProjectileSource } from "../components/projectiles/ProjectileActor";
 
-export class PlayGameState extends GameState {
+export class PlayGameState extends GameStateBase {
   player: PlayerShipManager;
   asteroidsMan:AsteroidsManager;
   timer:GameTimer;
   mylevel:number=0;
-  dummy:string="Hello";
+  // dummy:string="Hello";
   saucerTimer: GameTimer;
 
 
@@ -51,11 +52,7 @@ export class PlayGameState extends GameState {
     const shipProjectiles=this.gameEngine.projectilesManager.sourceProjectiles(ProjectileSource.PLAYER)
     const saucerProjectiles=this.gameEngine.projectilesManager.sourceProjectiles(ProjectileSource.SAUCER)
     if (ship.show) {
-      const colA = ship.hasCollided(asteroids) as Asteroid;
-      const colS=ship.hasCollided(saucers) as SaucerActor;
-      if (colA != undefined || colS !=undefined) {
-        this.gameEngine.playerManager.shipHit();
-      }
+      this.checkShipCollisions(ship, asteroids, saucers);
     }
     saucers.forEach(s=>{
       const colA=s.hasCollided(asteroids) as Asteroid;
@@ -80,6 +77,14 @@ export class PlayGameState extends GameState {
         }
       })
     }
+
+  private checkShipCollisions(ship: SpaceshipActor, asteroids: import("c:/Users/georg_000/dev/typescript/asteroids/src/app/shared/actors/base/actorBase").ActorBase[], saucers: import("c:/Users/georg_000/dev/typescript/asteroids/src/app/shared/actors/base/actorBase").ActorBase[]) {
+    const colA = ship.hasCollided(asteroids) as Asteroid;
+    const colS = ship.hasCollided(saucers) as SaucerActor;
+    if (colA != undefined || colS != undefined) {
+      this.gameEngine.playerManager.shipHit();
+    }
+  }
 
   public newLevel(){
     this.mylevel++;

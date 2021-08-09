@@ -1,10 +1,11 @@
 
 import { Justify } from "../components/text/textManager";
-import { GameTimer, Keys } from "./../asteroidsGame";
-import { GameState } from "./GameState";
+import { Keys } from "./../asteroidsGame";
+import { GameTimer } from "../gameTimer";
+import { GameStateBase } from "../shared/gameStates/base/gameStateBase";
 import { PlayGameState } from "./PlayGameState";
 
-export class InitialGameState extends GameState {
+export class InitialGameState extends GameStateBase {
   showPlayer: boolean = false;
   timer: GameTimer;
 

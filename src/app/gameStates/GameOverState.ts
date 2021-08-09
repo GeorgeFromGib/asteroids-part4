@@ -1,11 +1,12 @@
 
 import { Justify } from "../components/text/textManager";
-import { GameTimer, Keys } from "./../asteroidsGame";
-import { GameState } from "./GameState";
+import { Keys } from "./../asteroidsGame";
+import { GameTimer } from "../gameTimer";
+import { GameStateBase } from "../shared/gameStates/base/gameStateBase";
 import { InitialGameState } from "./InitialGameState";
 
 
-export class GameOverState extends GameState {
+export class GameOverState extends GameStateBase {
   timer: GameTimer;
 
   public setup() {

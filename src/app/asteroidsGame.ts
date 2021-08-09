@@ -8,11 +8,12 @@ import * as ConfigData from '../assets/config.json'
 import { IModel } from "./shared/actors/base/actorBase";
 import { ManagerBase } from './shared/managers/base/managerBase';
 import { InitialGameState } from "./gameStates/InitialGameState";
-import { GameState } from "./gameStates/GameState";
+import { GameStateBase } from "./shared/gameStates/base/gameStateBase";
 import { PlayerShipManager } from './components/player/playerShipManager';
 import { AsteroidsManager } from './components/asteroids/asteroidsManager';
 import { SaucerManager } from './components/saucer/saucerManager';
 import { TextManager } from './components/text/textManager';
+import { GameTimer } from './gameTimer';
 
 export class ScreenSize {
   width:number;
@@ -45,11 +46,8 @@ export class AsteroidsGame {
   settings:ISettings;
   configData:typeof ConfigData;
   elapsedTime:number=0;
-  gameState:GameState
+  gameState:GameStateBase
   timers:GameTimer[]=[];
-
-
-
 
   private _ge:P5;
   private _prevElapsed = 0; 
@@ -86,9 +84,12 @@ export class AsteroidsGame {
     p5.keyPressed = () => this.keyPressed(p5);
     p5.keyReleased = () => this.keyReleased(p5);
 
-    this.screenSize=<ScreenSize>{width:p5.width,height:p5.height,center:p5.createVector(p5.width/2,p5.height/2)}
+    this.screenSize=<ScreenSize>{
+      width:p5.width,
+      height:p5.height,
+      center:p5.createVector(p5.width/2,p5.height/2)
+    }
     
-
     // setup managers
     this.playerManager=new PlayerShipManager(this);
     this.asteroidsManager=new AsteroidsManager(this);
@@ -97,14 +98,6 @@ export class AsteroidsGame {
     this.scoresManager=new ScoresManager(this);
     this.saucerManager=new SaucerManager(this);
     this.projectilesManager=new ProjectileManager(this);
-    // this.managers.push(...[this.playerManager,
-    //   this.asteroidsManager,
-    //   this.explosionsManager, 
-    //   this.textManager,
-    //   this.scoresManager,
-    //   this.saucerManager,
-    //   this.projectilesManager
-    // ])
 
     this.gameState=new InitialGameState(this);
   };
@@ -191,39 +184,4 @@ export class AsteroidsGame {
   }
 }
 
-export class GameTimer {
-  protected _countDown:number;
-  protected _expired:boolean=true;
 
-  constructor(public time:number,protected callback?:()=>void) {
-    this._countDown=time;
-  }
-
-  public get expired() : boolean {
-    return this._expired;
-  }
-  
-  public start() {
-    this._expired=false;
-  }
-
-  public reset(){
-    this._countDown=this.time;
-    this._expired=true;
-  }
-
-  public restart() {
-    this.reset();
-    this.start();
-  }
-
-  public update(timeDelta:number) {
-    if(!this._expired) {
-      this._countDown-=timeDelta;
-      if(this._countDown<=0) {
-        this._expired=true;
-        this.callback && this.callback();
-      }
-    }
-  }
-}

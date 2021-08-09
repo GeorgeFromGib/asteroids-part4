@@ -3,7 +3,8 @@ import { Vector } from "p5";
 import { ActorBase } from "../../shared/actors/base/actorBase";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SaucerActor } from "./saucerActor";
-import { AsteroidsGame, GameTimer } from "../../asteroidsGame";
+import { AsteroidsGame } from "../../asteroidsGame";
+import { GameTimer } from "../../gameTimer";
 import { ISaucer } from "./ISaucer";
 
 

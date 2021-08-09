@@ -1,4 +1,4 @@
-import { GameTimer } from "../../asteroidsGame";
+import { GameTimer } from "../../gameTimer";
 import { Vector } from "p5";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
