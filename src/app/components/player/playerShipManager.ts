@@ -1,10 +1,9 @@
 import { GameTimer } from "../../asteroidsGame";
-import { Particle } from "../../shared/actors/particle";
 import { Vector } from "p5";
-import { IModel } from "../../shared/actors/base/actorBase";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SpaceshipActor } from "./spaceshipActor";
+import { ISpaceShip } from "./ISpaceShip";
 
 export enum ShipTurn {
     LEFT = -1,
@@ -12,22 +11,10 @@ export enum ShipTurn {
     STOP = 0,
 }
 
-export interface ISpaceShip {
-    ship: IModel;
-    thrust: IModel;
-    rotationVel: number;
-    thrustVel: number;
-    friction: number;
-    projectileVel: number;
-    rateOfFire: number;
-    projectileLife: number;
-}
-
 export class PlayerShipManager extends ManagerBase {
     ship: SpaceshipActor;
     firing: boolean;
     lastShot = 0;
-    projectiles: Particle[] = [];
     spaceship: ISpaceShip;
     shipShowTimer: GameTimer;
     hyperSpaceTimer: GameTimer;
@@ -83,22 +70,19 @@ export class PlayerShipManager extends ManagerBase {
     }
 
     public update(timeDelta: number) {
+        this._actors = [];
         if (this.firing && this.ship.show)
             if (
                 this.gameEngine.elapsedTime - this.lastShot >
                 this.spaceship.rateOfFire
             ) {
-                this.addProjectile();
+                this.fireProjectile();
                 this.lastShot = this.gameEngine.elapsedTime;
             }
-        this.projectiles = this.projectiles.filter(
-            (p) => !p.expired && !p.collidedWith
-        );
-        this._actors = [];
+       
         if (this.ship.show) {
             this._actors.push(this.ship);
         }
-        this._actors.push(...this.projectiles);
         super.update(timeDelta);
     }
 
@@ -130,15 +114,7 @@ export class PlayerShipManager extends ManagerBase {
         this.hyperSpaceTimer.restart();
     }
 
-    private addProjectile() {
-        const radius = this.spaceship.ship.radius;
-        const heading = this.ship.heading - Math.PI / 2;
-        const gunPos = new Vector().set(radius, 0).rotate(heading);
-        const startPos = gunPos.add(this.ship.position);
-        const vel = Vector.fromAngle(heading)
-            .mult(this.spaceship.projectileVel)
-            .add(this.ship.velocity);
-        const proj = new Particle(startPos, vel,this.spaceship.projectileLife);
-        this.projectiles.push(proj);
+    private fireProjectile() {
+        this.gameEngine.projectilesManager.addPlayerProjectile(this.ship,this.spaceship.projectileVel,this.spaceship.projectileLife)
     }
 }

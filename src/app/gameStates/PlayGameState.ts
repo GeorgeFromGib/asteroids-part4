@@ -7,6 +7,7 @@ import { SaucerActor } from '../components/saucer/saucerActor';
 import { PlayerShipManager, ShipTurn } from '../components/player/playerShipManager';
 import { SpaceshipActor } from '../components/player/spaceshipActor';
 import { AsteroidsManager } from "../components/asteroids/asteroidsManager";
+import { ProjectileSource } from "../components/projectiles/ProjectileActor";
 
 export class PlayGameState extends GameState {
   player: PlayerShipManager;
@@ -44,11 +45,11 @@ export class PlayGameState extends GameState {
   }
 
   public checkCollisions() {
-    const asteroids = this.gameEngine.asteroidsManager.allActors;
-    const saucers = this.gameEngine.saucerManager.allActors;
+    const asteroids = this.gameEngine.asteroidsManager.actors;
+    const saucers = this.gameEngine.saucerManager.actors;
     const ship=this.gameEngine.playerManager.ship;
-    const shipProjectiles=this.gameEngine.playerManager.projectiles;
-    const saucerProjectiles=this.gameEngine.saucerManager.projectiles;
+    const shipProjectiles=this.gameEngine.projectilesManager.sourceProjectiles(ProjectileSource.PLAYER)
+    const saucerProjectiles=this.gameEngine.projectilesManager.sourceProjectiles(ProjectileSource.SAUCER)
     if (ship.show) {
       const colA = ship.hasCollided(asteroids) as Asteroid;
       const colS=ship.hasCollided(saucers) as SaucerActor;
@@ -63,6 +64,7 @@ export class PlayGameState extends GameState {
       const colA = p.hasCollided(asteroids) as Asteroid;
       if (colA != undefined) {
         this.gameEngine.scoresManager.addToScore(colA.points);
+        return;
       }
       const colS = p.hasCollided(saucers) as SaucerActor;
       if (colS != undefined) {

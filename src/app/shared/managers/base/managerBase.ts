@@ -5,6 +5,7 @@ export abstract class ManagerBase{
   protected _actors: ActorBase[] = [];
 
   constructor(protected gameEngine: AsteroidsGame) {
+    this.gameEngine.managers.push(this);
   }
 
   public update(timeDelta: number): void {
@@ -33,7 +34,7 @@ export abstract class ManagerBase{
     });
   }
 
-  // public get allActors(): ActorBase[] {
-  //   return this._actors;
-  // }
+  public get actors(): ActorBase[] {
+    return this._actors;
+  }
 }

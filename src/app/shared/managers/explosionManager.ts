@@ -1,14 +1,14 @@
 
 import { Vector } from "p5";
 import { ActorBase, IModel } from "../actors/base/actorBase";
-import { Particle } from "../actors/particle";
+import { ParticleActor } from "../actors/particleActor";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { ManagerBase } from "./base/managerBase";
-import { Debris } from "../actors/debris";
+import { DebrisActor } from "../actors/debrisActor";
 
 export class ExplosionManager extends ManagerBase {
-  particles: Particle[]=[] ;
-  debris:Particle[]=[];
+  particles: ParticleActor[]=[] ;
+  debris:ParticleActor[]=[];
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
@@ -28,7 +28,7 @@ export class ExplosionManager extends ManagerBase {
     for (let i = 0; i < 10; i++) {
       const vel = Vector.random2D().mult((this.gameEngine.randomRange(20,70))/1000);
       const life=this.gameEngine.randomRange(300,700);
-      const particle = new Particle(position.copy(), vel,life);
+      const particle = new ParticleActor(position.copy(), vel,life);
       this.particles.push(particle);
      }  
   }
@@ -38,7 +38,7 @@ export class ExplosionManager extends ManagerBase {
     shipModel.vertices.forEach(vert=>{
       const model:IModel={vertexes:[vertexes[vert[0]],vertexes[vert[1]]],vertices:[[0,1]],radius:1}
       const vel=Vector.random2D().mult((this.gameEngine.randomRange(20,40))/1000)
-      const debris=new Debris(model,ship.position.copy(),vel,ship.heading);
+      const debris=new DebrisActor(model,ship.position.copy(),vel,ship.heading);
       this.debris.push(debris);
     })
   }

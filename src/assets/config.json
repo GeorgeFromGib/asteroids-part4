@@ -147,7 +147,7 @@
       ],
       "radius": 10
     },
-    "sizes":[
+    "profiles":[
       {
         "size":"SAUCER_LARGE",
         "scale":2.5,

@@ -1,6 +1,7 @@
-import { ISpaceShip } from './playerShipManager';
+
 import { Vector } from "p5";
 import { ShipTurn } from './playerShipManager';
+import { ISpaceShip } from "./ISpaceShip";
 import { AsteroidsGame } from '../../asteroidsGame';
 import { ActorBase } from '../../shared/actors/base/actorBase';
 import { ThrustActor } from './thrustActor';

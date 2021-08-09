@@ -5,7 +5,7 @@ import { AsteroidsGame } from '../../asteroidsGame';
 import { ExpiringActor } from './base/expiringActor';
 
 
-export class Debris extends ExpiringActor{
+export class DebrisActor extends ExpiringActor{
     constructor(model: IModel, pos: Vector, vel: Vector, heading:number,lifeTime: number = 1000) {
         super(model,lifeTime);
         this.position = pos;

@@ -3,7 +3,7 @@ import { Vector } from 'p5';
 import { AsteroidsGame } from '../../asteroidsGame';
 import { ExpiringActor } from './base/expiringActor';
 
-export class Particle extends ExpiringActor {
+export class ParticleActor extends ExpiringActor {
 
     constructor(pos:Vector,vel:Vector,lifeTime: number = 1000) {
         super({vertexes:[],vertices:[],radius:1},lifeTime);
@@ -16,4 +16,5 @@ export class Particle extends ExpiringActor {
       }
 
 }
+
 

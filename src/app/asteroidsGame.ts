@@ -1,3 +1,4 @@
+import { ProjectileManager } from './components/projectiles/projectileManager';
 
 import P5, { Vector } from 'p5';
 import { ScoresManager } from './shared/managers/scoreManager';
@@ -53,6 +54,7 @@ export class AsteroidsGame {
   private _ge:P5;
   private _prevElapsed = 0; 
   private _keyMapper:Map<number,Keys>=new Map();
+  projectilesManager: ProjectileManager;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -89,20 +91,20 @@ export class AsteroidsGame {
 
     // setup managers
     this.playerManager=new PlayerShipManager(this);
-    //this.playerManager.createShip();
     this.asteroidsManager=new AsteroidsManager(this);
-    //this.asteroidsManager.createAsteroids(10);
     this.explosionsManager=new ExplosionManager(this);
     this.textManager=new TextManager(this);
     this.scoresManager=new ScoresManager(this);
     this.saucerManager=new SaucerManager(this);
-    this.managers.push(...[this.playerManager,
-      this.asteroidsManager,
-      this.explosionsManager, 
-      this.textManager,
-      this.scoresManager,
-      this.saucerManager
-    ])
+    this.projectilesManager=new ProjectileManager(this);
+    // this.managers.push(...[this.playerManager,
+    //   this.asteroidsManager,
+    //   this.explosionsManager, 
+    //   this.textManager,
+    //   this.scoresManager,
+    //   this.saucerManager,
+    //   this.projectilesManager
+    // ])
 
     this.gameState=new InitialGameState(this);
   };

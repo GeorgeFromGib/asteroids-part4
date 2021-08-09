@@ -1,24 +1,9 @@
 import { Vector } from "p5";
-import { IModel } from "../../shared/actors/base/actorBase";
-import { Asteroid } from "./asteroid";
+import { Asteroid, SizeTypes } from "./asteroid";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
+import { IAsteroids } from "./IAsteroids";
 
-export enum SizeTypes {
-  LARGE = "ASTEROID_LARGE",
-  MEDIUM = "ASTEROID_MEDIUM",
-  SMALL = "ASTEROID_SMALL",
-}
-export interface IAsteroidSize {
-  size: string; //"LARGE"|"MEDIUM"|"SMALL"
-  scale: number;
-  speed: number;
-  points: number;
-}
-export interface IAsteroids {
-  designs: IModel[];
-  sizes: IAsteroidSize[];
-}
 
 export class AsteroidsManager extends ManagerBase {
   asteroids: Asteroid[] = [];
@@ -34,7 +19,7 @@ export class AsteroidsManager extends ManagerBase {
   public update(timeDelta: number) {
     if (
       this.asteroids.length == 0 &&
-      this.gameEngine.saucerManager.allActors.length == 0
+      this.gameEngine.saucerManager.saucer
     )
       this.levelCompleted = true;
 

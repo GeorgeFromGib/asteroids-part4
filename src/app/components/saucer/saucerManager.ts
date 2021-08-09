@@ -1,10 +1,10 @@
 
 import { Vector } from "p5";
-import { ActorBase, IModel } from "../../shared/actors/base/actorBase";
-import { Particle } from "../../shared/actors/particle";
+import { ActorBase } from "../../shared/actors/base/actorBase";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SaucerActor } from "./saucerActor";
 import { AsteroidsGame, GameTimer } from "../../asteroidsGame";
+import { ISaucer } from "./ISaucer";
 
 
 export enum SaucerTypes {
@@ -12,28 +12,11 @@ export enum SaucerTypes {
   SMALL = "SAUCER_SMALL",
 }
 
-export interface ISaucerType {
-  size: string;
-  scale: number;
-  speed: number;
-  points: number;
-  fudgeAim:number;
-}
-
-export interface ISaucer {
-  model: IModel;
-  sizes: ISaucerType[];
-  projectileVel: number;
-  projectileLife: number;
-  rateOfFire: number;
-}
-
 export class SaucerManager extends ManagerBase {
   saucerData: ISaucer;
   saucer: SaucerActor;
   saucerTimer: GameTimer;
   firingTimer: GameTimer;
-  projectiles: Particle[] = [];
   firing: boolean = true;
   saucerEndXPos:number;
 
@@ -46,7 +29,7 @@ export class SaucerManager extends ManagerBase {
     this.firingTimer = gameEngine.createTimer(
       this.saucerData.rateOfFire,
       () => {
-        this.addProjectile();
+        this.fireProjectile();
       }
     );
   }
@@ -68,11 +51,6 @@ export class SaucerManager extends ManagerBase {
         this.clear();
     }
 
-    this.projectiles = this.projectiles.filter(
-      (p) => !p.expired && !p.collidedWith
-    );
-
-    this._actors.push(...this.projectiles);
     super.update(timeDelta);
   }
 
@@ -101,8 +79,8 @@ export class SaucerManager extends ManagerBase {
     return this.gameEngine.randomRange(0, 100) > 50?1:-1
   }
 
-  private getSaucerType(saucerType) {
-    const sSize = this.saucerData.sizes.find(
+  private getSaucerType(saucerType:string) {
+    const sSize = this.saucerData.profiles.find(
       (s) => s.size == saucerType
     );
     return sSize;
@@ -133,30 +111,8 @@ export class SaucerManager extends ManagerBase {
     return ((saucer.velocity.x<0 && saucer.position.x<endX) || (saucer.velocity.x>0 && saucer.position.x>endX))
   }
 
-  public addProjectile() {
+  public fireProjectile() {
     if (!this.saucer) return;
-    const radius = this.saucer.radius;
-    const projHeading = this.getRangeAndDirection(
-      this.gameEngine.playerManager.ship.position,
-      this.saucer.position,
-      this.saucer.type.fudgeAim
-    ).heading;
-    const gunPos = new Vector().set(radius, 0).rotate(projHeading);
-    const startPos = gunPos.add(this.saucer.position);
-    const vel = Vector.fromAngle(projHeading).mult(0.7);
-    const proj = new Particle(startPos, vel, 700);
-    this.projectiles.push(proj);
-  }
-
-  protected getRangeAndDirection(
-    source: Vector,
-    target: Vector,
-    fudgeAngle: number
-  ): { range: number; heading: number } {
-    const heading =
-      source.copy().sub(target).heading() +
-      this.gameEngine.randomRange(-fudgeAngle, fudgeAngle);
-    const range = source.dist(target);
-    return { range: range, heading: heading };
+    this.gameEngine.projectilesManager.addSaucerProjectile(this.saucer,0.7,700)
   }
 }
