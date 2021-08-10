@@ -1,10 +1,10 @@
 
 import { Vector } from "p5";
 import { ShipTurn } from './playerShipManager';
-import { ISpaceShip } from "./ISpaceShip";
 import { AsteroidsGame } from '../../asteroidsGame';
 import { ActorBase } from '../../shared/actors/base/actorBase';
 import { ThrustActor } from './thrustActor';
+import { ISpaceship } from "../../shared/interfaces/iConfig";
 
 
 export class SpaceshipActor extends ActorBase {
@@ -13,8 +13,8 @@ export class SpaceshipActor extends ActorBase {
   engineThrust:ThrustActor
 
 
-  constructor(protected shipData:ISpaceShip) {
-    super(shipData.ship);
+  constructor(protected shipData:ISpaceship) {
+    super(shipData.model);
     this.engineThrust=new ThrustActor(shipData.thrust)
     this.addChildActor(this.engineThrust,new Vector().set(0,7))
   }

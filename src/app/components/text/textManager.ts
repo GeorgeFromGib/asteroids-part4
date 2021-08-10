@@ -3,22 +3,23 @@ import { ActorBase, IModel } from '../../shared/actors/base/actorBase';
 import { ManagerBase } from '../../shared/managers/base/managerBase';
 import { AsteroidsGame } from '../../asteroidsGame';
 import { TextActor } from './textActor';
+import { ITextModel } from '../../shared/interfaces/iConfig';
 
 export enum Justify {
     LEFT,
     RIGHT,
     CENTER
 }
-export interface ICharacterModel {
-    char:string;
-    vertices:number[][];
-}
+// export interface ICharacterModel {
+//     char:string;
+//     vertices:number[][];
+// }
 
-export interface ITextModel {
-    vertexes:number[][];
-    radius:number;
-    characters: ICharacterModel[];
-}
+// export interface ITextModel {
+//     vertexes:number[][];
+//     radius:number;
+//     characters: ICharacterModel[];
+// }
 
 export interface IText {
     name:string;

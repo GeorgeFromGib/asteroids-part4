@@ -2,13 +2,14 @@ import { Vector } from "p5";
 import { Asteroid, SizeTypes } from "./asteroid";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
-import { IAsteroids } from "./IAsteroids";
+import { IAsteroids } from "../../shared/interfaces/iConfig";
+
 
 
 export class AsteroidsManager extends ManagerBase {
   asteroids: Asteroid[] = [];
   asteroidModels: IAsteroids;
-  levelCompleted: boolean = false;
+  levelCompleted: boolean = true;
   level: number = 1;
 
   constructor(gameEngine: AsteroidsGame) {
@@ -28,7 +29,7 @@ export class AsteroidsManager extends ManagerBase {
     });
 
     this.asteroids = this.asteroids.filter(
-      (a, i) => a.collidedWith == undefined
+      (a) => a.collidedWith == undefined
     );
 
     this._actors = [];
@@ -47,16 +48,16 @@ export class AsteroidsManager extends ManagerBase {
     const designIndex = Math.floor(
       this.gameEngine.random(this.asteroidModels.designs.length)
     );
-    const l_asteroid = new Asteroid(this.asteroidModels.designs[designIndex]);
+    const asteroid = new Asteroid(this.asteroidModels.designs[designIndex]);
     const minSpeed = 30 * (1 + this.level / 100);
     const maxSpeed=80 * aSize.speed
     const vel = this.gameEngine.randomRange(minSpeed, maxSpeed);
-    l_asteroid.position = pos.copy();
-    l_asteroid.velocity = Vector.random2D().mult(vel / 1000);
-    l_asteroid.size = aSize.size as SizeTypes;
-    l_asteroid.points = aSize.points;
-    l_asteroid.scale = aSize.scale;
-    this.asteroids.push(l_asteroid);
+    asteroid.position = pos.copy();
+    asteroid.velocity = Vector.random2D().mult(vel / 1000);
+    asteroid.size = aSize.size as SizeTypes;
+    asteroid.points = aSize.points;
+    asteroid.scale = aSize.scale;
+    this.asteroids.push(asteroid);
   }
 
   public createAsteroids(noOfAsteroids: number) {

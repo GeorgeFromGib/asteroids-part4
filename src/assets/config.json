@@ -4,7 +4,7 @@
     "extraLife":10000
   },
   "spaceship": {
-    "ship": {
+    "model": {
       "vertexes": [
         [0, -10],
         [8, 10],

@@ -3,7 +3,8 @@ import { Vector } from "p5";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SpaceshipActor } from "./spaceshipActor";
-import { ISpaceShip } from "./ISpaceShip";
+import { ISpaceship } from "../../shared/interfaces/iConfig";
+
 
 export enum ShipTurn {
     LEFT = -1,
@@ -15,7 +16,7 @@ export class PlayerShipManager extends ManagerBase {
     ship: SpaceshipActor;
     firing: boolean;
     lastShot = 0;
-    spaceship: ISpaceShip;
+    spaceship: ISpaceship;
     shipShowTimer: GameTimer;
     hyperSpaceTimer: GameTimer;
 
@@ -53,10 +54,11 @@ export class PlayerShipManager extends ManagerBase {
     }
 
     public placeShipInSafeSpace(position: Vector, safeRadius: number = 200) {
+
         let show = true;
 
         this.gameEngine.asteroidsManager.asteroids.forEach((asteroid) => {
-            show = position.dist(asteroid.position) > safeRadius;
+            show = (position.dist(asteroid.position) > safeRadius && this.gameEngine.saucerManager.saucer==undefined);
             if (!show) return;
         });
 
@@ -90,7 +92,7 @@ export class PlayerShipManager extends ManagerBase {
         this.gameEngine.scoresManager.lives--;
         this.showShip(false);
         this.gameEngine.explosionsManager.createShipExplosion(
-            this.spaceship.ship,
+            this.spaceship.model,
             this.ship
         );
         if (this.gameEngine.scoresManager.lives > 0) this.startNewLife();

@@ -5,7 +5,8 @@ import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SaucerActor } from "./saucerActor";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { GameTimer } from "../../gameTimer";
-import { ISaucer } from "./ISaucer";
+import { ISaucer } from "../../shared/interfaces/iConfig";
+
 
 
 export enum SaucerTypes {
@@ -16,7 +17,6 @@ export enum SaucerTypes {
 export class SaucerManager extends ManagerBase {
   saucerData: ISaucer;
   saucer: SaucerActor;
-  saucerTimer: GameTimer;
   firingTimer: GameTimer;
   firing: boolean = true;
   saucerEndXPos:number;
@@ -24,9 +24,7 @@ export class SaucerManager extends ManagerBase {
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
     this.saucerData = gameEngine.configData.saucer;
-    this.saucerTimer = gameEngine.createTimer(4000, () => {
-      this.createSaucer();
-    });
+
     this.firingTimer = gameEngine.createTimer(
       this.saucerData.rateOfFire,
       () => {
@@ -45,7 +43,7 @@ export class SaucerManager extends ManagerBase {
 
       if (this.saucer.collidedWith) {
         this.gameEngine.explosionsManager.createExplosion(this.saucer.position);
-        this.saucer = undefined;
+        this.clear();
       }
 
       if(this.saucer && this.isSaucerAtEnd(this.saucer,this.saucerEndXPos))
@@ -57,8 +55,8 @@ export class SaucerManager extends ManagerBase {
 
   public edgeWrap(actor:ActorBase) {}
 
-  public createSaucer() {
-    const sType = this.getSaucerType(this.getRandomSaucerType());
+  public createSaucer(saucerType:SaucerTypes) {
+    const sType = this.getSaucerType(saucerType);
     this.saucer = new SaucerActor(this.saucerData.model, sType);
     this.saucer.position=this.calcSaucerStartPos(this.saucer);
     this.saucer.velocity = new Vector().set(this.calcSaucerDirection(), 0).mult(sType.speed / 1000);
@@ -67,7 +65,6 @@ export class SaucerManager extends ManagerBase {
 
   public clear() {
     this.saucer=undefined
-    this.saucerTimer.reset();
   }
 
   private calcSaucerEndXpos(position:Vector,radius:number) {
@@ -87,12 +84,7 @@ export class SaucerManager extends ManagerBase {
     return sSize;
   }
 
-  private getRandomSaucerType() {
-    const type= this.gameEngine.randomRange(0, 100) > 50
-    ? SaucerTypes.LARGE
-    : SaucerTypes.SMALL;
-    return type;
-  }
+
 
   private calcSaucerStartPos(saucer:ActorBase) {
     const screen=this.gameEngine.screenSize;

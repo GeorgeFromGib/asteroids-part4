@@ -14,6 +14,7 @@ import { AsteroidsManager } from './components/asteroids/asteroidsManager';
 import { SaucerManager } from './components/saucer/saucerManager';
 import { TextManager } from './components/text/textManager';
 import { GameTimer } from './gameTimer';
+import { ISettings } from './shared/interfaces/iConfig';
 
 export class ScreenSize {
   width:number;
@@ -21,10 +22,6 @@ export class ScreenSize {
   center:Vector;
 }
 
-export interface ISettings {
-  lives:number;
-  extraLife:number;
-}
 
 export enum Keys {
   RIGHT_ARROW,
@@ -40,9 +37,10 @@ export class AsteroidsGame {
   asteroidsManager: AsteroidsManager;
   explosionsManager: ExplosionManager;
   saucerManager: SaucerManager;
-  managers:ManagerBase[]=[];
   textManager: TextManager;
   scoresManager:ScoresManager;
+  projectilesManager: ProjectileManager;
+  managers:ManagerBase[]=[];
   settings:ISettings;
   configData:typeof ConfigData;
   elapsedTime:number=0;
@@ -52,7 +50,6 @@ export class AsteroidsGame {
   private _ge:P5;
   private _prevElapsed = 0; 
   private _keyMapper:Map<number,Keys>=new Map();
-  projectilesManager: ProjectileManager;
 
   constructor() {
     new P5((p5) => sketch(p5, this.setup));
@@ -81,8 +78,8 @@ export class AsteroidsGame {
 
     // Redirect sketch functions
     p5.draw = () => this.gameLoop();
-    p5.keyPressed = () => this.keyPressed(p5);
-    p5.keyReleased = () => this.keyReleased(p5);
+    p5.keyPressed = () => this.keyPressed();
+    p5.keyReleased = () => this.keyReleased();
 
     this.screenSize=<ScreenSize>{
       width:p5.width,
@@ -102,13 +99,17 @@ export class AsteroidsGame {
     this.gameState=new InitialGameState(this);
   };
 
-  public keyPressed = (p5: P5) => {
-    const key=this._keyMapper.get(p5.keyCode);
+  // public keyPressed = (p5: P5) => {
+  //   const key=this._keyMapper.get(p5.keyCode);
+  //   this.gameState.handleKeyPress(key)
+  // };
+  public keyPressed = () => {
+    const key=this._keyMapper.get(this._ge.keyCode);
     this.gameState.handleKeyPress(key)
   };
 
-  public keyReleased = (p5: P5) => {
-    const key=this._keyMapper.get(p5.keyCode);
+  public keyReleased = () => {
+    const key=this._keyMapper.get(this._ge.keyCode);
     this.gameState.handleKeyRelease(key)
   };
 
@@ -180,7 +181,9 @@ export class AsteroidsGame {
   public getRandomScreenPosition(constraintPct:number):Vector {
     const widthConstraint=this.screenSize.width*constraintPct;
     const heightConstraint=this.screenSize.height*constraintPct;
-    return new Vector().set(this.randomRange(widthConstraint,this.screenSize.width-widthConstraint),this.randomRange(heightConstraint,this.screenSize.height-heightConstraint))
+    return new Vector().set(
+      this.randomRange(widthConstraint,this.screenSize.width-widthConstraint),
+      this.randomRange(heightConstraint,this.screenSize.height-heightConstraint))
   }
 }
 
