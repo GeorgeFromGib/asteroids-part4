@@ -15,18 +15,16 @@ import { SaucerTypes } from "../components/saucer/saucerManager";
 export class PlayGameState extends GameStateBase {
   player: PlayerShipManager;
   asteroidsMan:AsteroidsManager;
-  timer:GameTimer;
+  newLevelTimer:GameTimer;
   level:number=0;
-  // dummy:string="Hello";
   saucerTimer: GameTimer;
 
 
   public setup() {
     this.asteroidsMan=this.gameEngine.asteroidsManager;
-    //this.newLevel(this);
-    this.timer=this.gameEngine.createTimer(2000,()=>{this.newLevel()});
+    this.newLevelTimer=this.gameEngine.createTimer(2000,()=>{this.newLevel()});
     this.player = this.gameEngine.playerManager;
-    this.player.placeShipInSafeSpace(this.gameEngine.screenSize.center);
+    this.player.showShip();
     this.saucerTimer = this.gameEngine.createTimer(4000, () => {
       this.showSaucer();
     });
@@ -35,8 +33,8 @@ export class PlayGameState extends GameStateBase {
   public update(timeDelta: number) {
     if (this.gameEngine.scoresManager.lives <= 0)
       this.nextState();
-    if(this.asteroidsMan.levelCompleted && !this.gameEngine.saucerManager.saucer && this.timer.expired) {
-      this.timer.restart();
+    if(this.asteroidsMan.levelCompleted && !this.gameEngine.saucerManager.saucer && this.newLevelTimer.expired) {
+      this.newLevelTimer.restart();
     }
    // if (this.gameEngine.asteroidsManager.asteroids.length < 4) {
       if (!this.gameEngine.saucerManager.saucer && this.saucerTimer.expired) {
@@ -51,16 +49,8 @@ export class PlayGameState extends GameStateBase {
   }
 
   public showSaucer() {
-    this.gameEngine.saucerManager.createSaucer(this.getRandomSaucerType());
-  }
-
-  private getRandomSaucerType() {
-    const smallSaucerBias=Math.min(80,5*(this.level-1))
-    const type= this.gameEngine.randomRange(0, 100) > (90-smallSaucerBias)
-    ? SaucerTypes.SMALL
-    : SaucerTypes.LARGE;
-    return type;
-  }
+    this.gameEngine.saucerManager.createSaucer(this.level);
+  }  
 
   public newLevel(){
     this.level++;
@@ -90,7 +80,7 @@ export class PlayGameState extends GameStateBase {
   }
 
   public nextState() {
-    this.player.showShip(false);
+    this.player.displayShip(false);
     this.saucerTimer.reset();
     this.gameEngine.saucerManager.clear();
     this.gameEngine.gameState = new GameOverState(this.gameEngine);

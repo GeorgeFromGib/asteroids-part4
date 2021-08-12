@@ -16,17 +16,25 @@ export abstract class ManagerBase{
   }
 
   public edgeWrap(actor:ActorBase)  {
+   this.wrapTopBottom(actor);
+   this.wrapLeftRight(actor)
+  };
+
+  protected wrapLeftRight(actor:ActorBase) {
     const screen=this.gameEngine.screenSize;
     if (actor.position.x > screen.width + actor.radius)
       actor.position.x = -actor.radius;
     else if (actor.position.x < -actor.radius)
       actor.position.x = screen.width + actor.radius;
+  }
 
+  protected wrapTopBottom(actor:ActorBase) {
+    const screen=this.gameEngine.screenSize;
     if (actor.position.y > screen.height + actor.radius)
       actor.position.y = -actor.radius;
     else if (actor.position.y < -actor.radius)
       actor.position.y = screen.height + actor.radius;
-  };
+  }
 
   public render() {
     this._actors.forEach((actor) => {

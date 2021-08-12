@@ -1,16 +1,14 @@
 
 import { ActorBase, IModel } from "../../shared/actors/base/actorBase";
 import { AsteroidsGame } from '../../asteroidsGame';
-import { ISaucerTypeProfile } from "./ISaucerTypeProfile";
+import { ISaucerTypeProfile } from "../../shared/interfaces/iConfig";
 
 
 export class SaucerActor extends ActorBase {
-  type:ISaucerTypeProfile
   points:number;
 
-  constructor(SaucerModel:IModel,type:ISaucerTypeProfile) {
+  constructor(SaucerModel:IModel,public type:ISaucerTypeProfile,public changeDirType:boolean) {
     super(SaucerModel);
-    this.type=type;
     this.scale=type.scale;
     this.points=type.points;
   }

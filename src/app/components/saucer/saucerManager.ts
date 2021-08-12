@@ -5,7 +5,7 @@ import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SaucerActor } from "./saucerActor";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { GameTimer } from "../../gameTimer";
-import { ISaucer } from "../../shared/interfaces/iConfig";
+import { ISaucer, ISaucerTypeProfile } from "../../shared/interfaces/iConfig";
 
 
 
@@ -20,6 +20,9 @@ export class SaucerManager extends ManagerBase {
   firingTimer: GameTimer;
   firing: boolean = true;
   saucerEndXPos:number;
+  saucerDirection:number;
+  changeAngleTimer: GameTimer;
+  saucerProfile: ISaucerTypeProfile;
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
@@ -28,9 +31,14 @@ export class SaucerManager extends ManagerBase {
     this.firingTimer = gameEngine.createTimer(
       this.saucerData.rateOfFire,
       () => {
-        this.fireProjectile();
+        if(this.saucer)
+          this.fireProjectile();
       }
     );
+    this.changeAngleTimer=gameEngine.createTimer(1000,()=>{
+      if(this.saucer)
+        this.changeSaucerDirectionAngle()
+    })
   }
 
   public update(timeDelta: number) {
@@ -40,31 +48,56 @@ export class SaucerManager extends ManagerBase {
       this._actors.push(this.saucer);
 
       if (this.firing && this.firingTimer.expired) this.firingTimer.restart();
+      
+      if (this.changeAngleTimer.expired && !this.saucer.changeDirType) this.changeAngleTimer.restart();
 
       if (this.saucer.collidedWith) {
         this.gameEngine.explosionsManager.createExplosion(this.saucer.position);
         this.clear();
       }
 
-      if(this.saucer && this.isSaucerAtEnd(this.saucer,this.saucerEndXPos))
+      if(this.saucer && this.isSaucerAtEnd())
         this.clear();
     }
 
     super.update(timeDelta);
   }
 
-  public edgeWrap(actor:ActorBase) {}
+  public edgeWrap(actor:ActorBase) {
+    this.wrapTopBottom(actor);
+  }
 
-  public createSaucer(saucerType:SaucerTypes) {
-    const sType = this.getSaucerType(saucerType);
-    this.saucer = new SaucerActor(this.saucerData.model, sType);
+  public createSaucer(level:number) {
+    const randomSaucer=this.getRandomSaucerType(level);
+    this.saucerProfile = this.getSaucerType(randomSaucer.type);
+    this.saucerDirection=this.calcSaucerDirection();
+    this.saucer = new SaucerActor(this.saucerData.model, this.saucerProfile,randomSaucer.dirChange);
     this.saucer.position=this.calcSaucerStartPos(this.saucer);
-    this.saucer.velocity = new Vector().set(this.calcSaucerDirection(), 0).mult(sType.speed / 1000);
+    this.saucer.velocity = new Vector().set(this.saucerDirection, 0).mult(this.saucerProfile.speed / 1000);
     this.saucerEndXPos=this.calcSaucerEndXpos(this.saucer.position,this.saucer.radius)
+  }
+
+  private getRandomSaucerType(level:number) :{type:SaucerTypes,dirChange:boolean}{
+    const smallSaucerBias=Math.min(80,5*(level-1))
+    const type= this.gameEngine.randomRange(0, 100) > (90-smallSaucerBias)
+    ? SaucerTypes.SMALL
+    : SaucerTypes.LARGE;
+    const dirChange=this.gameEngine.randomRange(0, 100)>(90-smallSaucerBias)
+    return {type,dirChange};
   }
 
   public clear() {
     this.saucer=undefined
+  }
+
+  private changeSaucerDirectionAngle() {
+    const possibleAngles=[1,-0.785,0.785]
+    const rand=this.gameEngine.randomRange(0,100);
+    let index=0;
+    if(rand>50) index=1;
+    if(rand>75) index=2;
+    const newAngle= possibleAngles[index];
+    this.saucer.velocity=new Vector().set(this.saucerDirection,0).rotate(newAngle).mult(this.saucerProfile.speed / 1000);
   }
 
   private calcSaucerEndXpos(position:Vector,radius:number) {
@@ -84,8 +117,6 @@ export class SaucerManager extends ManagerBase {
     return sSize;
   }
 
-
-
   private calcSaucerStartPos(saucer:ActorBase) {
     const screen=this.gameEngine.screenSize;
     const xPos =
@@ -100,12 +131,14 @@ export class SaucerManager extends ManagerBase {
     return new Vector().set(xPos,yPos)
   }
 
-  private isSaucerAtEnd(saucer:ActorBase, endX:number) {
-    return ((saucer.velocity.x<0 && saucer.position.x<endX) || (saucer.velocity.x>0 && saucer.position.x>endX))
+  private isSaucerAtEnd() {
+    const endX=this.saucerEndXPos;
+    return ((this.saucer.velocity.x<0 && this.saucer.position.x<endX) || (this.saucer.velocity.x>0 && this.saucer.position.x>endX))
   }
 
   public fireProjectile() {
-    if (!this.saucer) return;
-    this.gameEngine.projectilesManager.addSaucerProjectile(this.saucer,0.7,700)
+    const projSpeed=0.7;
+    const projlife=700;
+    this.gameEngine.projectilesManager.addSaucerProjectile(this.saucer,projSpeed,projlife)
   }
 }

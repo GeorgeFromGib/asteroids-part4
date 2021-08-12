@@ -172,6 +172,10 @@ export class AsteroidsGame {
     return this._ge.random(min,max);
   }
 
+  public map(value:number,start1:number,stop1:number,start2:number,stop2:number) {
+    return this._ge.map(value,start1,stop1,start2,stop2);
+  }
+
   public createTimer(time:number, callback?:()=>void):GameTimer {
     const timer=new GameTimer(time,callback);
     this.timers.push(timer);
