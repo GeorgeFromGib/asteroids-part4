@@ -23,12 +23,13 @@ export class PlayerShipManager extends ManagerBase {
     constructor(gameEngine: AsteroidsGame) {
         super(gameEngine);
         this.shipShowTimer = gameEngine.createTimer(3000, () => {
-            this.placeShipInSafeSpace(gameEngine.screenSize.center);
+            this.placeShipInSafeSpace(gameEngine.screenSize.center,300,this.shipShowTimer);
         });
         this.hyperSpaceTimer = gameEngine.createTimer(1000, () => {
             this.placeShipInSafeSpace(
                 gameEngine.getRandomScreenPosition(0.2),
-                20
+                20,
+                this.hyperSpaceTimer
             );
         });
         this.spaceship = gameEngine.configData.spaceship;
@@ -42,7 +43,11 @@ export class PlayerShipManager extends ManagerBase {
         this.firing = false;
     }
 
-    public showShip(show: boolean) {
+    public showShip() {
+        this.shipShowTimer.restart();
+    }
+
+    public displayShip(show: boolean) {
         this.ship.show = show;
         if (!show) {
             this.ship.thrusting = false;
@@ -53,7 +58,7 @@ export class PlayerShipManager extends ManagerBase {
         this.shipShowTimer.restart();
     }
 
-    public placeShipInSafeSpace(position: Vector, safeRadius: number = 200) {
+    public placeShipInSafeSpace(position: Vector, safeRadius: number = 300,timer:GameTimer) {
 
         let show = true;
 
@@ -65,9 +70,9 @@ export class PlayerShipManager extends ManagerBase {
         if (show) {
             this.createShip();
             this.ship.position = position.copy();
-            this.showShip(true);
+            this.displayShip(true);
         } else {
-            this.shipShowTimer.restart();
+            timer.restart();
         }
     }
 
@@ -90,7 +95,7 @@ export class PlayerShipManager extends ManagerBase {
 
     public shipHit() {
         this.gameEngine.scoresManager.lives--;
-        this.showShip(false);
+        this.displayShip(false);
         this.gameEngine.explosionsManager.createShipExplosion(
             this.spaceship.model,
             this.ship
@@ -112,7 +117,7 @@ export class PlayerShipManager extends ManagerBase {
 
     public hyperSpace() {
         if (!this.hyperSpaceTimer.expired) return;
-        this.showShip(false);
+        this.displayShip(false);
         this.hyperSpaceTimer.restart();
     }
 
