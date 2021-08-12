@@ -26,9 +26,11 @@ export class PlayerShipManager extends ManagerBase {
             this.placeShipInSafeSpace(gameEngine.screenSize.center,300,this.shipShowTimer);
         });
         this.hyperSpaceTimer = gameEngine.createTimer(1000, () => {
+            const constraintPct=0.2;
+            const safeRadius=20;
             this.placeShipInSafeSpace(
-                gameEngine.getRandomScreenPosition(0.2),
-                20,
+                gameEngine.getRandomScreenPosition(constraintPct),
+                safeRadius,
                 this.hyperSpaceTimer
             );
         });
