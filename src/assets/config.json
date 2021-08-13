@@ -151,14 +151,14 @@
       {
         "size":"SAUCER_LARGE",
         "scale":2.5,
-        "speed":110,
+        "speed":150,
         "points":200,
         "fudgeAim":0.78
       },
       {
         "size":"SAUCER_SMALL",
         "scale":1.5,
-        "speed":200,
+        "speed":220,
         "points":1000,
         "fudgeAim":0.1
       }

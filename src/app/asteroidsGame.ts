@@ -1,10 +1,9 @@
-import { ProjectileManager } from './components/projectiles/projectileManager';
-
+import * as ConfigData from '../assets/config.json' 
 import P5, { Vector } from 'p5';
+import { ProjectileManager } from './components/projectiles/projectileManager';
 import { ScoresManager } from './shared/managers/scoreManager';
 import { ExplosionManager } from './shared/managers/explosionManager';
 import { sketch } from "./p5-sketch";
-import * as ConfigData from '../assets/config.json' 
 import { IModel } from "./shared/actors/base/actorBase";
 import { ManagerBase } from './shared/managers/base/managerBase';
 import { InitialGameState } from "./gameStates/InitialGameState";
@@ -118,6 +117,7 @@ export class AsteroidsGame {
     const timeDelta = this.getTimeDelta();
 
     this._ge.background(0);
+    this._ge.stroke("white");
 
     this.timers.forEach(timer=>timer.update(timeDelta));
 
@@ -130,7 +130,9 @@ export class AsteroidsGame {
       this._ge.pop();
     });
 
-    this._ge.stroke("white");
+    
+    // this._ge.noFill();
+    // this._ge.circle(this.screenSize.center.x,this.screenSize.center.y,600)
     //this._ge.textSize(20);
     //this._ge.text((1000/timeDelta).toFixed(2).toString(),this._ge.width/2,this._ge.height);
 
@@ -170,10 +172,6 @@ export class AsteroidsGame {
 
   public randomRange(min:number,max:number) {
     return this._ge.random(min,max);
-  }
-
-  public map(value:number,start1:number,stop1:number,start2:number,stop2:number) {
-    return this._ge.map(value,start1,stop1,start2,stop2);
   }
 
   public createTimer(time:number, callback?:()=>void):GameTimer {

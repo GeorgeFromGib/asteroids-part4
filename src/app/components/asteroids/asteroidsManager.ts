@@ -17,6 +17,10 @@ export class AsteroidsManager extends ManagerBase {
     this.asteroidModels = gameEngine.configData.asteroids;
   }
 
+  public setup() {
+
+  }
+
   public update(timeDelta: number) {
     if (
       this.asteroids.length == 0 &&

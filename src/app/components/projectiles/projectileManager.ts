@@ -8,6 +8,10 @@ import { ActorBase } from "../../shared/actors/base/actorBase";
 export class ProjectileManager extends ManagerBase {
     projectiles: ProjectileActor[] = [];
 
+    public setup() {
+
+    }
+
     public update(timeDelta: number) {
         this._actors = [];
         this.projectiles = this.projectiles.filter(

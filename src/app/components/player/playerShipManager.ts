@@ -1,6 +1,5 @@
 import { GameTimer } from "../../gameTimer";
 import { Vector } from "p5";
-import { AsteroidsGame } from "../../asteroidsGame";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SpaceshipActor } from "./spaceshipActor";
 import { ISpaceship } from "../../shared/interfaces/iConfig";
@@ -19,23 +18,38 @@ export class PlayerShipManager extends ManagerBase {
     spaceship: ISpaceship;
     shipShowTimer: GameTimer;
     hyperSpaceTimer: GameTimer;
+    fireTimer:GameTimer;
 
-    constructor(gameEngine: AsteroidsGame) {
-        super(gameEngine);
-        this.shipShowTimer = gameEngine.createTimer(3000, () => {
-            this.placeShipInSafeSpace(gameEngine.screenSize.center,300,this.shipShowTimer);
+    public setup() {
+        this.spaceship = this.gameEngine.configData.spaceship;
+        this.shipShowTimer = this.gameEngine.createTimer(3000, () => {
+            this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.shipShowTimer);
         });
-        this.hyperSpaceTimer = gameEngine.createTimer(1000, () => {
+        this.hyperSpaceTimer = this.gameEngine.createTimer(1000, () => {
             const constraintPct=0.2;
             const safeRadius=20;
             this.placeShipInSafeSpace(
-                gameEngine.getRandomScreenPosition(constraintPct),
+                this.gameEngine.getRandomScreenPosition(constraintPct),
+                this.hyperSpaceTimer,
                 safeRadius,
-                this.hyperSpaceTimer
             );
         });
-        this.spaceship = gameEngine.configData.spaceship;
+        this.fireTimer=this.gameEngine.createTimer(this.spaceship.rateOfFire)
         this.createShip();
+    }
+
+    public update(timeDelta: number) {
+        this._actors = [];
+        if (this.firing && this.ship.show)
+            if (this.fireTimer.expired) {
+                this.fireProjectile();
+                this.fireTimer.restart();
+            }
+       
+        if (this.ship.show) {
+            this._actors.push(this.ship);
+        }
+        super.update(timeDelta);
     }
 
     public createShip() {
@@ -46,7 +60,7 @@ export class PlayerShipManager extends ManagerBase {
     }
 
     public showShip() {
-        this.shipShowTimer.restart();
+        this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.shipShowTimer)
     }
 
     public displayShip(show: boolean) {
@@ -60,15 +74,20 @@ export class PlayerShipManager extends ManagerBase {
         this.shipShowTimer.restart();
     }
 
-    public placeShipInSafeSpace(position: Vector, safeRadius: number = 300,timer:GameTimer) {
+    public placeShipInSafeSpace(position: Vector,timer:GameTimer,safeRadius: number = 200 ) {
 
         let show = true;
 
-        this.gameEngine.asteroidsManager.asteroids.forEach((asteroid) => {
-            show = (position.dist(asteroid.position) > safeRadius && this.gameEngine.saucerManager.saucer==undefined);
-            if (!show) return;
-        });
-
+        // this.gameEngine.asteroidsManager.asteroids.forEach((a) => {
+        //     console.log(position.dist(a.position));   
+        //     show = (position.dist(a.position) > safeRadius && this.gameEngine.saucerManager.saucer==undefined);
+        //     if (!show) break;
+        // });
+        
+        show=this.gameEngine.asteroidsManager.asteroids.every(a=>  
+            (position.dist(a.position) > safeRadius && this.gameEngine.saucerManager.saucer==undefined)
+        );
+        console.log(show)
         if (show) {
             this.createShip();
             this.ship.position = position.copy();
@@ -78,22 +97,7 @@ export class PlayerShipManager extends ManagerBase {
         }
     }
 
-    public update(timeDelta: number) {
-        this._actors = [];
-        if (this.firing && this.ship.show)
-            if (
-                this.gameEngine.elapsedTime - this.lastShot >
-                this.spaceship.rateOfFire
-            ) {
-                this.fireProjectile();
-                this.lastShot = this.gameEngine.elapsedTime;
-            }
-       
-        if (this.ship.show) {
-            this._actors.push(this.ship);
-        }
-        super.update(timeDelta);
-    }
+  
 
     public shipHit() {
         this.gameEngine.scoresManager.lives--;

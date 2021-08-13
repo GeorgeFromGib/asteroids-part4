@@ -10,16 +10,6 @@ export enum Justify {
     RIGHT,
     CENTER
 }
-// export interface ICharacterModel {
-//     char:string;
-//     vertices:number[][];
-// }
-
-// export interface ITextModel {
-//     vertexes:number[][];
-//     radius:number;
-//     characters: ICharacterModel[];
-// }
 
 export interface IText {
     name:string;
@@ -32,9 +22,17 @@ export class TextManager extends ManagerBase {
     texts:IText[]=[];
     protected textModel:ITextModel
 
-    constructor(gameEngine:AsteroidsGame) {
-        super(gameEngine);
-        this.textModel=gameEngine.configData.text;
+
+    public setup() {
+        this.textModel=this.gameEngine.configData.text;
+    }
+
+    public update(timeDelta:number) {
+        this._actors=[];
+        this.texts.forEach(t=>{
+            this._actors.push(...t.characters);
+        })
+        super.update(timeDelta);
     }
 
     public write(name:string, message:string,xPos:number,yPos:number, scale:number, justify:Justify) {
@@ -69,14 +67,7 @@ export class TextManager extends ManagerBase {
         this.texts=this.texts.filter(t=>t.name!==name);
     }
 
-    public update(timeDelta:number) {
-        this._actors=[];
-        this.texts.forEach(t=>{
-            this._actors.push(...t.characters);
-        })
-        super.update(timeDelta);
-
-    }
+   
 
     
 

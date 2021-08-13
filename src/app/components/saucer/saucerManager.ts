@@ -24,18 +24,18 @@ export class SaucerManager extends ManagerBase {
   changeAngleTimer: GameTimer;
   saucerProfile: ISaucerTypeProfile;
 
-  constructor(gameEngine: AsteroidsGame) {
-    super(gameEngine);
-    this.saucerData = gameEngine.configData.saucer;
 
-    this.firingTimer = gameEngine.createTimer(
+  public setup() {
+    this.saucerData = this.gameEngine.configData.saucer;
+
+    this.firingTimer = this.gameEngine.createTimer(
       this.saucerData.rateOfFire,
       () => {
         if(this.saucer)
           this.fireProjectile();
       }
     );
-    this.changeAngleTimer=gameEngine.createTimer(1000,()=>{
+    this.changeAngleTimer=this.gameEngine.createTimer(1000,()=>{
       if(this.saucer)
         this.changeSaucerDirectionAngle()
     })
@@ -67,9 +67,13 @@ export class SaucerManager extends ManagerBase {
     this.wrapTopBottom(actor);
   }
 
+  public clear() {
+    this.saucer=undefined
+  }
+
   public createSaucer(level:number) {
     const randomSaucer=this.getRandomSaucerType(level);
-    this.saucerProfile = this.getSaucerType(randomSaucer.type);
+    this.saucerProfile = this.getSaucerProfile(randomSaucer.type);
     this.saucerDirection=this.calcSaucerDirection();
     this.saucer = new SaucerActor(this.saucerData.model, this.saucerProfile,randomSaucer.dirChange);
     this.saucer.position=this.calcSaucerStartPos(this.saucer);
@@ -84,10 +88,6 @@ export class SaucerManager extends ManagerBase {
     : SaucerTypes.LARGE;
     const dirChange=this.gameEngine.randomRange(0, 100)>(90-smallSaucerBias)
     return {type,dirChange};
-  }
-
-  public clear() {
-    this.saucer=undefined
   }
 
   private changeSaucerDirectionAngle() {
@@ -110,7 +110,7 @@ export class SaucerManager extends ManagerBase {
     return this.gameEngine.randomRange(0, 100) > 50?1:-1
   }
 
-  private getSaucerType(saucerType:string) {
+  private getSaucerProfile(saucerType:string) {
     const sSize = this.saucerData.profiles.find(
       (s) => s.size == saucerType
     );
@@ -137,8 +137,6 @@ export class SaucerManager extends ManagerBase {
   }
 
   public fireProjectile() {
-    const projSpeed=0.7;
-    const projlife=700;
-    this.gameEngine.projectilesManager.addSaucerProjectile(this.saucer,projSpeed,projlife)
+    this.gameEngine.projectilesManager.addSaucerProjectile(this.saucer,this.saucerData.projectileVel,this.saucerData.projectileLife)
   }
 }

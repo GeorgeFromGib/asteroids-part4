@@ -6,7 +6,10 @@ export abstract class ManagerBase{
 
   constructor(protected gameEngine: AsteroidsGame) {
     this.gameEngine.managers.push(this);
+    this.setup();
   }
+
+  public abstract setup();
 
   public update(timeDelta: number): void {
     this._actors.forEach((a) => {

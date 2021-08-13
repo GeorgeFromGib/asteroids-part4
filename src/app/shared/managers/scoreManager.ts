@@ -8,18 +8,19 @@ import { Justify } from "../../components/text/textManager";
 export class ScoresManager extends ManagerBase {
   protected nextLife: number;
   protected _score: number = 0;
+  protected _bestScore: number = 0;
   protected _lives: number;
   protected _shipModel: IModel;
-  protected _bestScore: number = 0;
   protected _extraLife: number;
 
-  constructor(gameEngine: AsteroidsGame) {
-    super(gameEngine);
-    this._shipModel = gameEngine.configData.spaceship.ship;
-    this.lives = gameEngine.configData.settings.lives;
-    this._extraLife = gameEngine.configData.settings.extraLife;
+
+  public setup() {
+    this._shipModel = this.gameEngine.configData.spaceship.model;
+    this.lives = this.gameEngine.configData.settings.lives;
+    this._extraLife = this.gameEngine.configData.settings.extraLife;
     this.nextLife = this._extraLife;
-    this.score = 0;
+    //this._bestScore=0;
+    //this.score = 0;
   }
 
   public update(timeDelta: number) {
@@ -75,7 +76,7 @@ export class ScoresManager extends ManagerBase {
     this.gameEngine.textManager.write(
       "bestscore",
       this._bestScore.toString().padStart(2, "0"),
-      this.gameEngine.screenSize.width / 2,
+      this.gameEngine.screenSize.center.x,
       17,
       1.5,
       Justify.RIGHT

@@ -10,8 +10,7 @@ export class ExplosionManager extends ManagerBase {
   particles: ParticleActor[]=[] ;
   debris:ParticleActor[]=[];
 
-  constructor(gameEngine: AsteroidsGame) {
-    super(gameEngine);
+  public setup() {
   }
 
   public update(timeDelta: number) {
