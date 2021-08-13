@@ -8,6 +8,8 @@ import { PlayGameState } from "./PlayGameState";
 export class InitialGameState extends GameStateBase {
   showPlayer: boolean = false;
   timer: GameTimer;
+  flashTime:GameTimer;
+  flash:boolean=true;
 
   public setup() {
     this.gameEngine.scoresManager.score=0;
@@ -22,6 +24,21 @@ export class InitialGameState extends GameStateBase {
       Justify.CENTER
     );
     this.timer = this.gameEngine.createTimer(2000);
+    this.flashTime=this.gameEngine.createTimer(1000,()=>{this.flashText()})
+    this.flashTime.restart();
+  }
+
+  public update(timeDelta: number) {
+    if (this.showPlayer) {
+     if(this.timer.expired)
+        this.nextState();
+    }
+  }
+
+  public flashText() {
+    this.gameEngine.textManager.show("init",this.flash)
+    this.flash=!this.flash;
+    this.flashTime.restart();
   }
 
   public handleKeyPress(key: Keys) {
@@ -37,12 +54,7 @@ export class InitialGameState extends GameStateBase {
     this.gameEngine.gameState = new PlayGameState(this.gameEngine);
   }
 
-  public update(timeDelta: number) {
-    if (this.showPlayer) {
-     if(this.timer.expired)
-        this.nextState();
-    }
-  }
+ 
 
   private startShowPlayer() {
     if (this.showPlayer)

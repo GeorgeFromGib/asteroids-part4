@@ -6,7 +6,6 @@ import { TextActor } from './textActor';
 import { ITextModel } from '../../shared/interfaces/iConfig';
 
 export enum Justify {
-    LEFT,
     RIGHT,
     CENTER
 }
@@ -15,6 +14,7 @@ export interface IText {
     name:string;
     characters:ActorBase[];
     position:Vector;
+    show:boolean;
 
 }
 
@@ -30,12 +30,13 @@ export class TextManager extends ManagerBase {
     public update(timeDelta:number) {
         this._actors=[];
         this.texts.forEach(t=>{
-            this._actors.push(...t.characters);
+            if(t.show)
+                this._actors.push(...t.characters);
         })
         super.update(timeDelta);
     }
 
-    public write(name:string, message:string,xPos:number,yPos:number, scale:number, justify:Justify) {
+    public write(name:string, message:string,xPos:number,yPos:number, scale:number, justify:Justify,show:boolean=true) {
         const messChars=[...message.toUpperCase()];
         const space=4;
         let adjXpos=0;
@@ -59,12 +60,18 @@ export class TextManager extends ManagerBase {
             l_xpos+=this.textModel.radius + space;
         });
         this.clear(name);
-        const text:IText={name:name,characters:actors,position:pos}
+        const text:IText={name:name,characters:actors,position:pos,show:show}
         this.texts.push(text);
     }
 
     public clear(name:string) {
         this.texts=this.texts.filter(t=>t.name!==name);
+    }
+
+    public show(name:string,show:boolean) {
+        const text=this.texts.find(c=>c.name==name)
+        if(text)
+            text.show=show;
     }
 
    
