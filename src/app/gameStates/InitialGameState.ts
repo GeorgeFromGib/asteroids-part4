@@ -1,3 +1,4 @@
+import { Howl } from 'howler';
 
 import { Justify } from "../components/text/textManager";
 import { Keys } from "./../asteroidsGame";
@@ -8,7 +9,7 @@ import { PlayGameState } from "./PlayGameState";
 export class InitialGameState extends GameStateBase {
   showPlayer: boolean = false;
   timer: GameTimer;
-  flashTime:GameTimer;
+  flashTimer:GameTimer;
   flash:boolean=true;
 
   public setup() {
@@ -24,8 +25,8 @@ export class InitialGameState extends GameStateBase {
       Justify.CENTER
     );
     this.timer = this.gameEngine.createTimer(2000);
-    this.flashTime=this.gameEngine.createTimer(1000,()=>{this.flashText()})
-    this.flashTime.restart();
+    this.flashTimer=this.gameEngine.createTimer(1000,()=>{this.flashText()})
+    this.flashTimer.restart();
   }
 
   public update(timeDelta: number) {
@@ -38,7 +39,7 @@ export class InitialGameState extends GameStateBase {
   public flashText() {
     this.gameEngine.textManager.show("init",this.flash)
     this.flash=!this.flash;
-    this.flashTime.restart();
+    this.flashTimer.restart();
   }
 
   public handleKeyPress(key: Keys) {
@@ -57,6 +58,9 @@ export class InitialGameState extends GameStateBase {
  
 
   private startShowPlayer() {
+    //this.gameEngine.fireSound=new Howl({src:['../../assets/sounds/fire.mp3']})
+    this.gameEngine.fireSound=new Howl({src:[require('../../assets/sounds/fire.wav')],html5:true})
+
     if (this.showPlayer)
       return;
     this.gameEngine.textManager.write(

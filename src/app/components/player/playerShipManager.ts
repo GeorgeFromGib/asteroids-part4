@@ -75,19 +75,10 @@ export class PlayerShipManager extends ManagerBase {
     }
 
     public placeShipInSafeSpace(position: Vector,timer:GameTimer,safeRadius: number = 200 ) {
-
         let show = true;
-
-        // this.gameEngine.asteroidsManager.asteroids.forEach((a) => {
-        //     console.log(position.dist(a.position));   
-        //     show = (position.dist(a.position) > safeRadius && this.gameEngine.saucerManager.saucer==undefined);
-        //     if (!show) break;
-        // });
-        
         show=this.gameEngine.asteroidsManager.asteroids.every(a=>  
             (position.dist(a.position) > safeRadius && this.gameEngine.saucerManager.saucer==undefined)
         );
-        console.log(show)
         if (show) {
             this.createShip();
             this.ship.position = position.copy();
@@ -96,8 +87,6 @@ export class PlayerShipManager extends ManagerBase {
             timer.restart();
         }
     }
-
-  
 
     public shipHit() {
         this.gameEngine.scoresManager.lives--;

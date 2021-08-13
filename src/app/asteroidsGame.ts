@@ -14,6 +14,7 @@ import { SaucerManager } from './components/saucer/saucerManager';
 import { TextManager } from './components/text/textManager';
 import { GameTimer } from './gameTimer';
 import { ISettings } from './shared/interfaces/iConfig';
+import {Howl} from 'howler';
 
 export class ScreenSize {
   width:number;
@@ -45,18 +46,20 @@ export class AsteroidsGame {
   elapsedTime:number=0;
   gameState:GameStateBase
   timers:GameTimer[]=[];
+  fireSound:Howl;
 
   private _ge:P5;
   private _prevElapsed = 0; 
   private _keyMapper:Map<number,Keys>=new Map();
 
   constructor() {
-    new P5((p5) => sketch(p5, this.setup));
+    new P5((p5) => sketch(p5,this.setup));
   }
 
   public setup = (p5: P5) => {
     this._ge=p5;
     this.configData=ConfigData;
+    
     // Creating canvas
     const scr_reduction = 0.8;
     const canvas = p5.createCanvas(

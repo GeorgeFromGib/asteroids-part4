@@ -38,6 +38,7 @@ export class ProjectileManager extends ManagerBase {
             projVelocity,
             projLife
         );
+        this.gameEngine.fireSound.play();
     }
 
     public addSaucerProjectile(
