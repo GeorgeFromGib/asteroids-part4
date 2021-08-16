@@ -1,3 +1,4 @@
+import { SoundEffect } from './../../soundEffect';
 import { GameTimer } from "../../gameTimer";
 import { Vector } from "p5";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
@@ -19,9 +20,12 @@ export class PlayerShipManager extends ManagerBase {
     shipShowTimer: GameTimer;
     hyperSpaceTimer: GameTimer;
     fireTimer:GameTimer;
+    thrustSound: SoundEffect;
+    shipExplosion: SoundEffect;
 
     public setup() {
         this.spaceship = this.gameEngine.configData.spaceship;
+
         this.shipShowTimer = this.gameEngine.createTimer(3000, () => {
             this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.shipShowTimer);
         });
@@ -36,6 +40,11 @@ export class PlayerShipManager extends ManagerBase {
         });
         this.fireTimer=this.gameEngine.createTimer(this.spaceship.rateOfFire)
         this.createShip();
+    }
+
+    public loadSounds() {
+        this.thrustSound=this.gameEngine.soundEffects.get('thrust')
+        this.shipExplosion=this.gameEngine.soundEffects.get('bangMedium')
     }
 
     public update(timeDelta: number) {
@@ -91,6 +100,8 @@ export class PlayerShipManager extends ManagerBase {
     public shipHit() {
         this.gameEngine.scoresManager.lives--;
         this.displayShip(false);
+        this.thrustSound.stop();
+        this.shipExplosion.play();
         this.gameEngine.explosionsManager.createShipExplosion(
             this.spaceship.model,
             this.ship
@@ -104,6 +115,7 @@ export class PlayerShipManager extends ManagerBase {
 
     public engine(on: boolean) {
         this.ship.thrusting = on;
+        this.playThrustSound(on);
     }
 
     public fire(on: boolean) {
@@ -118,5 +130,12 @@ export class PlayerShipManager extends ManagerBase {
 
     private fireProjectile() {
         this.gameEngine.projectilesManager.addPlayerProjectile(this.ship,this.spaceship.projectileVel,this.spaceship.projectileLife)
+    }
+
+    private playThrustSound(thrust:boolean) {
+    if(!this.thrustSound.isPlaying() && thrust)
+        this.thrustSound.play(true);
+    else if(!thrust)
+        this.thrustSound.stop();
     }
 }

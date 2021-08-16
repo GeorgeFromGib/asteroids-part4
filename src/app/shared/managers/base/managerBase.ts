@@ -11,6 +11,8 @@ export abstract class ManagerBase{
 
   public abstract setup();
 
+  public loadSounds() {};
+
   public update(timeDelta: number): void {
     this._actors.forEach((a) => {
       a.update(timeDelta);

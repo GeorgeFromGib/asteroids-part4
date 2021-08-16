@@ -3,14 +3,14 @@ import { Asteroid, SizeTypes } from "./asteroid";
 import { AsteroidsGame } from "../../asteroidsGame";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { IAsteroids } from "../../shared/interfaces/iConfig";
-
-
+import { SoundEffect } from "../../soundEffect";
 
 export class AsteroidsManager extends ManagerBase {
   asteroids: Asteroid[] = [];
   asteroidModels: IAsteroids;
   levelCompleted: boolean = true;
   level: number = 1;
+  explosionSounds: Map<SizeTypes,SoundEffect>
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
@@ -19,6 +19,14 @@ export class AsteroidsManager extends ManagerBase {
 
   public setup() {
 
+  }
+
+  public loadSounds() {
+    this.explosionSounds=new Map([
+      [SizeTypes.SMALL,this.gameEngine.soundEffects.get('bangSmall')],
+      [SizeTypes.MEDIUM,this.gameEngine.soundEffects.get('bangMedium')],
+      [SizeTypes.LARGE,this.gameEngine.soundEffects.get('bangLarge')],
+    ])
   }
 
   public update(timeDelta: number) {
@@ -85,6 +93,8 @@ export class AsteroidsManager extends ManagerBase {
   }
 
   public hit(hitAsteroid: Asteroid) {
+    this.explosionSounds.get(hitAsteroid.size).play();
+
     if (hitAsteroid.size === SizeTypes.SMALL) {
       this.gameEngine.explosionsManager.createExplosion(hitAsteroid.position);
       return;

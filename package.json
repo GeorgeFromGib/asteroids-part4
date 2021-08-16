@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/p5": "0.9.0",
+    "assets": "^3.0.1",
     "howler": "^2.2.3",
     "p5": "0.9.0"
   },
@@ -20,6 +21,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/howler": "^2.2.3",
+    "@types/node": "^16.6.1",
     "parcel-bundler": "^1.12.4",
     "typescript": "^3.9.5"
   }

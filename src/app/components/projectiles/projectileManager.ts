@@ -1,3 +1,4 @@
+import { SoundEffect } from './../../soundEffect';
 import { SaucerActor } from "../saucer/saucerActor";
 import { SpaceshipActor } from "../player/spaceshipActor";
 import { Vector } from "p5";
@@ -7,9 +8,13 @@ import { ActorBase } from "../../shared/actors/base/actorBase";
 
 export class ProjectileManager extends ManagerBase {
     projectiles: ProjectileActor[] = [];
+    projectileSound: SoundEffect;
 
     public setup() {
+    }
 
+    public loadSounds() {
+        this.projectileSound=this.gameEngine.soundEffects.get('fire');
     }
 
     public update(timeDelta: number) {
@@ -38,7 +43,6 @@ export class ProjectileManager extends ManagerBase {
             projVelocity,
             projLife
         );
-        this.gameEngine.fireSound.play();
     }
 
     public addSaucerProjectile(
@@ -67,6 +71,7 @@ export class ProjectileManager extends ManagerBase {
         projVel: number,
         projLife: number
     ) {
+        this.projectileSound.play();
         const gunPos = new Vector().set(actor.radius, 0).rotate(projHeading);
         const startPos = gunPos.add(actor.position);
         const vel = Vector.fromAngle(projHeading).mult(projVel);

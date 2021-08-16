@@ -1,3 +1,4 @@
+import { SoundEffect } from './../../soundEffect';
 
 import { Vector } from "p5";
 import { ActorBase } from "../../shared/actors/base/actorBase";
@@ -23,6 +24,9 @@ export class SaucerManager extends ManagerBase {
   saucerDirection:number;
   changeAngleTimer: GameTimer;
   saucerProfile: ISaucerTypeProfile;
+  saucerSounds:Map<SaucerTypes,SoundEffect>
+  saucerSound:SoundEffect;
+  fireSound:SoundEffect;
 
 
   public setup() {
@@ -39,6 +43,14 @@ export class SaucerManager extends ManagerBase {
       if(this.saucer)
         this.changeSaucerDirectionAngle()
     })
+  }
+
+  public loadSounds() {
+    this.saucerSounds=new Map([
+      [SaucerTypes.LARGE,this.gameEngine.soundEffects.get('saucerBig')],
+      [SaucerTypes.SMALL,this.gameEngine.soundEffects.get('saucerSmall')],
+    ]);
+    this.fireSound
   }
 
   public update(timeDelta: number) {
@@ -68,11 +80,16 @@ export class SaucerManager extends ManagerBase {
   }
 
   public clear() {
+    this.saucerSound.stop();
     this.saucer=undefined
   }
 
   public createSaucer(level:number) {
+    console.log(level)
     const randomSaucer=this.getRandomSaucerType(level);
+    this.saucerSound=this.saucerSounds.get(randomSaucer.type);
+    if(!this.saucerSound.isPlaying())
+      this.saucerSound.play(true);
     this.saucerProfile = this.getSaucerProfile(randomSaucer.type);
     this.saucerDirection=this.calcSaucerDirection();
     this.saucer = new SaucerActor(this.saucerData.model, this.saucerProfile,randomSaucer.dirChange);

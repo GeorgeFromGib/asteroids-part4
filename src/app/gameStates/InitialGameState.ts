@@ -1,4 +1,3 @@
-import { Howl } from 'howler';
 
 import { Justify } from "../components/text/textManager";
 import { Keys } from "./../asteroidsGame";
@@ -55,12 +54,8 @@ export class InitialGameState extends GameStateBase {
     this.gameEngine.gameState = new PlayGameState(this.gameEngine);
   }
 
- 
-
   private startShowPlayer() {
-    //this.gameEngine.fireSound=new Howl({src:['../../assets/sounds/fire.mp3']})
-    this.gameEngine.fireSound=new Howl({src:[require('../../assets/sounds/fire.wav')],html5:true})
-
+    this.gameEngine.loadSounds();
     if (this.showPlayer)
       return;
     this.gameEngine.textManager.write(

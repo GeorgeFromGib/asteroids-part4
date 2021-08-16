@@ -1,3 +1,4 @@
+import { SoundEffect } from './soundEffect';
 import * as ConfigData from '../assets/config.json' 
 import P5, { Vector } from 'p5';
 import { ProjectileManager } from './components/projectiles/projectileManager';
@@ -14,14 +15,12 @@ import { SaucerManager } from './components/saucer/saucerManager';
 import { TextManager } from './components/text/textManager';
 import { GameTimer } from './gameTimer';
 import { ISettings } from './shared/interfaces/iConfig';
-import {Howl} from 'howler';
 
 export class ScreenSize {
   width:number;
   height:number;
   center:Vector;
 }
-
 
 export enum Keys {
   RIGHT_ARROW,
@@ -46,7 +45,7 @@ export class AsteroidsGame {
   elapsedTime:number=0;
   gameState:GameStateBase
   timers:GameTimer[]=[];
-  fireSound:Howl;
+  soundEffects:Map<string,SoundEffect>=new Map();
 
   private _ge:P5;
   private _prevElapsed = 0; 
@@ -100,6 +99,15 @@ export class AsteroidsGame {
 
     this.gameState=new InitialGameState(this);
   };
+
+  public loadSounds() {
+    const files:string[] = Object.values(require('../assets/sounds/*.wav'));
+    files.forEach((v:string) => {
+        const name=v.substr(v.lastIndexOf('/')+1,v.indexOf('.')-1);
+        this.soundEffects.set(name,new SoundEffect(v))
+      });
+    this.managers.forEach(m=>m.loadSounds());
+  }
 
   // public keyPressed = (p5: P5) => {
   //   const key=this._keyMapper.get(p5.keyCode);
