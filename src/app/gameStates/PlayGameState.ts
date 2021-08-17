@@ -1,3 +1,4 @@
+import { SaucerManager } from './../components/saucer/saucerManager';
 import { Keys } from "./../asteroidsGame";
 import { GameTimer } from "../gameTimer";
 import { GameOverState } from "./GameOverState";
@@ -19,16 +20,19 @@ import { ActorBase } from "../shared/actors/base/actorBase";
 export class PlayGameState extends GameStateBase {
     playerMan: PlayerShipManager;
     asteroidsMan: AsteroidsManager;
+    saucerMan:SaucerManager;
     newLevelTimer: GameTimer;
     level: number = 0;
     saucerTimer: GameTimer;
 
     public setup() {
+        this.playerMan = this.gameEngine.playerManager;
         this.asteroidsMan = this.gameEngine.asteroidsManager;
+        this.saucerMan=this.gameEngine.saucerManager;
         this.newLevelTimer = this.gameEngine.createTimer(2000, () => {
             this.newLevel();
         });
-        this.playerMan = this.gameEngine.playerManager;
+        
         this.playerMan.showShip();
         this.saucerTimer = this.gameEngine.createTimer(4000, () => {
             this.showSaucer();
@@ -58,10 +62,12 @@ export class PlayGameState extends GameStateBase {
         this.checkCollisions();
     }
 
-    public showShip() {}
+    public showShip() {
+      this.playerMan.showShip();
+    }
 
     public showSaucer() {
-        this.gameEngine.saucerManager.createSaucer(this.level);
+        this.saucerMan.createSaucer(this.level);
     }
 
     public newLevel() {
