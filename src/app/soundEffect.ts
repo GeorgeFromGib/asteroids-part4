@@ -5,17 +5,19 @@ export class SoundEffect {
     private sound:Howl;
     
     constructor(url:string) {
-        this.sound=new Howl({src:[url],html5:true})
+        this.sound=new Howl({src:[url]})
     }
 
     public play(loop:boolean=false) {
-        this.sound.play();
         if(loop) 
             this.sound.loop(true)
+        this.sound.play();
     }
 
     public stop() {
+        this.sound.mute();
         this.sound.stop();
+        //this.sound.pause();
     }
 
     public isPlaying():boolean {

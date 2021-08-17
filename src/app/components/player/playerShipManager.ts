@@ -39,7 +39,7 @@ export class PlayerShipManager extends ManagerBase {
             );
         });
         this.fireTimer=this.gameEngine.createTimer(this.spaceship.rateOfFire)
-        this.createShip();
+        //this.createShip();
     }
 
     public loadSounds() {
@@ -49,13 +49,13 @@ export class PlayerShipManager extends ManagerBase {
 
     public update(timeDelta: number) {
         this._actors = [];
-        if (this.firing && this.ship.show)
+        if (this.firing && this.ship)
             if (this.fireTimer.expired) {
                 this.fireProjectile();
                 this.fireTimer.restart();
             }
        
-        if (this.ship.show) {
+        if (this.ship) {
             this._actors.push(this.ship);
         }
         super.update(timeDelta);
@@ -64,19 +64,11 @@ export class PlayerShipManager extends ManagerBase {
     public createShip() {
         this.ship = new SpaceshipActor(this.spaceship);
         this.ship.position = this.gameEngine.screenSize.center;
-        this.ship.show = false;
         this.firing = false;
     }
 
     public showShip() {
         this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.shipShowTimer)
-    }
-
-    public displayShip(show: boolean) {
-        this.ship.show = show;
-        if (!show) {
-            this.ship.thrusting = false;
-        }
     }
 
     public startNewLife() {
@@ -91,7 +83,7 @@ export class PlayerShipManager extends ManagerBase {
         if (show) {
             this.createShip();
             this.ship.position = position.copy();
-            this.displayShip(true);
+            //this.displayShip(true);
         } else {
             timer.restart();
         }
@@ -99,13 +91,13 @@ export class PlayerShipManager extends ManagerBase {
 
     public shipHit() {
         this.gameEngine.scoresManager.lives--;
-        this.displayShip(false);
         this.thrustSound.stop();
         this.shipExplosion.play();
         this.gameEngine.explosionsManager.createShipExplosion(
             this.spaceship.model,
             this.ship
         );
+        this.ship=undefined;
         if (this.gameEngine.scoresManager.lives > 0) this.startNewLife();
     }
 
@@ -124,7 +116,7 @@ export class PlayerShipManager extends ManagerBase {
 
     public hyperSpace() {
         if (!this.hyperSpaceTimer.expired) return;
-        this.displayShip(false);
+        this.ship=undefined;
         this.hyperSpaceTimer.restart();
     }
 
@@ -135,7 +127,7 @@ export class PlayerShipManager extends ManagerBase {
     private playThrustSound(thrust:boolean) {
     if(!this.thrustSound.isPlaying() && thrust)
         this.thrustSound.play(true);
-    else if(!thrust)
+    if(!thrust)
         this.thrustSound.stop();
     }
 }

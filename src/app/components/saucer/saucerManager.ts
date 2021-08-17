@@ -1,3 +1,5 @@
+import { PlayerShipManager } from './../player/playerShipManager';
+import { GameOverState } from './../../gameStates/GameOverState';
 import { SoundEffect } from './../../soundEffect';
 
 import { Vector } from "p5";
@@ -26,7 +28,7 @@ export class SaucerManager extends ManagerBase {
   saucerProfile: ISaucerTypeProfile;
   saucerSounds:Map<SaucerTypes,SoundEffect>
   saucerSound:SoundEffect;
-  fireSound:SoundEffect;
+  saucerExplosion: SoundEffect;
 
 
   public setup() {
@@ -50,7 +52,7 @@ export class SaucerManager extends ManagerBase {
       [SaucerTypes.LARGE,this.gameEngine.soundEffects.get('saucerBig')],
       [SaucerTypes.SMALL,this.gameEngine.soundEffects.get('saucerSmall')],
     ]);
-    this.fireSound
+    this.saucerExplosion=this.gameEngine.soundEffects.get('bangMedium')
   }
 
   public update(timeDelta: number) {
@@ -64,6 +66,7 @@ export class SaucerManager extends ManagerBase {
       if (this.changeAngleTimer.expired && !this.saucer.changeDirType) this.changeAngleTimer.restart();
 
       if (this.saucer.collidedWith) {
+        this.saucerExplosion.play();
         this.gameEngine.explosionsManager.createExplosion(this.saucer.position);
         this.clear();
       }
@@ -80,12 +83,12 @@ export class SaucerManager extends ManagerBase {
   }
 
   public clear() {
-    this.saucerSound.stop();
+    this.saucerSound?.stop();
     this.saucer=undefined
   }
 
   public createSaucer(level:number) {
-    console.log(level)
+    if(this.saucer) return;
     const randomSaucer=this.getRandomSaucerType(level);
     this.saucerSound=this.saucerSounds.get(randomSaucer.type);
     if(!this.saucerSound.isPlaying())
