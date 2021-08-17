@@ -43,7 +43,7 @@ export class PlayGameState extends GameStateBase {
         if (this.gameEngine.scoresManager.lives <= 0) this.nextState();
         if (
             this.asteroidsMan.levelCompleted &&
-            !this.gameEngine.saucerManager.saucer &&
+            !this.saucerMan.saucer &&
             this.newLevelTimer.expired
         ) {
             this.newLevelTimer.restart();
@@ -95,14 +95,14 @@ export class PlayGameState extends GameStateBase {
     public nextState() {
         //this.playerMan.displayShip(false);
         this.saucerTimer.reset();
-        this.gameEngine.saucerManager.clear();
+        this.saucerMan.clear();
         this.gameEngine.gameState = new GameOverState(this.gameEngine);
     }
 
     private checkCollisions() {
-        const asteroids = this.gameEngine.asteroidsManager.actors;
-        const saucers = this.gameEngine.saucerManager.actors;
-        const ship = this.gameEngine.playerManager.ship;
+        const asteroids = this.asteroidsMan.actors;
+        const saucers = this.saucerMan.actors;
+        const ship = this.playerMan.ship;
         const shipProjectiles =
             this.gameEngine.projectilesManager.sourceProjectiles(
                 ProjectileSource.PLAYER
@@ -141,7 +141,7 @@ export class PlayGameState extends GameStateBase {
             const colA = p.hasCollided(asteroids) as Asteroid;
             if (ship) {
                 const colP = p.hasCollided([ship]) as SpaceshipActor;
-                if (colP) this.gameEngine.playerManager.shipHit();
+                if (colP) this.playerMan.shipHit();
             }
         });
     }
@@ -173,7 +173,7 @@ export class PlayGameState extends GameStateBase {
         const colA = ship.hasCollided(asteroids) as Asteroid;
         const colS = ship.hasCollided(saucers) as SaucerActor;
         if (colA != undefined || colS != undefined) {
-            this.gameEngine.playerManager.shipHit();
+            this.playerMan.shipHit();
         }
     }
 }
