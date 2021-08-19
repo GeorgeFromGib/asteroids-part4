@@ -34,13 +34,7 @@ export class SaucerManager extends ManagerBase {
   public setup() {
     this.saucerData = this.gameEngine.configData.saucer;
 
-    this.firingTimer = this.gameEngine.createTimer(
-      this.saucerData.rateOfFire,
-      () => {
-        if(this.saucer)
-          this.fireProjectile();
-      }
-    );
+    this.firingTimer = this.gameEngine.createTimer(this.saucerData.rateOfFire);
     this.changeAngleTimer=this.gameEngine.createTimer(1000,()=>{
       if(this.saucer)
         this.changeSaucerDirectionAngle()
@@ -60,6 +54,11 @@ export class SaucerManager extends ManagerBase {
 
     if (this.saucer) {
       this._actors.push(this.saucer);
+
+      if (this.firing && this.firingTimer.expired) {
+          this.fireProjectile();
+          this.firingTimer.restart();
+      }
 
       if (this.firing && this.firingTimer.expired) this.firingTimer.restart();
       

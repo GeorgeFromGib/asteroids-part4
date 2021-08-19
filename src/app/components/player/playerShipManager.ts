@@ -17,17 +17,19 @@ export class PlayerShipManager extends ManagerBase {
     firing: boolean;
     lastShot = 0;
     spaceship: ISpaceship;
-    shipShowTimer: GameTimer;
+    safeShipTimer: GameTimer;
     hyperSpaceTimer: GameTimer;
     fireTimer:GameTimer;
     thrustSound: SoundEffect;
     shipExplosion: SoundEffect;
+    shipIsPlacing:boolean;
 
     public setup() {
         this.spaceship = this.gameEngine.configData.spaceship;
-
-        this.shipShowTimer = this.gameEngine.createTimer(3000, () => {
-            this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.shipShowTimer);
+        this.shipIsPlacing=false;
+        this.safeShipTimer = this.gameEngine.createTimer(500, () => {
+            this.shipIsPlacing=true;
+            this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.safeShipTimer);
         });
         this.hyperSpaceTimer = this.gameEngine.createTimer(1000, () => {
             const constraintPct=0.2;
@@ -68,11 +70,7 @@ export class PlayerShipManager extends ManagerBase {
     }
 
     public showShip() {
-        this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.shipShowTimer)
-    }
-
-    public startNewLife() {
-        this.shipShowTimer.restart();
+        this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.safeShipTimer)
     }
 
     public placeShipInSafeSpace(position: Vector,timer:GameTimer,safeRadius: number = 200 ) {
@@ -81,9 +79,9 @@ export class PlayerShipManager extends ManagerBase {
             (position.dist(a.position) > safeRadius && this.gameEngine.saucerManager.saucer==undefined)
         );
         if (show) {
+            this.shipIsPlacing=false;
             this.createShip();
             this.ship.position = position.copy();
-            //this.displayShip(true);
         } else {
             timer.restart();
         }
@@ -98,7 +96,6 @@ export class PlayerShipManager extends ManagerBase {
             this.ship
         );
         this.ship=undefined;
-        if (this.gameEngine.scoresManager.lives > 0) this.startNewLife();
     }
 
     public turn(turn: ShipTurn) {

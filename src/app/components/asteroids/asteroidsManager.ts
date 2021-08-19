@@ -1,3 +1,4 @@
+import { GameTimer } from './../../gameTimer';
 import { Vector } from "p5";
 import { Asteroid, SizeTypes } from "./asteroid";
 import { AsteroidsGame } from "../../asteroidsGame";
@@ -11,6 +12,8 @@ export class AsteroidsManager extends ManagerBase {
   levelCompleted: boolean = true;
   level: number = 1;
   explosionSounds: Map<SizeTypes,SoundEffect>
+  levelBeatSound: SoundEffect;
+  beatSoundTimer:GameTimer;
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
@@ -18,7 +21,10 @@ export class AsteroidsManager extends ManagerBase {
   }
 
   public setup() {
-
+    this.beatSoundTimer=this.gameEngine.createTimer(500,()=>{
+      this.levelBeatSound.play();
+      this.beatSoundTimer.restart();
+    })
   }
 
   public loadSounds() {
@@ -27,14 +33,16 @@ export class AsteroidsManager extends ManagerBase {
       [SizeTypes.MEDIUM,this.gameEngine.soundEffects.get('bangMedium')],
       [SizeTypes.LARGE,this.gameEngine.soundEffects.get('bangLarge')],
     ])
+    this.levelBeatSound=this.gameEngine.soundEffects.get('beat1')
   }
 
   public update(timeDelta: number) {
-    if (
-      this.asteroids.length == 0 &&
-      this.gameEngine.saucerManager.saucer
-    )
+    this._actors = [];
+    if(this.hasLevelEnded()) {
       this.levelCompleted = true;
+      this.beatSoundTimer.reset();
+    }
+    
 
     this.asteroids.forEach((a) => {
       if (a.collidedWith !== undefined) this.hit(a);
@@ -44,8 +52,8 @@ export class AsteroidsManager extends ManagerBase {
       (a) => a.collidedWith == undefined
     );
 
-    this._actors = [];
     this._actors.push(...this.asteroids);
+    if(this.actors.length>15) this.beatSoundTimer.time=200;
     super.update(timeDelta);
   }
 
@@ -53,6 +61,7 @@ export class AsteroidsManager extends ManagerBase {
     this.levelCompleted = false;
     this.level = level;
     this.createAsteroids(6);
+    this.beatSoundTimer.restart();
   }
 
   public createAsteroid(pos: Vector, size: SizeTypes) {
@@ -62,7 +71,7 @@ export class AsteroidsManager extends ManagerBase {
     );
     const asteroid = new Asteroid(this.asteroidModels.designs[designIndex]);
     const minSpeed = 30 * (1 + this.level / 100);
-    const maxSpeed=80 * aSize.speed
+    const maxSpeed = 80 * aSize.speed
     const vel = this.gameEngine.randomRange(minSpeed, maxSpeed);
     asteroid.position = pos.copy();
     asteroid.velocity = Vector.random2D().mult(vel / 1000);
@@ -90,6 +99,7 @@ export class AsteroidsManager extends ManagerBase {
 
   public clear() {
     this.asteroids = [];
+    this.beatSoundTimer.reset();
   }
 
   public hit(hitAsteroid: Asteroid) {
@@ -105,5 +115,10 @@ export class AsteroidsManager extends ManagerBase {
     const pos = hitAsteroid.position.add(posOffset);
     this.createAsteroid(pos, nextSize);
     this.createAsteroid(pos, nextSize);
+  }
+
+  private hasLevelEnded() {
+    return (this.asteroids.length == 0 &&
+    !this.gameEngine.saucerManager.saucer)
   }
 }

@@ -50,6 +50,7 @@ export class ProjectileManager extends ManagerBase {
         projVel: number,
         projLife: number
     ) {
+        if(!this.gameEngine.playerManager.ship) return;
         const projHeading = this.getRangeAndDirection(
             this.gameEngine.playerManager.ship.position,
             saucer.position,

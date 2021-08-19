@@ -24,6 +24,7 @@ export class PlayGameState extends GameStateBase {
     newLevelTimer: GameTimer;
     level: number = 0;
     saucerTimer: GameTimer;
+    shipShowTimer: GameTimer;
 
     public setup() {
         this.playerMan = this.gameEngine.playerManager;
@@ -37,27 +38,27 @@ export class PlayGameState extends GameStateBase {
         this.saucerTimer = this.gameEngine.createTimer(4000, () => {
             this.showSaucer();
         });
+        this.shipShowTimer = this.gameEngine.createTimer(2000, () => {
+            this.showShip();
+        });
     }
 
     public update(timeDelta: number) {
         if (this.gameEngine.scoresManager.lives <= 0) this.nextState();
-        if (
-            this.asteroidsMan.levelCompleted &&
-            !this.saucerMan.saucer &&
-            this.newLevelTimer.expired
-        ) {
+        if (this.shouldNewAsteroidsLevelStart()) 
             this.newLevelTimer.restart();
+        if (this.shouldPlayerShipBeShown()) 
+            this.shipShowTimer.restart();
+        if (!this.gameEngine.saucerManager.saucer && this.saucerTimer.expired) {
+            const timeDecrement = this.level * 1000;
+            const minDelay = Math.max(1000, 10000 - timeDecrement);
+            const maxDelay = Math.max(1500, 15000 - timeDecrement);
+            this.saucerTimer.time = this.gameEngine.randomRange(
+                minDelay,
+                maxDelay
+            );
+            this.saucerTimer.restart();
         }
-        // if (!this.gameEngine.saucerManager.saucer && this.saucerTimer.expired) {
-        //     const timeDecrement = this.level * 1000;
-        //     const minDelay = Math.max(1000, 10000 - timeDecrement);
-        //     const maxDelay = Math.max(1500, 15000 - timeDecrement);
-        //     this.saucerTimer.time = this.gameEngine.randomRange(
-        //         minDelay,
-        //         maxDelay
-        //     );
-        //     this.saucerTimer.restart();
-        // }
 
         this.checkCollisions();
     }
@@ -97,6 +98,14 @@ export class PlayGameState extends GameStateBase {
         this.saucerTimer.reset();
         this.saucerMan.clear();
         this.gameEngine.gameState = new GameOverState(this.gameEngine);
+    }
+
+    private shouldPlayerShipBeShown() {
+        return (!this.playerMan.ship && this.gameEngine.scoresManager.lives > 0 && this.shipShowTimer.expired && !this.playerMan.shipIsPlacing)
+    }
+
+    private shouldNewAsteroidsLevelStart() {
+        return (this.asteroidsMan.levelCompleted && !this.saucerMan.saucer && this.newLevelTimer.expired)
     }
 
     private checkCollisions() {
