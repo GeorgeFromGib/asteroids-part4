@@ -14,6 +14,9 @@ export class AsteroidsManager extends ManagerBase {
   explosionSounds: Map<SizeTypes,SoundEffect>
   levelBeatSound: SoundEffect;
   beatSoundTimer:GameTimer;
+  beatDelays:number[]=[1000,500,300];
+  increaseBeatTimer:GameTimer
+  increaseBeatIndex:number=0;
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
@@ -24,6 +27,10 @@ export class AsteroidsManager extends ManagerBase {
     this.beatSoundTimer=this.gameEngine.createTimer(500,()=>{
       this.levelBeatSound.play();
       this.beatSoundTimer.restart();
+    })
+    this.increaseBeatTimer=this.gameEngine.createTimer(15000,()=>{
+      this.increaseBeatIndex=Math.min(this.beatDelays.length-1,this.increaseBeatIndex+1)
+      this.beatSoundTimer.time=this.beatDelays[this.increaseBeatIndex]
     })
   }
 
@@ -53,7 +60,7 @@ export class AsteroidsManager extends ManagerBase {
     );
 
     this._actors.push(...this.asteroids);
-    if(this.actors.length>15) this.beatSoundTimer.time=200;
+   
     super.update(timeDelta);
   }
 
@@ -61,7 +68,10 @@ export class AsteroidsManager extends ManagerBase {
     this.levelCompleted = false;
     this.level = level;
     this.createAsteroids(6);
+    this.increaseBeatIndex=0;
+    this.beatSoundTimer.time=this.beatDelays[0];
     this.beatSoundTimer.restart();
+    this.increaseBeatTimer.restart();
   }
 
   public createAsteroid(pos: Vector, size: SizeTypes) {

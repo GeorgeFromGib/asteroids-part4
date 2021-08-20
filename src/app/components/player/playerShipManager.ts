@@ -65,6 +65,7 @@ export class PlayerShipManager extends ManagerBase {
 
     public createShip() {
         this.ship = new SpaceshipActor(this.spaceship);
+        this.ship.scale=1.2
         this.ship.position = this.gameEngine.screenSize.center;
         this.firing = false;
     }

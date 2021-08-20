@@ -60,7 +60,7 @@ export class SaucerManager extends ManagerBase {
           this.firingTimer.restart();
       }
 
-      if (this.firing && this.firingTimer.expired) this.firingTimer.restart();
+      //if (this.firing && this.firingTimer.expired) this.firingTimer.restart();
       
       if (this.changeAngleTimer.expired && !this.saucer.changeDirType) this.changeAngleTimer.restart();
 
