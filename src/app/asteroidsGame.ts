@@ -109,10 +109,6 @@ export class AsteroidsGame {
     this.managers.forEach(m=>m.loadSounds());
   }
 
-  // public keyPressed = (p5: P5) => {
-  //   const key=this._keyMapper.get(p5.keyCode);
-  //   this.gameState.handleKeyPress(key)
-  // };
   public keyPressed = () => {
     const key=this._keyMapper.get(this._ge.keyCode);
     this.gameState.handleKeyPress(key)
@@ -122,7 +118,6 @@ export class AsteroidsGame {
     const key=this._keyMapper.get(this._ge.keyCode);
     this.gameState.handleKeyRelease(key)
   };
-
 
   public gameLoop = () => {
     const timeDelta = this.getTimeDelta();
@@ -140,12 +135,6 @@ export class AsteroidsGame {
       manager.render();
       this._ge.pop();
     });
-
-    
-    // this._ge.noFill();
-    // this._ge.circle(this.screenSize.center.x,this.screenSize.center.y,600)
-    //this._ge.textSize(20);
-    //this._ge.text((1000/timeDelta).toFixed(2).toString(),this._ge.width/2,this._ge.height);
 
   };
 
