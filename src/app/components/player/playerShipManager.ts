@@ -27,7 +27,7 @@ export class PlayerShipManager extends ManagerBase {
     public setup() {
         this.spaceship = this.gameEngine.configData.spaceship;
         this.shipIsPlacing=false;
-        this.safeShipTimer = this.gameEngine.createTimer(500, () => {
+        this.safeShipTimer = this.gameEngine.createTimer(200, () => {
             this.shipIsPlacing=true;
             this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.safeShipTimer);
         });
@@ -80,9 +80,9 @@ export class PlayerShipManager extends ManagerBase {
             (position.dist(a.position) > safeRadius && this.gameEngine.saucerManager.saucer==undefined)
         );
         if (show) {
-            this.shipIsPlacing=false;
             this.createShip();
             this.ship.position = position.copy();
+            this.shipIsPlacing=false;
         } else {
             timer.restart();
         }

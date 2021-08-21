@@ -1,14 +1,12 @@
-import { PlayerShipManager } from './../player/playerShipManager';
-import { GameOverState } from './../../gameStates/GameOverState';
-import { SoundEffect } from './../../soundEffect';
 
+import { SoundEffect } from './../../soundEffect';
 import { Vector } from "p5";
 import { ActorBase } from "../../shared/actors/base/actorBase";
 import { ManagerBase } from "../../shared/managers/base/managerBase";
 import { SaucerActor } from "./saucerActor";
-import { AsteroidsGame } from "../../asteroidsGame";
 import { GameTimer } from "../../gameTimer";
 import { ISaucer, ISaucerTypeProfile } from "../../shared/interfaces/iConfig";
+import { ProjectileSource } from '../projectiles/ProjectileActor';
 
 
 
@@ -54,13 +52,6 @@ export class SaucerManager extends ManagerBase {
 
     if (this.saucer) {
       this._actors.push(this.saucer);
-
-      if (this.firing && this.firingTimer.expired) {
-          this.fireProjectile();
-          this.firingTimer.restart();
-      }
-
-      //if (this.firing && this.firingTimer.expired) this.firingTimer.restart();
       
       if (this.changeAngleTimer.expired && !this.saucer.changeDirType) this.changeAngleTimer.restart();
 
@@ -72,6 +63,11 @@ export class SaucerManager extends ManagerBase {
 
       if(this.saucer && this.isSaucerAtEnd())
         this.clear();
+
+      if (this.saucer && this.firingTimer.expired) {
+          this.fireProjectile();
+          this.firingTimer.restart();
+      }  
     }
 
     super.update(timeDelta);
@@ -83,6 +79,7 @@ export class SaucerManager extends ManagerBase {
 
   public clear() {
     this.saucerSound?.stop();
+    this.firingTimer.reset();
     this.saucer=undefined
   }
 
@@ -98,6 +95,7 @@ export class SaucerManager extends ManagerBase {
     this.saucer.position=this.calcSaucerStartPos(this.saucer);
     this.saucer.velocity = new Vector().set(this.saucerDirection, 0).mult(this.saucerProfile.speed / 1000);
     this.saucerEndXPos=this.calcSaucerEndXpos(this.saucer.position,this.saucer.radius)
+    this.gameEngine.projectilesManager.clearProjectilesfor(ProjectileSource.SAUCER);
   }
 
   private getRandomSaucerType(level:number) :{type:SaucerTypes,dirChange:boolean}{
@@ -110,13 +108,19 @@ export class SaucerManager extends ManagerBase {
   }
 
   private changeSaucerDirectionAngle() {
-    const possibleAngles=[1,-0.785,0.785]
-    const rand=this.gameEngine.randomRange(0,100);
-    let index=0;
-    if(rand>50) index=1;
-    if(rand>75) index=2;
-    const newAngle= possibleAngles[index];
+    const newAngle= this.getRandomEntryAngle();
     this.saucer.velocity=new Vector().set(this.saucerDirection,0).rotate(newAngle).mult(this.saucerProfile.speed / 1000);
+  }
+
+  private getRandomEntryAngle() {
+    const possibleAngles = [1, -0.785, 0.785];
+    const rand = this.gameEngine.randomRange(0, 100);
+    let index = 0;
+    if (rand > 50)
+      index = 1;
+    if (rand > 75)
+      index = 2;
+    return possibleAngles[index]
   }
 
   private calcSaucerEndXpos(position:Vector,radius:number) {

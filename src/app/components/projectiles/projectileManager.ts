@@ -30,6 +30,10 @@ export class ProjectileManager extends ManagerBase {
         return this.projectiles.filter((c) => c.source === source);
     }
 
+    public clearProjectilesfor(source:ProjectileSource) {
+        this.projectiles=this.projectiles.filter(p=>p.source!==source);
+    }
+
     public addPlayerProjectile(
         ship: SpaceshipActor,
         projVelocity: number,
@@ -50,7 +54,7 @@ export class ProjectileManager extends ManagerBase {
         projVel: number,
         projLife: number
     ) {
-        if(!this.gameEngine.playerManager.ship) return;
+        if(!this.gameEngine.playerManager.ship) return; 
         const projHeading = this.getRangeAndDirection(
             this.gameEngine.playerManager.ship.position,
             saucer.position,

@@ -1,5 +1,4 @@
 
-
 import { AsteroidsGame } from "../../asteroidsGame";
 import { ActorBase, IModel } from "../../shared/actors/base/actorBase";
 

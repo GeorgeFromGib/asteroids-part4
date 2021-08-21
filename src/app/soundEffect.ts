@@ -1,6 +1,5 @@
 import { Howl } from 'howler';
 
-
 export class SoundEffect {
     private sound:Howl;
     
@@ -17,7 +16,10 @@ export class SoundEffect {
     public stop() {
         this.sound.mute();
         this.sound.stop();
-        //this.sound.pause();
+    }
+
+    public volume(level:number) {
+        this.sound.volume(level)
     }
 
     public isPlaying():boolean {

@@ -1,4 +1,4 @@
-import { GameTimer } from './../../gameTimer';
+import { BeatSoundEffect } from './beatSound';
 import { Vector } from "p5";
 import { Asteroid, SizeTypes } from "./asteroid";
 import { AsteroidsGame } from "../../asteroidsGame";
@@ -12,11 +12,9 @@ export class AsteroidsManager extends ManagerBase {
   levelCompleted: boolean = true;
   level: number = 1;
   explosionSounds: Map<SizeTypes,SoundEffect>
-  levelBeatSound: SoundEffect;
-  beatSoundTimer:GameTimer;
-  beatDelays:number[]=[1000,500,300];
-  increaseBeatTimer:GameTimer
-  increaseBeatIndex:number=0;
+  beatSoundEffect: BeatSoundEffect;
+  
+ 
 
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
@@ -24,14 +22,6 @@ export class AsteroidsManager extends ManagerBase {
   }
 
   public setup() {
-    this.beatSoundTimer=this.gameEngine.createTimer(500,()=>{
-      this.levelBeatSound.play();
-      this.beatSoundTimer.restart();
-    })
-    this.increaseBeatTimer=this.gameEngine.createTimer(15000,()=>{
-      this.increaseBeatIndex=Math.min(this.beatDelays.length-1,this.increaseBeatIndex+1)
-      this.beatSoundTimer.time=this.beatDelays[this.increaseBeatIndex]
-    })
   }
 
   public loadSounds() {
@@ -40,16 +30,16 @@ export class AsteroidsManager extends ManagerBase {
       [SizeTypes.MEDIUM,this.gameEngine.soundEffects.get('bangMedium')],
       [SizeTypes.LARGE,this.gameEngine.soundEffects.get('bangLarge')],
     ])
-    this.levelBeatSound=this.gameEngine.soundEffects.get('beat1')
+    this.beatSoundEffect=new BeatSoundEffect(this.gameEngine);
   }
 
   public update(timeDelta: number) {
     this._actors = [];
+
     if(this.hasLevelEnded()) {
       this.levelCompleted = true;
-      this.beatSoundTimer.reset();
+      this.beatSoundEffect.start();
     }
-    
 
     this.asteroids.forEach((a) => {
       if (a.collidedWith !== undefined) this.hit(a);
@@ -68,27 +58,7 @@ export class AsteroidsManager extends ManagerBase {
     this.levelCompleted = false;
     this.level = level;
     this.createAsteroids(6);
-    this.increaseBeatIndex=0;
-    this.beatSoundTimer.time=this.beatDelays[0];
-    this.beatSoundTimer.restart();
-    this.increaseBeatTimer.restart();
-  }
-
-  public createAsteroid(pos: Vector, size: SizeTypes) {
-    const aSize = this.asteroidModels.sizes.find((s) => s.size == size);
-    const designIndex = Math.floor(
-      this.gameEngine.random(this.asteroidModels.designs.length)
-    );
-    const asteroid = new Asteroid(this.asteroidModels.designs[designIndex]);
-    const minSpeed = 30 * (1 + this.level / 100);
-    const maxSpeed = 80 * aSize.speed
-    const vel = this.gameEngine.randomRange(minSpeed, maxSpeed);
-    asteroid.position = pos.copy();
-    asteroid.velocity = Vector.random2D().mult(vel / 1000);
-    asteroid.size = aSize.size as SizeTypes;
-    asteroid.points = aSize.points;
-    asteroid.scale = aSize.scale;
-    this.asteroids.push(asteroid);
+    this.beatSoundEffect.start();
   }
 
   public createAsteroids(noOfAsteroids: number) {
@@ -109,10 +79,27 @@ export class AsteroidsManager extends ManagerBase {
 
   public clear() {
     this.asteroids = [];
-    this.beatSoundTimer.reset();
+    this.beatSoundEffect.reset();
   }
 
-  public hit(hitAsteroid: Asteroid) {
+  private createAsteroid(pos: Vector, size: SizeTypes) {
+    const aSize = this.asteroidModels.sizes.find((s) => s.size == size);
+    const designIndex = Math.floor(
+      this.gameEngine.random(this.asteroidModels.designs.length)
+    );
+    const asteroid = new Asteroid(this.asteroidModels.designs[designIndex]);
+    const minSpeed = 30 * (1 + this.level / 100);
+    const maxSpeed = 80 * aSize.speed
+    const vel = this.gameEngine.randomRange(minSpeed, maxSpeed);
+    asteroid.position = pos.copy();
+    asteroid.velocity = Vector.random2D().mult(vel / 1000);
+    asteroid.size = aSize.size as SizeTypes;
+    asteroid.points = aSize.points;
+    asteroid.scale = aSize.scale; 
+    this.asteroids.push(asteroid);
+  }
+
+  private hit(hitAsteroid: Asteroid) {
     this.explosionSounds.get(hitAsteroid.size).play();
 
     if (hitAsteroid.size === SizeTypes.SMALL) {
