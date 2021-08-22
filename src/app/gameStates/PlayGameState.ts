@@ -99,7 +99,7 @@ export class PlayGameState extends GameStateBase {
     }
 
     private shouldSaucerBeShown() {
-        return (!this.gameEngine.saucerManager.saucer && this.saucerTimer.expired);
+        return (!this.saucerMan.saucer && this.playerMan.ship && this.saucerTimer.expired);
     }
 
     private shouldPlayerShipBeShown() {

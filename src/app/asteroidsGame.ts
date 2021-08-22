@@ -188,10 +188,10 @@ export class AsteroidsGame {
   private createCanvas(p5: P5) {
     const scr_reduction = 0.8;
     const oldTvRatio=1.33;
-    const width=860;
-    const height=width*0.75
-    // const width=p5.windowHeight * oldTvRatio * scr_reduction;
-    // const height=p5.windowHeight * scr_reduction
+    // const width=860;
+    // const height=width*0.75
+    const width=p5.windowHeight * oldTvRatio * scr_reduction;
+    const height=p5.windowHeight * scr_reduction
     const canvas = p5.createCanvas(width,height);
     return canvas;
   }
