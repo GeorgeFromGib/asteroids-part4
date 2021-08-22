@@ -28,7 +28,6 @@ export class PlayerShipManager extends ManagerBase {
         this.spaceship = this.gameEngine.configData.spaceship;
         this.shipIsPlacing=false;
         this.safeShipTimer = this.gameEngine.createTimer(200, () => {
-            this.shipIsPlacing=true;
             this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.safeShipTimer);
         });
         this.hyperSpaceTimer = this.gameEngine.createTimer(1000, () => {
@@ -70,6 +69,7 @@ export class PlayerShipManager extends ManagerBase {
     }
 
     public showShip() {
+        this.shipIsPlacing=true;
         this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.safeShipTimer)
     }
 
@@ -114,6 +114,7 @@ export class PlayerShipManager extends ManagerBase {
     public hyperSpace() {
         if (!this.hyperSpaceTimer.expired) return;
         this.ship=undefined;
+        this.shipIsPlacing=true;
         this.hyperSpaceTimer.restart();
     }
 
