@@ -46,7 +46,10 @@ export class PlayGameState extends GameStateBase {
     }
 
     public update(timeDelta: number) {
-        if (this.gameEngine.scoresManager.lives <= 0) this.nextState();
+        if (this.gameEngine.scoresManager.lives <= 0) {
+            this.nextState();
+            return
+        }
 
         if (this.shouldNewAsteroidsLevelStart()) 
             this.newLevelTimer.restart();
@@ -91,9 +94,7 @@ export class PlayGameState extends GameStateBase {
     }
 
     public nextState() {
-        //this.playerMan.displayShip(false);
         this.saucerTimer.reset();
-        this.saucerMan.clear();
         this.gameEngine.gameState = new GameOverState(this.gameEngine);
     }
 

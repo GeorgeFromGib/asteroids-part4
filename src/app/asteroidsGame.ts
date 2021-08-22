@@ -60,11 +60,8 @@ export class AsteroidsGame {
     this.configData=ConfigData;
     
     // Creating canvas
-    const scr_reduction = 0.8;
-    const canvas = p5.createCanvas(
-      p5.windowWidth * scr_reduction,
-      p5.windowHeight * scr_reduction
-    );
+    const canvas=this.createCanvas(p5)
+    
     canvas.parent("app");
 
     this._keyMapper=new Map([
@@ -104,7 +101,7 @@ export class AsteroidsGame {
     const files:string[] = Object.values(require('../assets/sounds/*.wav'));
     files.forEach((v:string) => {
         const name=v.substr(v.lastIndexOf('/')+1,v.indexOf('.')-1);
-        this.soundEffects.set(name,new SoundEffect(v))
+        this.soundEffects.set(name,new SoundEffect(v,this))
       });
     this.managers.forEach(m=>m.loadSounds());
   }
@@ -159,13 +156,6 @@ export class AsteroidsGame {
     this._ge.point(x,y);
   }
 
-  private getTimeDelta() {
-    this.elapsedTime=Math.trunc(this._ge.millis());
-    const timeDelta = this.elapsedTime - this._prevElapsed;
-    this._prevElapsed = this.elapsedTime
-    return timeDelta;
-  }
-
   public random(max:number) {
     return this._ge.random(0,max);
   }
@@ -186,6 +176,22 @@ export class AsteroidsGame {
     return new Vector().set(
       this.randomRange(widthConstraint,this.screenSize.width-widthConstraint),
       this.randomRange(heightConstraint,this.screenSize.height-heightConstraint))
+  }
+
+  private getTimeDelta() {
+    this.elapsedTime=Math.trunc(this._ge.millis());
+    const timeDelta = this.elapsedTime - this._prevElapsed;
+    this._prevElapsed = this.elapsedTime
+    return timeDelta;
+  }
+
+  private createCanvas(p5: P5) {
+    const scr_reduction = 0.8;
+    const oldTvRatio=1.33;
+    const width=p5.windowHeight * oldTvRatio * scr_reduction;
+    const height=p5.windowHeight * scr_reduction
+    const canvas = p5.createCanvas(width,height);
+    return canvas;
   }
 }
 

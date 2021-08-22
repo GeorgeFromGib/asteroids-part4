@@ -15,7 +15,9 @@ export class SpaceshipActor extends ActorBase {
 
   constructor(protected shipData:ISpaceship) {
     super(shipData.model);
+    this.scale=shipData.scale;
     this.engineThrust=new ThrustActor(shipData.thrust)
+    this.engineThrust.scale=this.scale;
     this.addChildActor(this.engineThrust,new Vector().set(0,7))
   }
 

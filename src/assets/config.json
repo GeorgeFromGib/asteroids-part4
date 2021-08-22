@@ -25,7 +25,8 @@
     "friction":0.998,
     "projectileVel":0.7,
     "projectileLife":700,
-    "rateOfFire":200
+    "rateOfFire":200,
+    "scale":1.2
   },
   "asteroids": {
     "designs": [

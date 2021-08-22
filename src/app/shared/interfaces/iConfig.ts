@@ -47,6 +47,7 @@ export interface ISpaceship {
     projectileVel:  number;
     projectileLife: number;
     rateOfFire:     number;
+    scale:          number;
 }
 
 export interface ITextModel {

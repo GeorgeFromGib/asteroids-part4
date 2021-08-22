@@ -1,26 +1,29 @@
 
 import { ManagerBase } from "./base/managerBase";
-import { AsteroidsGame } from "../../asteroidsGame";
 import { IModel } from "../actors/base/actorBase";
 import { SpaceshipActor } from "../../components/player/spaceshipActor";
 import { Justify } from "../../components/text/textManager";
+import { SoundEffect } from "../../soundEffect";
 
 export class ScoresManager extends ManagerBase {
-  protected nextLife: number;
+  protected _nextLife: number;
   protected _score: number = 0;
   protected _bestScore: number = 0;
   protected _lives: number;
   protected _shipModel: IModel;
   protected _extraLife: number;
+  protected _extraLifeSound: SoundEffect;
 
 
   public setup() {
     this._shipModel = this.gameEngine.configData.spaceship.model;
     this.lives = this.gameEngine.configData.settings.lives;
     this._extraLife = this.gameEngine.configData.settings.extraLife;
-    this.nextLife = this._extraLife;
-    //this._bestScore=0;
-    //this.score = 0;
+    this._nextLife = this._extraLife;
+  }
+
+  public loadSounds() {
+    this._extraLifeSound=this.gameEngine.soundEffects.get('extraShip')
   }
 
   public update(timeDelta: number) {
@@ -88,9 +91,10 @@ export class ScoresManager extends ManagerBase {
   }
 
   private checkForExtraLife() {
-    if (this._score > this.nextLife) {
-      this.nextLife += this._extraLife;
+    if (this._score > this._nextLife) {
+      this._nextLife += this._extraLife;
       this.lives++;
+      this._extraLifeSound.repeat(5,200);
     }
   }
 }

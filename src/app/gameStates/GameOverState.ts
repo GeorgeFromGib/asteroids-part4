@@ -29,12 +29,14 @@ export class GameOverState extends GameStateBase {
 
   public handleKeyPress(key: Keys) {
   }
+  
   public handleKeyRelease(key: Keys) {
   }
 
   public nextState() {
     this.gameEngine.textManager.clear('gameover');
     this.gameEngine.asteroidsManager.clear();
+    this.gameEngine.saucerManager.clear();
     this.gameEngine.gameState = new InitialGameState(this.gameEngine);
   }
 }

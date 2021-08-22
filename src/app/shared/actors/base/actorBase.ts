@@ -33,7 +33,7 @@ export abstract class ActorBase {
   public addChildActor(actor:ActorBase,offset:Vector) {
     this.childActors.push(actor);
     actor.parent=this;
-    actor.parentOffset=offset;
+    actor.parentOffset=offset.mult(this.scale);
   }
 
   public positionXY = (x: number, y: number) => {

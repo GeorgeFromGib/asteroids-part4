@@ -1,3 +1,18 @@
+
+body {
+    margin-top: 20px;
+    background-image: url("./assets/images/astdelux.png");
+    background-repeat: no-repeat;
+    background-color: black;
+    background-size: cover;
+    color: white;
+   }
+
 .container {
     text-align: center;
+}
+
+.controls p {
+    line-height: 5px;
+    font-size: larger;
 }
