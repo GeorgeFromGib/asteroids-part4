@@ -16,7 +16,6 @@ import {
     ProjectileSource,
 } from "../components/projectiles/ProjectileActor";
 import { ActorBase } from "../shared/actors/base/actorBase";
-import { SoundEffect } from '../soundEffect';
 
 export class PlayGameState extends GameStateBase {
     playerMan: PlayerShipManager;
@@ -68,7 +67,7 @@ export class PlayGameState extends GameStateBase {
     }
 
     public showSaucer() {
-        this.saucerMan.createSaucer(this.level);
+        this.saucerMan.createSaucer();
     }
 
     public newLevel() {

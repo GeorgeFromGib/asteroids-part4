@@ -83,9 +83,9 @@ export class SaucerManager extends ManagerBase {
     this.saucer=undefined
   }
 
-  public createSaucer(level:number) {
+  public createSaucer() {
     if(this.saucer) return;
-    const randomSaucer=this.getRandomSaucerType(level);
+    const randomSaucer=this.getRandomSaucerType();
     this.saucerSound=this.saucerSounds.get(randomSaucer.type);
     if(!this.saucerSound.isPlaying())
       this.saucerSound.play(true);
@@ -98,12 +98,12 @@ export class SaucerManager extends ManagerBase {
     this.gameEngine.projectilesManager.clearProjectilesfor(ProjectileSource.SAUCER);
   }
 
-  private getRandomSaucerType(level:number) :{type:SaucerTypes,dirChange:boolean}{
-    const smallSaucerBias=Math.min(80,5*(level-1))
-    const type= this.gameEngine.randomRange(0, 100) > (90-smallSaucerBias)
+  private getRandomSaucerType() :{type:SaucerTypes,dirChange:boolean}{
+    const smallSaucerBias=this.gameEngine.scoresManager.score>10000?20:95
+    const type= this.gameEngine.randomRange(0, 100) > smallSaucerBias
     ? SaucerTypes.SMALL
     : SaucerTypes.LARGE;
-    const dirChange=this.gameEngine.randomRange(0, 100)>(90-smallSaucerBias)
+    const dirChange=this.gameEngine.randomRange(0, 100) > smallSaucerBias
     return {type,dirChange};
   }
 

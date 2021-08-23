@@ -1,12 +1,41 @@
 
+* {margin:0; padding:0; border:0; box-sizing: border-box;}
+
 body {
-    margin-top: 20px;
     background-image: url("./assets/images/astdelux.png");
     background-repeat: no-repeat;
     background-color: black;
     background-size: cover;
     color: white;
    }
+
+header {
+    margin-top: 10px;
+    margin-bottom: 10px;;
+    min-height: 60px;
+}
+main {
+    /* background-color: #678;  */
+    display:flex; flex-flow:row wrap;
+}
+
+aside:nth-child(1) {
+    flex:0 0 auto; 
+    /* background-color: pink; */
+}
+aside:nth-child(3) {
+    flex:0 0 auto; 
+    /* background-color: blue; */
+}
+article {
+    flex:1 0 auto; 
+    /* background-color: skyblue; */
+}
+footer {
+    margin-top: 10px;
+     min-height: 20px;
+}
+
 
 .container {
     text-align: center;
