@@ -1,7 +1,10 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&display=swap');
+
 * {margin:0; padding:0; border:0; box-sizing: border-box;}
 
 body {
+    font-family: 'Electrolize',sans-serif;
     background-image: url("./assets/images/astdelux.png");
     background-repeat: no-repeat;
     background-color: black;
