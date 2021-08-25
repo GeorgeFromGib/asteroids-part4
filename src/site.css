@@ -29,7 +29,6 @@ main {
 aside img {
     max-width: 100%;
     height:auto;
-    /* border: 1px solid red; */
 }
 
 aside:nth-child(1) {
@@ -58,7 +57,7 @@ article div {
 }
 footer {
     margin-top: 10px;
-     min-height: 20px;
+    min-height: 20px;
 }
 
 

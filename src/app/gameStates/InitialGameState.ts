@@ -21,11 +21,12 @@ export class InitialGameState extends GameStateBase {
       this.gameEngine.screenSize.width / 2,
       this.gameEngine.screenSize.height / 4 ,
       2.3,
-      Justify.CENTER
+      Justify.CENTER,
+      true,true
     );
     this.timer = this.gameEngine.createTimer(2000);
     this.flashTimer=this.gameEngine.createTimer(1000,()=>{this.flashText()})
-    this.flashTimer.restart();
+    //this.flashTimer.restart();
   }
 
   public update(timeDelta: number) {

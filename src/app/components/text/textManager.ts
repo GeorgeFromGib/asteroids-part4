@@ -4,6 +4,7 @@ import { ManagerBase } from '../../shared/managers/base/managerBase';
 import { AsteroidsGame } from '../../asteroidsGame';
 import { TextActor } from './textActor';
 import { ITextModel } from '../../shared/interfaces/iConfig';
+import { FlashingTextActor } from './FlashingTextActor';
 
 export enum Justify {
     RIGHT,
@@ -15,6 +16,7 @@ export interface IText {
     characters:ActorBase[];
     position:Vector;
     show:boolean;
+    flashing:boolean;
 
 }
 
@@ -36,7 +38,7 @@ export class TextManager extends ManagerBase {
         super.update(timeDelta);
     }
 
-    public write(name:string, message:string,xPos:number,yPos:number, scale:number, justify:Justify,show:boolean=true) {
+    public write(name:string, message:string,xPos:number,yPos:number, scale:number, justify:Justify,show:boolean=true,flashing:boolean=false) {
         const messChars=[...message.toUpperCase()];
         const space=4;
         let adjXpos=0;
@@ -53,14 +55,14 @@ export class TextManager extends ManagerBase {
                 vertices:this.textModel.characters.find(h=>h.char===c).vertices,
                 radius:this.textModel.radius
             }
-            const charActor=new TextActor(model);
+            const charActor=flashing?new FlashingTextActor(model,500):new TextActor(model);
             charActor.position=pos;
             charActor.scale=scale;
             actors.push(charActor);
             l_xpos+=this.textModel.radius + space;
         });
         this.clear(name);
-        const text:IText={name:name,characters:actors,position:pos,show:show}
+        const text:IText={name:name,characters:actors,position:pos,show:show,flashing:flashing}
         this.texts.push(text);
     }
 
