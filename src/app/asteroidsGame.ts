@@ -44,7 +44,6 @@ export class AsteroidsGame {
   configData:typeof ConfigData;
   elapsedTime:number=0;
   gameState:GameStateBase
-  timers:GameTimer[]=[];
   soundEffects:Map<string,SoundEffect>=new Map();
 
   private _ge:P5;
@@ -122,8 +121,6 @@ export class AsteroidsGame {
     this._ge.background(0);
     this._ge.stroke("white");
 
-    //this.timers.forEach(timer=>timer.update(timeDelta));
-
     this.gameState.update(timeDelta);
 
     this.managers.forEach(manager => {
@@ -163,12 +160,6 @@ export class AsteroidsGame {
   public randomRange(min:number,max:number) {
     return this._ge.random(min,max);
   }
-
-  // public createTimer(time:number, callback?:()=>void):GameTimer {
-  //   const timer=new GameTimer(time,callback);
-  //   this.timers.push(timer);
-  //   return timer;
-  // }
 
   public getRandomScreenPosition(constraintPct:number):Vector {
     const widthConstraint=this.screenSize.width*constraintPct;

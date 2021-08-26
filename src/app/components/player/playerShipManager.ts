@@ -27,10 +27,10 @@ export class PlayerShipManager extends ManagerBase {
     public setup() {
         this.spaceship = this.gameEngine.configData.spaceship;
         this.shipIsPlacing=false;
-        this.safeShipTimer = this.gameEngine.createTimer(200, () => {
+        this.safeShipTimer = new GameTimer(200, () => {
             this.placeShipInSafeSpace(this.gameEngine.screenSize.center,this.safeShipTimer);
         });
-        this.hyperSpaceTimer = this.gameEngine.createTimer(1000, () => {
+        this.hyperSpaceTimer = new GameTimer(1000, () => {
             const constraintPct=0.2;
             const safeRadius=20;
             this.placeShipInSafeSpace(
@@ -39,7 +39,7 @@ export class PlayerShipManager extends ManagerBase {
                 safeRadius,
             );
         });
-        this.fireTimer=this.gameEngine.createTimer(this.spaceship.rateOfFire)
+        this.fireTimer=new GameTimer(this.spaceship.rateOfFire)
         //this.createShip();
     }
 

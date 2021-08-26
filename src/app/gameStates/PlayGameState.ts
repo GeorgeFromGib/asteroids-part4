@@ -31,15 +31,15 @@ export class PlayGameState extends GameStateBase {
         this.playerMan = this.gameEngine.playerManager;
         this.asteroidsMan = this.gameEngine.asteroidsManager;
         this.saucerMan=this.gameEngine.saucerManager;
-        this.newLevelTimer = this.gameEngine.createTimer(2000, () => {
+        this.newLevelTimer = new GameTimer(2000, () => {
             this.newLevel();
         });
         
         this.playerMan.showShip();
-        this.saucerTimer = this.gameEngine.createTimer(4000, () => {
+        this.saucerTimer = new GameTimer(4000, () => {
             this.showSaucer();
         });
-        this.shipShowTimer = this.gameEngine.createTimer(2000, () => {
+        this.shipShowTimer = new GameTimer(2000, () => {
             this.showShip();
         });
     }

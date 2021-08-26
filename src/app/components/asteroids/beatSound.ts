@@ -16,12 +16,12 @@ export class BeatSoundEffect {
             this.gameEngine.soundEffects.get("beat2"),
         ];
         this.levelBeatSounds.forEach((s) => s.volume(0.5));
-        this.beatSoundTimer = this.gameEngine.createTimer(500, () => {
+        this.beatSoundTimer = new GameTimer(500, () => {
             this.levelBeatSounds[this.beatIndex].play();
             this.beatIndex = 1 - this.beatIndex;
             this.beatSoundTimer.restart();
         });
-        this.increaseBeatTimer = this.gameEngine.createTimer(30000, () => {
+        this.increaseBeatTimer = new GameTimer(30000, () => {
             this.increaseBeatIndex = Math.min(
                 this.beatDelays.length - 1,
                 this.increaseBeatIndex + 1

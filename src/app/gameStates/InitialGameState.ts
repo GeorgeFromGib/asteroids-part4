@@ -23,7 +23,7 @@ export class InitialGameState extends GameStateBase {
       Justify.CENTER,
       true,true
     );
-    this.timer = this.gameEngine.createTimer(2000);
+    this.timer = new GameTimer(2000);
   }
 
   public update(timeDelta: number) {

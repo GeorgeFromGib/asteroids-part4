@@ -18,7 +18,7 @@ export class GameOverState extends GameStateBase {
       2.3,
       Justify.CENTER);
        
-      this.timer=this.gameEngine.createTimer(5000);
+      this.timer=new GameTimer(5000);
       this.timer.start();
     
   }

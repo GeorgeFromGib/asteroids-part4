@@ -10,7 +10,7 @@ export class SoundEffect {
     
     constructor(url:string,gameEngine:AsteroidsGame) {
         this.sound=new Howl({src:[url]})
-        this.repeatTimer=gameEngine.createTimer(1000,()=>{this.repeatSound()})
+        this.repeatTimer=new GameTimer(1000,()=>{this.repeatSound()})
     }
     
 

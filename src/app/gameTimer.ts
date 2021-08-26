@@ -17,7 +17,8 @@ export class GameTimer {
     this._timer=setTimeout(this.timedOut,this.time)
   }
 
-  private timedOut(timedOut: any) {
+  private timedOut=()=> {
+    console.log('timedOut');
     this._expired=true;
     this.callback && this.callback();
   }

@@ -32,8 +32,8 @@ export class SaucerManager extends ManagerBase {
   public setup() {
     this.saucerData = this.gameEngine.configData.saucer;
 
-    this.firingTimer = this.gameEngine.createTimer(this.saucerData.rateOfFire);
-    this.changeAngleTimer=this.gameEngine.createTimer(1000,()=>{
+    this.firingTimer = new GameTimer(this.saucerData.rateOfFire);
+    this.changeAngleTimer=new GameTimer(1000,()=>{
       if(this.saucer)
         this.changeSaucerDirectionAngle()
     })
