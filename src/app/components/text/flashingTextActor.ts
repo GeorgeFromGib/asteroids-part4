@@ -6,17 +6,17 @@ import { TextActor } from "./textActor";
 
 export class FlashingTextActor extends TextActor {
     private _flash:boolean=true;
-    flashTimer: GameTimer;
+    private _flashTimer: GameTimer;
 
     constructor(model: IModel, private pulseDelay: number) {
         super(model);
-        this.flashTimer=new GameTimer(pulseDelay)
+        this._flashTimer=new GameTimer(pulseDelay)
     }
 
     public update(timeDela: number) {
-        if(this.flashTimer.expired) {
+        if(this._flashTimer.expired) {
             this._flash=!this._flash
-            this.flashTimer.restart();
+            this._flashTimer.restart();
         }
         super.update(timeDela);
     }
