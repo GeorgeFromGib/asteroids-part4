@@ -99,7 +99,7 @@ export class SaucerManager extends ManagerBase {
   }
 
   private getRandomSaucerType() :{type:SaucerTypes,dirChange:boolean}{
-    const smallSaucerBias=this.gameEngine.scoresManager.score>10000?20:95
+    const smallSaucerBias=this.gameEngine.scoresManager.score>10000?20:100
     const type= this.gameEngine.randomRange(0, 100) > smallSaucerBias
     ? SaucerTypes.SMALL
     : SaucerTypes.LARGE;

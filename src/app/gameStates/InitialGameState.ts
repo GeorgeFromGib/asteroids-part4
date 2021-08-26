@@ -8,8 +8,7 @@ import { PlayGameState } from "./PlayGameState";
 export class InitialGameState extends GameStateBase {
   showPlayer: boolean = false;
   timer: GameTimer;
-  flashTimer:GameTimer;
-  flash:boolean=true;
+  
 
   public setup() {
     this.gameEngine.scoresManager.score=0;
@@ -25,8 +24,6 @@ export class InitialGameState extends GameStateBase {
       true,true
     );
     this.timer = this.gameEngine.createTimer(2000);
-    this.flashTimer=this.gameEngine.createTimer(1000,()=>{this.flashText()})
-    //this.flashTimer.restart();
   }
 
   public update(timeDelta: number) {
@@ -34,12 +31,6 @@ export class InitialGameState extends GameStateBase {
      if(this.timer.expired)
         this.nextState();
     }
-  }
-
-  public flashText() {
-    this.gameEngine.textManager.show("init",this.flash)
-    this.flash=!this.flash;
-    this.flashTimer.restart();
   }
 
   public handleKeyPress(key: Keys) {
