@@ -95,7 +95,7 @@ export class SaucerManager extends ManagerBase {
     this.saucer.position=this.calcSaucerStartPos(this.saucer);
     this.saucer.velocity = new Vector().set(this.saucerDirection, 0).mult(this.saucerProfile.speed / 1000);
     this.saucerEndXPos=this.calcSaucerEndXpos(this.saucer.position,this.saucer.radius)
-    this.gameEngine.projectilesManager.clearProjectilesfor(ProjectileSource.SAUCER);
+    //this.gameEngine.projectilesManager.clearProjectilesfor(ProjectileSource.SAUCER);
   }
 
   private getRandomSaucerType() :{type:SaucerTypes,dirChange:boolean}{
