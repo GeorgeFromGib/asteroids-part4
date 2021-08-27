@@ -1,6 +1,7 @@
 import { AsteroidsGame, Keys } from "../../../asteroidsGame";
 
 export abstract class GameStateBase {
+  
   constructor(protected gameEngine: AsteroidsGame) {
     this.setup();
   }
@@ -9,9 +10,11 @@ export abstract class GameStateBase {
 
   public abstract update(timeDelta: number);
 
-  public abstract handleKeyPress(key: Keys);
+  public handleKeyPress(key: Keys) {};
 
-  public abstract handleKeyRelease(key: Keys);
+  public handleKeyRelease(key: Keys) {};
+
+  public handleKeyMouseClick() {}
 
   public abstract nextState();
 }

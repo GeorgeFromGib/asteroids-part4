@@ -18,7 +18,6 @@ export class GameTimer {
   }
 
   private timedOut=()=> {
-    console.log('timedOut');
     this._expired=true;
     this.callback && this.callback();
   }
@@ -34,13 +33,4 @@ export class GameTimer {
     this.start();
   }
 
-  // public update(timeDelta: number) {
-  //   if (!this._expired) {
-  //     this._countDown -= timeDelta;
-  //     if (this._countDown <= 0) {
-  //       this._expired = true;
-  //       this.callback && this.callback();
-  //     }
-  //   }
-  // }
 }

@@ -1,3 +1,4 @@
+
 import { SoundEffect } from './soundEffect';
 import * as ConfigData from '../assets/config.json' 
 import P5, { Vector } from 'p5';
@@ -7,14 +8,13 @@ import { ExplosionManager } from './shared/managers/explosionManager';
 import { sketch } from "./p5-sketch";
 import { IModel } from "./shared/actors/base/actorBase";
 import { ManagerBase } from './shared/managers/base/managerBase';
-import { InitialGameState } from "./gameStates/InitialGameState";
 import { GameStateBase } from "./shared/gameStates/base/gameStateBase";
 import { PlayerShipManager } from './components/player/playerShipManager';
 import { AsteroidsManager } from './components/asteroids/asteroidsManager';
 import { SaucerManager } from './components/saucer/saucerManager';
 import { TextManager } from './components/text/textManager';
-import { GameTimer } from './gameTimer';
 import { ISettings } from './shared/interfaces/iConfig';
+import { BootGameState } from './gameStates/BootGameState';
 
 export class ScreenSize {
   width:number;
@@ -77,6 +77,7 @@ export class AsteroidsGame {
     p5.draw = () => this.gameLoop();
     p5.keyPressed = () => this.keyPressed();
     p5.keyReleased = () => this.keyReleased();
+    p5.mouseClicked = ()=>this.mouseClicked();
 
     this.screenSize=<ScreenSize>{
       width:p5.width,
@@ -93,7 +94,7 @@ export class AsteroidsGame {
     this.saucerManager=new SaucerManager(this);
     this.projectilesManager=new ProjectileManager(this);
 
-    this.gameState=new InitialGameState(this);
+    this.gameState=new BootGameState(this);
   };
 
   public loadSounds() {
@@ -114,6 +115,10 @@ export class AsteroidsGame {
     const key=this._keyMapper.get(this._ge.keyCode);
     this.gameState.handleKeyRelease(key)
   };
+
+  public mouseClicked=() => {
+    this.gameState.handleKeyMouseClick()
+  }
 
   public gameLoop = () => {
     const timeDelta = this.getTimeDelta();

@@ -27,11 +27,6 @@ export class GameOverState extends GameStateBase {
       this.nextState();
   }
 
-  public handleKeyPress(key: Keys) {
-  }
-  
-  public handleKeyRelease(key: Keys) {
-  }
 
   public nextState() {
     this.gameEngine.textManager.clear('gameover');

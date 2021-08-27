@@ -19,6 +19,7 @@ export class AsteroidsManager extends ManagerBase {
   constructor(gameEngine: AsteroidsGame) {
     super(gameEngine);
     this.asteroidModels = gameEngine.configData.asteroids;
+    this.levelCompleted= true;
   }
 
   public setup() {
@@ -38,7 +39,7 @@ export class AsteroidsManager extends ManagerBase {
 
     if(this.hasLevelEnded()) {
       this.levelCompleted = true;
-      this.beatSoundEffect.start();
+      this.beatSoundEffect?.start();
     }
 
     this.asteroids.forEach((a) => {
@@ -58,7 +59,7 @@ export class AsteroidsManager extends ManagerBase {
     this.levelCompleted = false;
     this.level = level;
     this.createAsteroids(6);
-    this.beatSoundEffect.start();
+    this.beatSoundEffect?.start();
   }
 
   public createAsteroids(noOfAsteroids: number) {
@@ -79,7 +80,7 @@ export class AsteroidsManager extends ManagerBase {
 
   public clear() {
     this.asteroids = [];
-    this.beatSoundEffect.reset();
+    this.beatSoundEffect?.reset();
   }
 
   private createAsteroid(pos: Vector, size: SizeTypes) {

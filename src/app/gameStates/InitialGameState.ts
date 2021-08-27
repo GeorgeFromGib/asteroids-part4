@@ -38,8 +38,6 @@ export class InitialGameState extends GameStateBase {
       this.startShowPlayer();
   }
 
-  public handleKeyRelease(key: Keys) { }
-
   nextState() {
     this.gameEngine.asteroidsManager.clear();
     this.gameEngine.textManager.clear("init");
@@ -47,7 +45,7 @@ export class InitialGameState extends GameStateBase {
   }
 
   private startShowPlayer() {
-    this.gameEngine.loadSounds();
+
     if (this.showPlayer)
       return;
     this.gameEngine.textManager.write(
@@ -63,3 +61,4 @@ export class InitialGameState extends GameStateBase {
   }
 
 }
+
