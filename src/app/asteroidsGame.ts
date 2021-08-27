@@ -1,20 +1,9 @@
 
-import { SoundEffect } from './soundEffect';
 import * as ConfigData from '../assets/config.json' 
 import P5, { Vector } from 'p5';
-import { ProjectileManager } from './components/projectiles/projectileManager';
-import { ScoresManager } from './shared/managers/scoreManager';
-import { ExplosionManager } from './shared/managers/explosionManager';
 import { sketch } from "./p5-sketch";
-import { IModel } from "./shared/actors/base/actorBase";
-import { ManagerBase } from './shared/managers/base/managerBase';
-import { GameStateBase } from "./shared/gameStates/base/gameStateBase";
-import { PlayerShipManager } from './components/player/playerShipManager';
-import { AsteroidsManager } from './components/asteroids/asteroidsManager';
-import { SaucerManager } from './components/saucer/saucerManager';
-import { TextManager } from './components/text/textManager';
-import { ISettings } from './shared/interfaces/iConfig';
-import { BootGameState } from './gameStates/BootGameState';
+import { IModel, ISettings } from './shared/interfaces/iConfig';
+
 
 export class ScreenSize {
   width:number;
@@ -32,19 +21,9 @@ export enum Keys {
 
 export class AsteroidsGame {
   screenSize:ScreenSize;
-  playerManager:PlayerShipManager;
-  asteroidsManager: AsteroidsManager;
-  explosionsManager: ExplosionManager;
-  saucerManager: SaucerManager;
-  textManager: TextManager;
-  scoresManager:ScoresManager;
-  projectilesManager: ProjectileManager;
-  managers:ManagerBase[]=[];
   settings:ISettings;
   configData:typeof ConfigData;
   elapsedTime:number=0;
-  gameState:GameStateBase
-  soundEffects:Map<string,SoundEffect>=new Map();
 
   private _ge:P5;
   private _prevElapsed = 0; 
@@ -60,7 +39,6 @@ export class AsteroidsGame {
     
     // Creating canvas
     const canvas=this.createCanvas(p5)
-    
     canvas.parent("app");
 
     this._keyMapper=new Map([
@@ -86,38 +64,22 @@ export class AsteroidsGame {
     }
     
     // setup managers
-    this.playerManager=new PlayerShipManager(this);
-    this.asteroidsManager=new AsteroidsManager(this);
-    this.explosionsManager=new ExplosionManager(this);
-    this.textManager=new TextManager(this);
-    this.scoresManager=new ScoresManager(this);
-    this.saucerManager=new SaucerManager(this);
-    this.projectilesManager=new ProjectileManager(this);
-
-    this.gameState=new BootGameState(this);
+    
   };
 
   public loadSounds() {
-    const files:string[] = Object.values(require('../assets/sounds/*.wav'));
-    files.forEach((v:string) => {
-        const name=v.substr(v.lastIndexOf('/')+1,v.indexOf('.')-1);
-        this.soundEffects.set(name,new SoundEffect(v,this))
-      });
-    this.managers.forEach(m=>m.loadSounds());
+  
   }
 
   public keyPressed = () => {
     const key=this._keyMapper.get(this._ge.keyCode);
-    this.gameState.handleKeyPress(key)
   };
 
   public keyReleased = () => {
     const key=this._keyMapper.get(this._ge.keyCode);
-    this.gameState.handleKeyRelease(key)
   };
 
   public mouseClicked=() => {
-    this.gameState.handleKeyMouseClick()
   }
 
   public gameLoop = () => {
@@ -125,15 +87,6 @@ export class AsteroidsGame {
 
     this._ge.background(0);
     this._ge.stroke("white");
-
-    this.gameState.update(timeDelta);
-
-    this.managers.forEach(manager => {
-      manager.update(timeDelta);
-      this._ge.push();
-      manager.render();
-      this._ge.pop();
-    });
 
   };
 
@@ -184,8 +137,6 @@ export class AsteroidsGame {
   private createCanvas(p5: P5) {
     const scr_reduction = 0.8;
     const oldTvRatio=1.33;
-    // const width=860;
-    // const height=width*0.75
     const width=p5.windowHeight * oldTvRatio * scr_reduction;
     const height=p5.windowHeight * scr_reduction
     const canvas = p5.createCanvas(width,height);

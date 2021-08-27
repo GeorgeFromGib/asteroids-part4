@@ -2,7 +2,7 @@
 export class GameTimer {
   protected _countDown: number;
   protected _expired: boolean = true;
-  protected _timer;
+  protected _timer:any;
 
   constructor(public time: number, protected callback?: () => void) {
     this._countDown = time;
