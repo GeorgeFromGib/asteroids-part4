@@ -16,7 +16,7 @@ export enum Keys {
   LEFT_ARROW,
   UP_ARROW,
   SPACE,
-  RIGHT_CTRL
+  CTRL
 }
 
 export class AsteroidsGame {
@@ -24,6 +24,8 @@ export class AsteroidsGame {
   settings:ISettings;
   configData:typeof ConfigData;
   elapsedTime:number=0;
+  //managers:ManagerBase[]=[];
+  //gameState:GameStateBase
 
   private _ge:P5;
   private _prevElapsed = 0; 
@@ -36,34 +38,37 @@ export class AsteroidsGame {
   public setup = (p5: P5) => {
     this._ge=p5;
     this.configData=ConfigData;
+    this._prevElapsed = p5.millis();
     
-    // Creating canvas
+    // Create canvas and inject back into html page
     const canvas=this.createCanvas(p5)
     canvas.parent("app");
 
+    // Map keys from P5 to AsteroidsGame key definitions
     this._keyMapper=new Map([
       [p5.LEFT_ARROW,Keys.LEFT_ARROW],
       [p5.RIGHT_ARROW,Keys.RIGHT_ARROW],
       [p5.UP_ARROW,Keys.UP_ARROW],
       [32,Keys.SPACE],
-      [p5.CONTROL,Keys.RIGHT_CTRL]
+      [p5.CONTROL,Keys.CTRL]
     ]);
 
-    this._prevElapsed = p5.millis();
-
-    // Redirect sketch functions
+    // Redirect P5 sketch functions
     p5.draw = () => this.gameLoop();
     p5.keyPressed = () => this.keyPressed();
     p5.keyReleased = () => this.keyReleased();
-    p5.mouseClicked = ()=>this.mouseClicked();
+    p5.mouseClicked = () => this.mouseClicked();
 
+    // Setup screen object.
     this.screenSize=<ScreenSize>{
       width:p5.width,
       height:p5.height,
       center:p5.createVector(p5.width/2,p5.height/2)
     }
     
-    // setup managers
+    // Setup managers
+
+    // Initialise GameState
     
   };
 
@@ -73,13 +78,16 @@ export class AsteroidsGame {
 
   public keyPressed = () => {
     const key=this._keyMapper.get(this._ge.keyCode);
+    // this.gameState.handleKeyPress(key)
   };
 
   public keyReleased = () => {
     const key=this._keyMapper.get(this._ge.keyCode);
+    // this.gameState.handleKeyRelease(key)
   };
 
   public mouseClicked=() => {
+    // this.gameState.handleKeyMouseClick()
   }
 
   public gameLoop = () => {
@@ -87,6 +95,15 @@ export class AsteroidsGame {
 
     this._ge.background(0);
     this._ge.stroke("white");
+
+    // this.gameState.update(timeDelta);
+
+    // this.managers.forEach(manager => {
+    //   manager.update(timeDelta);
+    //   this._ge.push();
+    //   manager.render();
+    //   this._ge.pop();
+    // });
 
   };
 
