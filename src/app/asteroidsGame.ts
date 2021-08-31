@@ -1,6 +1,6 @@
-
+import { Vector2D } from './vector2d';
 import * as ConfigData from '../assets/config.json' 
-import P5, { Vector } from 'p5';
+import P5 from 'p5';
 import { sketch } from "./p5-sketch";
 import { IModel, ISettings } from './shared/interfaces/iConfig';
 
@@ -8,7 +8,7 @@ import { IModel, ISettings } from './shared/interfaces/iConfig';
 export class ScreenSize {
   width:number;
   height:number;
-  center:Vector;
+  center:Vector2D;
 }
 
 export enum Keys {
@@ -136,10 +136,10 @@ export class AsteroidsGame {
     return this._ge.random(min,max);
   }
 
-  public getRandomScreenPosition(constraintPct:number):Vector {
+  public getRandomScreenPosition(constraintPct:number):Vector2D {
     const widthConstraint=this.screenSize.width*constraintPct;
     const heightConstraint=this.screenSize.height*constraintPct;
-    return new Vector().set(
+    return new Vector2D(
       this.randomRange(widthConstraint,this.screenSize.width-widthConstraint),
       this.randomRange(heightConstraint,this.screenSize.height-heightConstraint))
   }
