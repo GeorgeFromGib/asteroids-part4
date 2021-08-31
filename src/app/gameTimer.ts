@@ -19,7 +19,7 @@ export class GameTimer {
 
   private timedOut=()=> {
     this._expired=true;
-    this.callback && this.callback();
+    this.callback?.call(this)
   }
 
   public reset() {
