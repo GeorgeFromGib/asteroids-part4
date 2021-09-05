@@ -1,8 +1,12 @@
+import { BootGameState } from './gameStates/bootGameState';
+import { AsteroidsManager } from './components/asteroids/asteroidsManager';
 import { Vector2D } from './vector2d';
 import * as ConfigData from '../assets/config.json' 
 import P5 from 'p5';
 import { sketch } from "./p5-sketch";
 import { IModel, ISettings } from './shared/interfaces/iConfig';
+import { ManagerBase } from './shared/managers/base/managerBase';
+import { GameStateBase } from './shared/gameStates/base/gameStateBase';
 
 
 export class ScreenSize {
@@ -20,16 +24,19 @@ export enum Keys {
 }
 
 export class AsteroidsGame {
+  // Class variables
+  asteroidsManager: AsteroidsManager;
   screenSize:ScreenSize;
   settings:ISettings;
   configData:typeof ConfigData;
   elapsedTime:number=0;
-  //managers:ManagerBase[]=[];
-  //gameState:GameStateBase
+  managers:ManagerBase[]=[];
+  gameState:GameStateBase
 
   private _ge:P5;
   private _prevElapsed = 0; 
   private _keyMapper:Map<number,Keys>=new Map();
+  
 
   constructor() {
     new P5((p5) => sketch(p5,this.setup));
@@ -67,8 +74,10 @@ export class AsteroidsGame {
     }
     
     // Setup managers
-
+    this.asteroidsManager=new AsteroidsManager(this)
+    
     // Initialise GameState
+    this.gameState=new BootGameState(this);
     
   };
 
@@ -96,14 +105,14 @@ export class AsteroidsGame {
     this._ge.background(0);
     this._ge.stroke("white");
 
-    // this.gameState.update(timeDelta);
+    this.gameState.update(timeDelta);
 
-    // this.managers.forEach(manager => {
-    //   manager.update(timeDelta);
-    //   this._ge.push();
-    //   manager.render();
-    //   this._ge.pop();
-    // });
+    this.managers.forEach(manager => {
+      manager.update(timeDelta);
+      this._ge.push();
+      manager.render();
+      this._ge.pop();
+    });
 
   };
 
