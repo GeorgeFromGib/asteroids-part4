@@ -1,20 +1,23 @@
-import { AsteroidsGame, Keys } from "../../../asteroidsGame";
+import {AsteroidsGame, Keys} from "../../../asteroidsGame";
 
 export abstract class GameStateBase {
-  
-  constructor(protected gameEngine: AsteroidsGame) {
-    this.setup();
-  }
 
-  public abstract setup();
+    constructor(protected gameEngine: AsteroidsGame) {
+        this.setup();
+    }
 
-  public abstract update(timeDelta: number);
+    protected abstract setup();
 
-  public handleKeyPress(key: Keys) {};
+    public abstract update(timeDelta: number);
 
-  public handleKeyRelease(key: Keys) {};
+    public handleKeyPress(key: Keys) {
+    };
 
-  public handleKeyMouseClick() {}
+    public handleKeyRelease(key: Keys) {
+    };
 
-  public abstract nextState();
+    public handleKeyMouseClick() {
+    }
+
+    public abstract nextState();
 }

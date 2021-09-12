@@ -13,7 +13,7 @@ export abstract class ActorBase {
     public radius: number = 0;
     public show: boolean = true;
 
-    constructor(public model: IModel) {
+    protected constructor(public model: IModel) {
         this._transModel = {
             vertexes: [],
             vertices: this.model.vertices,

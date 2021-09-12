@@ -102,9 +102,19 @@ export class AsteroidsManager extends ManagerBase {
         return Vector2D.random2D().mult(vel / 1000);
     }
 
-    private hit(hitAsteroid: AsteroidActor) {}
+    private hit(hitAsteroid: AsteroidActor) {
+        if (hitAsteroid.size === SizeTypes.SMALL) {
+            return;
+        }
+        const nextSize =
+            hitAsteroid.size === SizeTypes.LARGE ? SizeTypes.MEDIUM : SizeTypes.SMALL;
+        const posOffset=Vector2D.random2D().mult(1.5);
+        const pos = hitAsteroid.position.add(posOffset);
+        this.createAsteroid(pos, nextSize);
+        this.createAsteroid(pos, nextSize);
+    }
 
     private hasLevelEnded() {
-        return false;
+        return (this.asteroids.length == 0)
     }
 }
