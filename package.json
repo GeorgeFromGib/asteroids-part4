@@ -1,0 +1,29 @@
+{
+  "name": "asteroids",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "cleanup": "rm -rf .cache dist"
+  },
+  "dependencies": {
+    "@types/p5": "0.9.0",
+    "assets": "^3.0.1",
+    "howler": "^2.2.3",
+    "p5": "0.9.0"
+  },
+  "keywords": [
+    "p5js",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/howler": "^2.2.3",
+    "@types/node": "^16.6.1",
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.9.5"
+  }
+}
